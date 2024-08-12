@@ -31,14 +31,12 @@ LogBox.ignoreLogs([
   'No source prop was provided. Nothing will be rendered',
 ]);
 
-// const related = [0, 1, 2];
-// const trending = [0, 1, 2, 3, 4];
+
 
 const Article = ({route, navigation}) => {
   const {articleId} = route.params;
   const {token} = useContext(TokenContext);
   const [article, setArticle] = useState(null);
-  // const [trending, setTrending] = useState(null);
   const [latest, setLatest] = useState(null);
   console.log(article);
 
@@ -55,7 +53,7 @@ const Article = ({route, navigation}) => {
     } catch (error) {
       console.log(error);
     }
-  };
+  };paradixafkajdlkhjalwands 
 
   // const getTrending = async () => {
   //   try {
