@@ -21,11 +21,11 @@ export const MPDigitalProvider = ({children}) => {
         ?.filter(item => item.x_type === 'Digital')
         .sort((a, b) => moment(b.publish_date).diff(moment(a.publish_date)));
       setData({
-        magazine: magazineData,
+        magazine: newsData,
         newsPaper: newsData,
       });
     } catch (error) {
-      console.log('on get mp', error);
+      console.log('on get mpPPP', error);
     } finally {
       setLoading(false);
     }
