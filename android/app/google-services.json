@@ -1,0 +1,107 @@
+{
+  "project_info": {
+    "project_number": "782626479856",
+    "firebase_url": "https://manadopost-f4a67.firebaseio.com",
+    "project_id": "manadopost-f4a67",
+    "storage_bucket": "manadopost-f4a67.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782626479856:android:9e08b016ba7b5be37fec35",
+        "android_client_info": {
+          "package_name": "com.manadopostrevamp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782626479856-e4qji3kkb1g1ocp53mgiaj2rokt7bmf5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manadopostrevamp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "782626479856-89khocqerprpe29tscrpvdn5vb8ghan0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSSFfvBAkWOcoO4zHWA40nvjntHqJYHS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782626479856-89khocqerprpe29tscrpvdn5vb8ghan0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "782626479856-dtna3hnpjadd3u8s9keoolk3ii30ulle.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mp.manadopost2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782626479856:android:f3090f3e713a79147fec35",
+        "android_client_info": {
+          "package_name": "com.mp.manadopost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782626479856-hdoc3h3ibi1inrg330p0p2im5q4pilpt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mp.manadopost",
+            "certificate_hash": "6a50066fe93c777516875fd556e42f75adafff8b"
+          }
+        },
+        {
+          "client_id": "782626479856-q0ni173ecig2uclvrapasragksm7jp3e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mp.manadopost",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "782626479856-89khocqerprpe29tscrpvdn5vb8ghan0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSSFfvBAkWOcoO4zHWA40nvjntHqJYHS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782626479856-89khocqerprpe29tscrpvdn5vb8ghan0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "782626479856-dtna3hnpjadd3u8s9keoolk3ii30ulle.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mp.manadopost2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
