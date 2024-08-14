@@ -15,11 +15,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "782626479856-a5r3vd280nmb48l6coc9r0nuhfq8ufte.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manadopostrevamp",
+            "certificate_hash": "e2001f0d13721ddf4e1e7020e48008dd6d148201"
+          }
+        },
+        {
           "client_id": "782626479856-e4qji3kkb1g1ocp53mgiaj2rokt7bmf5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.manadopostrevamp",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "782626479856-pqi4gurctai391te73qdkpai9jfparad.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.manadopostrevamp",
+            "certificate_hash": "f6f00be448a555cb2e646dbfb5909bc37389853e"
           }
         },
         {
@@ -59,19 +75,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "782626479856-hdoc3h3ibi1inrg330p0p2im5q4pilpt.apps.googleusercontent.com",
+          "client_id": "782626479856-pgiu3t1rro2k3tb3ivdki9j2mnlutd1r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.mp.manadopost",
-            "certificate_hash": "6a50066fe93c777516875fd556e42f75adafff8b"
-          }
-        },
-        {
-          "client_id": "782626479856-q0ni173ecig2uclvrapasragksm7jp3e.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mp.manadopost",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "5730b8c29eb374de038a631aa80b7b3b26d07ea1"
           }
         },
         {
