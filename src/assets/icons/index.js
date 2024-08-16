@@ -68,6 +68,10 @@ import IcBigCheckmark from './ic-big-checkmark.svg';
 import IcFilter from './ic-filter.svg';
 import IcPinpoint from './ic-pinpoint.svg';
 import IcWhatsappExtraSmall from './ic-whatsapp-extra-small.svg';
+import IcTtsPlay from './ic-TtsPlay.svg';
+import IcTtsPause from './ic-TtsPause.svg';
+import IcTtsArticlePlay from './ic-TtsArticlePlay.svg';
+import IcTtsArticlePause from './ic-TtsArticlePause.svg';
 
 export {
   IcClosedEye,
@@ -140,4 +144,8 @@ export {
   IcFilter,
   IcPinpoint,
   IcWhatsappExtraSmall,
+  IcTtsPlay,
+  IcTtsPause,
+  IcTtsArticlePause,
+  IcTtsArticlePlay,
 };

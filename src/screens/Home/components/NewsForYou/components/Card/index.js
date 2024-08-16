@@ -1,6 +1,6 @@
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {IMGDummyNews, theme} from '../../../../../../assets';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {theme} from '../../../../../../assets';
 import {
   Actions,
   CategoryHorizontal,
@@ -9,9 +9,11 @@ import {
   TimeStamp,
 } from '../../../../../../components';
 import {useNavigation} from '@react-navigation/native';
+import TTSButton from '../../../../../../components/atoms/TtsButton';
 
-const Card = ({item}) => {
+const Card = ({item, isActive, onPress}) => {
   const navigation = useNavigation();
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -24,7 +26,10 @@ const Card = ({item}) => {
       <View style={styles.informationContainer}>
         <TextInter style={styles.title}>{item?.title}</TextInter>
         <Gap height={8} />
-        <TimeStamp data={item?.published_date} />
+        <View style={styles.TtsButton}>
+          <TimeStamp data={item?.published_date} />
+          <TTSButton isActive={isActive} onPress={onPress} />
+        </View>
         <Gap height={4} />
         <CategoryHorizontal />
         <Gap height={4} />
@@ -64,14 +69,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: theme.colors.dark1,
   },
-  categoriesContainer: {
+  TtsButton: {
     flexDirection: 'row',
-  },
-  categories: {
-    marginHorizontal: 8,
-    marginVertical: 5,
-    fontFamily: theme.fonts.inter.semiBold,
-    fontSize: 10,
-    color: theme.colors.grey1,
   },
 });

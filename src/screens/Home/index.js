@@ -234,7 +234,6 @@ const Home = ({navigation}) => {
 
           <Gap height={screenHeightPercentage('11%')} />
         </ScrollView>
-
         <CanalModal
           canalModalRef={canalModalRef}
           preferences={forYou?.preferences}
