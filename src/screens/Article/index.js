@@ -25,6 +25,7 @@ import {latestEndPoint, readArticle, search} from '../../api';
 import axios from 'axios';
 import RenderHtml from 'react-native-render-html';
 import {TokenContext} from '../../context/TokenContext';
+import TtsArticleButton from '../../components/atoms/TtsArticleButton';
 
 LogBox.ignoreLogs([
   'You should always pass contentWidth',
@@ -155,6 +156,7 @@ const Article = ({route, navigation}) => {
                   </View>
                   <Gap width={4} />
                   <TextInter style={styles.authorName}>{item.name}</TextInter>
+                  <TtsArticleButton />
                 </View>
               );
             })}
