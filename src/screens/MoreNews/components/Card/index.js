@@ -9,8 +9,9 @@ import {
   TimeStamp,
 } from '../../../../components';
 import {useNavigation} from '@react-navigation/native';
+import TTSButton from '../../../../components/atoms/TtsButton';
 
-const Card = ({item}) => {
+const Card = ({item, isActive, onPress}) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
@@ -29,7 +30,10 @@ const Card = ({item}) => {
           {item?.description}
         </TextInter>
         <Gap height={8} />
-        <TimeStamp data={item?.published_date} />
+        <View style={styles.TtsButton}>
+          <TimeStamp data={item?.published_date} />
+          <TTSButton isActive={isActive} onPress={onPress} />
+        </View>
         <Gap height={4} />
         <CategoryHorizontal />
         <Gap height={4} />
@@ -94,5 +98,8 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.inter.semiBold,
     fontSize: 10,
     color: theme.colors.grey1,
+  },
+  TtsButton: {
+    flexDirection: 'row',
   },
 });

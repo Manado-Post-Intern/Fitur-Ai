@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -16,6 +17,7 @@ import {regionList, sectionList} from '../../data';
 import {latestEndPoint, loadSession, tagArticle} from '../../api';
 import axios from 'axios';
 import {AdsContext} from '../../context/AdsContext';
+import {Snackbar} from 'react-native-paper';
 
 const SPACING = 10;
 
@@ -28,6 +30,23 @@ const MoreNews = ({route}) => {
   const {medium} = useContext(AdsContext);
   const label = sectionList.find(item => item?.id === sectionId)?.name;
 
+  const [activeTTS, setActiveTTS] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleTTSPress = id => {
+    if (activeTTS !== null && activeTTS !== id) {
+      setActiveTTS(null);
+      setShowPopup(false);
+    }
+
+    if (activeTTS === id) {
+      setActiveTTS(null);
+      setShowPopup(false);
+    } else {
+      setActiveTTS(id);
+      setShowPopup(true);
+    }
+  };
   const navigation = useNavigation();
 
   const bottomReached = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -151,8 +170,23 @@ const MoreNews = ({route}) => {
 
         <View>
           {moreNews?.map((item, index) => {
-            return <Card key={index} item={item} />;
+            return (
+              <Card
+                key={index}
+                item={item}
+                isActive={activeTTS === item.id}
+                onPress={() => handleTTSPress(item.id)}
+              />
+            );
           })}
+          {showPopup && (
+            <Snackbar
+              visible={showPopup}
+              onDismiss={() => setShowPopup(false)}
+              style={styles.snackbar}>
+              <Text style={styles.textSnacbar}>Mendengarkan...</Text>
+            </Snackbar>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -178,5 +212,20 @@ const styles = StyleSheet.create({
     color: theme.colors.MPGrey2,
     fontWeight: '700',
     marginLeft: 16,
+  },
+  snackbar: {
+    position: 'static',
+    bottom: 60,
+    width: 400,
+    height: 20,
+    marginVertical: 10,
+    backgroundColor: 'rgba(0, 0, 255, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  textSnacbar: {
+    color: 'white',
+    textAlign: 'center',
   },
 });
