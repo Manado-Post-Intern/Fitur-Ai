@@ -141,7 +141,10 @@ const Article = ({route, navigation}) => {
               </TextInter>
             )}
             <Gap height={7} />
-            <TimeStamp data={article?.published_date} />
+            <View style={styles.TtsButton}>
+              <TimeStamp data={article?.published_date} />
+              <TtsArticleButton />
+            </View>
             <Gap height={7} />
             {article?.author.map((item, index) => {
               return (
@@ -156,7 +159,6 @@ const Article = ({route, navigation}) => {
                   </View>
                   <Gap width={4} />
                   <TextInter style={styles.authorName}>{item.name}</TextInter>
-                  <TtsArticleButton />
                 </View>
               );
             })}
@@ -307,5 +309,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderColor: 'rgba(0,0,0,0.07)',
     zIndex: 20,
+  },
+
+  TtsButton: {
+    flexDirection: 'row',
   },
 });
