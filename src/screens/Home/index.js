@@ -1,7 +1,7 @@
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {theme} from '../../assets';
-import {Banner1, Banner2, Gap} from '../../components';
+import {Banner1, Banner2, Gap, SnackbarNotification} from '../../components';
 import {
   ActionSection,
   BottomBanner,
@@ -37,6 +37,12 @@ const Home = ({navigation}) => {
   const [latest, setLatest] = useState(null);
   const [story, setStory] = useState(null);
   const {top, bottom, second, full} = useContext(AdsContext);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const handleShowSnackbar = (show, message) => {
+    setShowSnackbar(show);
+    setSnackbarMessage(message);
+  };
 
   const getHeadline = async () => {
     try {
@@ -202,6 +208,7 @@ const Home = ({navigation}) => {
               moment(b.published_date).diff(moment(a.published_date)),
             )}
             preferences={forYou?.preferences}
+            onShowSnackbar={handleShowSnackbar}
           />
 
           <Gap height={25} />
@@ -234,6 +241,11 @@ const Home = ({navigation}) => {
 
           <Gap height={screenHeightPercentage('11%')} />
         </ScrollView>
+        <SnackbarNotification
+          visible={showSnackbar}
+          onDismiss={() => setShowSnackbar(false)}
+          message={snackbarMessage}
+        />
         <CanalModal
           canalModalRef={canalModalRef}
           preferences={forYou?.preferences}

@@ -157,9 +157,7 @@ const Article = ({route, navigation}) => {
                       />
                     )}
                   </View>
-
                   <Gap width={4} />
-
                   <TextInter style={styles.authorName}>{item.name}</TextInter>
                 </View>
               );

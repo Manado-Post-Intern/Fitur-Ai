@@ -19,8 +19,8 @@ android {
         applicationId "com.mp.manadopost"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 206
-        versionName "2.0.6"
+        versionCode 211
+        versionName "2.1.1"
         missingDimensionStrategy "store", "play"
     }
 

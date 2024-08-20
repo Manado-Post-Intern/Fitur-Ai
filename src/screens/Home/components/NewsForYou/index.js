@@ -1,29 +1,39 @@
-import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
+import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import {Gap, TextInter} from '../../../../components';
 import {IcPlus, theme} from '../../../../assets';
 import More from '../../../../components/atoms/More';
 import {Card} from './components';
-import {Snackbar} from 'react-native-paper';
 
-const NewsForYou = ({data, canalModalRef, item, preferences}) => {
+const NewsForYou = ({
+  data,
+  canalModalRef,
+  item,
+  preferences,
+  onShowSnackbar,
+}) => {
   const [activeTTS, setActiveTTS] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
 
   const handleTTSPress = id => {
+    let message = '';
+
     if (activeTTS !== null && activeTTS !== id) {
       setActiveTTS(null);
-      setShowPopup(false);
+      message = 'Pemutaran dijeda';
+      onShowSnackbar(true, message);
     }
 
     if (activeTTS === id) {
       setActiveTTS(null);
-      setShowPopup(false);
+      message = 'Pemutaran dijeda';
+      onShowSnackbar(true, message);
     } else {
       setActiveTTS(id);
-      setShowPopup(true);
+      message = 'Mendengarkan...';
+      onShowSnackbar(true, message);
     }
   };
+
   return (
     <View>
       <View style={styles.titleContainer}>
@@ -59,14 +69,6 @@ const NewsForYou = ({data, canalModalRef, item, preferences}) => {
           onPress={() => handleTTSPress(item.id)}
         />
       ))}
-      {showPopup && (
-        <Snackbar
-          visible={showPopup}
-          onDismiss={() => setShowPopup(false)}
-          style={styles.snackbar}>
-          <Text style={styles.textSnacbar}>Mendengarkan...</Text>
-        </Snackbar>
-      )}
       <More forYou item={item} />
     </View>
   );
@@ -103,20 +105,5 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.inter.semiBold,
     fontSize: 10,
     color: theme.colors.grey1,
-  },
-  snackbar: {
-    position: 'relative',
-    bottom: 60,
-    width: 400,
-    height: 20,
-    marginVertical: 10,
-    backgroundColor: 'rgba(0, 0, 255, 0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  textSnacbar: {
-    color: 'white',
-    textAlign: 'center',
   },
 });
