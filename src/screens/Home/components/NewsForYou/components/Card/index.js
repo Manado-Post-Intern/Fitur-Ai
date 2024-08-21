@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {theme} from '../../../../../../assets';
+
 import {
   Actions,
   CategoryHorizontal,
@@ -28,7 +29,11 @@ const Card = ({item, isActive, onPress}) => {
         <Gap height={8} />
         <View style={styles.TtsButton}>
           <TimeStamp data={item?.published_date} />
-          <TTSButton isActive={isActive} onPress={onPress} />
+          <TTSButton
+            isActive={isActive}
+            onPress={onPress}
+            // article={item?.description}
+          />
         </View>
         <Gap height={4} />
         <CategoryHorizontal />
