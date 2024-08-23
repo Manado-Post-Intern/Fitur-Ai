@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-shadow */
 import {
   Image,
   Linking,
@@ -143,7 +145,7 @@ const Article = ({route, navigation}) => {
             <Gap height={7} />
             <View style={styles.TtsButton}>
               <TimeStamp data={article?.published_date} />
-              <TtsArticleButton />
+              <TtsArticleButton article={article?.content} />
             </View>
             <Gap height={7} />
             {article?.author.map((item, index) => {

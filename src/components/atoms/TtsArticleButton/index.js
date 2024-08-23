@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
 import {IcTtsArticlePlay, IcTtsArticlePause} from '../../../assets';
 import {Snackbar} from 'react-native-paper';
+import Tts from 'react-native-tts';
 
-const TtsArticleButton = ({scrollY, isActive, onPress}) => {
+const TtsArticleButton = ({scrollY, isActive, onPress,article}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -16,15 +17,20 @@ const TtsArticleButton = ({scrollY, isActive, onPress}) => {
 
   const handlePress = () => {
     setIsPlaying(!isPlaying);
+    // Bersihkan HTML tags dari artikel
+    const cleanArticle = article.replace(/<\/?[^>]+(>|$)/g, "").toLowerCase().replace(/manadopost\.id/gi, "");
 
     if (!isPlaying) {
       setSnackbarMessage('Mendengarkan artikel...');
       setSnackbarError(false);
       setShowSnackbar(true);
+      Tts.speak(cleanArticle);
+      console.log(cleanArticle);
     } else {
       setSnackbarMessage('Pemutaran dijeda');
       setSnackbarError(false);
       setShowSnackbar(true);
+      Tts.stop();
     }
     if (Math.random() > 0.8) {
       setSnackbarMessage('Terjadi kesalahan');

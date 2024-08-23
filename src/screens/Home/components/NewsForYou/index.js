@@ -1,9 +1,12 @@
+/* eslint-disable no-shadow */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import {Gap, TextInter} from '../../../../components';
 import {IcPlus, theme} from '../../../../assets';
 import More from '../../../../components/atoms/More';
 import {Card} from './components';
+import Tts from 'react-native-tts';
 
 const NewsForYou = ({
   data,
@@ -27,10 +30,18 @@ const NewsForYou = ({
       setActiveTTS(null);
       message = 'Pemutaran dijeda';
       onShowSnackbar(true, message);
+      Tts.stop();
     } else {
       setActiveTTS(id);
       message = 'Mendengarkan...';
       onShowSnackbar(true, message);
+      Tts.speak('hallo nama saya william', {
+        androidParams: {
+          KEY_PARAM_PAN: -1,
+          KEY_PARAM_VOLUME: 0.5,
+          KEY_PARAM_STREAM: 'STREAM_MUSIC',
+        },
+      });
     }
   };
 
