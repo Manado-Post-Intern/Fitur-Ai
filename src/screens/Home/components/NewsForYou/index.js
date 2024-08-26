@@ -1,12 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
+import {TokenContext} from '../../../../context/TokenContext';
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import {Gap, TextInter} from '../../../../components';
 import {IcPlus, theme} from '../../../../assets';
 import More from '../../../../components/atoms/More';
 import {Card} from './components';
 import Tts from 'react-native-tts';
+import axios from 'axios';
+import {readArticle} from '../../../../api';
 
 const NewsForYou = ({
   data,
@@ -16,6 +20,43 @@ const NewsForYou = ({
   onShowSnackbar,
 }) => {
   const [activeTTS, setActiveTTS] = useState(null);
+  const [article, setArticle] = useState(null);
+  const {token} = useContext(TokenContext);
+  const getArticle = async () => {
+    if (!item?.id) {
+      console.log('Item ID is undefined or null');
+      return;
+    }
+    try {
+      const response = await axios.get(readArticle, {
+        headers: {
+          Accept: 'application/vnd.promedia+json; version=1.0',
+          Authorization: `Bearer ${token}`,
+        },
+        params: {id: item.id},
+      });
+      setArticle(response.data.data.detail);
+    } catch (error) {
+      if (error.response) {
+        // Server responded with a status code outside 2xx range
+        console.log('Error data:', error.response.data);
+        console.log('Error status:', error.response.status);
+        console.log('Error headers:', error.response.headers);
+      } else if (error.request) {
+        // Request was made but no response received
+        console.log('Error request:', error.request);
+      } else {
+        // Something happened in setting up the request
+        console.log('Error message:', error.message);
+      }
+      console.log('Error config:', error.config);
+    }
+  };
+  useEffect(() => {
+    if (token) {
+      getArticle();
+    }
+  }, [token]);
 
   const handleTTSPress = id => {
     let message = '';
@@ -35,13 +76,8 @@ const NewsForYou = ({
       setActiveTTS(id);
       message = 'Mendengarkan...';
       onShowSnackbar(true, message);
-      Tts.speak('hallo nama saya william', {
-        androidParams: {
-          KEY_PARAM_PAN: -1,
-          KEY_PARAM_VOLUME: 0.5,
-          KEY_PARAM_STREAM: 'STREAM_MUSIC',
-        },
-      });
+      console.log(article?.content);
+      // Tts.speak('kedepan harus tetap sama');
     }
   };
 

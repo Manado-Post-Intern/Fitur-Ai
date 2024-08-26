@@ -1,11 +1,39 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {TouchableOpacity, StyleSheet} from 'react-native';
 import {IcTtsPlay, IcTtsPause} from '../../../assets';
+import Tts from 'react-native-tts';
 
-const TTSButton = ({isActive, onPress}) => {
+const TTSButton = ({isActive, onPress, content}) => {
+  const handlePress = () => {
+    // Set the default language to Indonesian
+    Tts.setDefaultLanguage('id-ID');
+
+    if (content) {
+      // Clean the content if it exists
+      const cleanContent = content
+        .replace(/<\/?[^>]+(>|$)/g, '')
+        .toLowerCase()
+        .replace(/manadopost\.id/gi, '');
+
+      // Trigger Tts.speak or Tts.stop based on isActive
+      if (isActive) {
+        Tts.stop();
+      } else {
+        Tts.speak(cleanContent);
+      }
+    } else {
+      console.log('Content is undefined or null');
+    }
+
+    // Call the passed onPress function
+    if (onPress) {
+      onPress();
+    }
+  };
+
   return (
     <>
-      <TouchableOpacity onPress={onPress} style={styles.button}>
+      <TouchableOpacity onPress={handlePress} style={styles.button}>
         {isActive ? (
           <IcTtsPause width={24} height={24} />
         ) : (
