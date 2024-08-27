@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {IMGMPTextPrimary, IcBack, IcMagnifying, theme} from '../../assets';
-import {TextInter} from '../../components';
+import {SnackbarNotification, TextInter} from '../../components';
 import {Card, MediumBanner} from './components';
 import {useNavigation} from '@react-navigation/native';
 import {regionList, sectionList} from '../../data';
@@ -179,16 +179,13 @@ const MoreNews = ({route}) => {
               />
             );
           })}
-          {showPopup && (
-            <Snackbar
-              visible={showPopup}
-              onDismiss={() => setShowPopup(false)}
-              style={styles.snackbar}>
-              <Text style={styles.textSnacbar}>Mendengarkan...</Text>
-            </Snackbar>
-          )}
         </View>
       </ScrollView>
+      <SnackbarNotification
+        visible={showPopup}
+        onDismiss={() => setShowPopup(false)}
+        style={styles.snackbar}
+      />
     </SafeAreaView>
   );
 };

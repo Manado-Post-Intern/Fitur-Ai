@@ -4,7 +4,7 @@ import {IcTtsArticlePlay, IcTtsArticlePause} from '../../../assets';
 import {Snackbar} from 'react-native-paper';
 import Tts from 'react-native-tts';
 
-const TtsArticleButton = ({scrollY, isActive, onPress,article}) => {
+const TtsArticleButton = ({scrollY, isActive, onPress, article}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -18,7 +18,10 @@ const TtsArticleButton = ({scrollY, isActive, onPress,article}) => {
   const handlePress = () => {
     setIsPlaying(!isPlaying);
     // Bersihkan HTML tags dari artikel
-    const cleanArticle = article.replace(/<\/?[^>]+(>|$)/g, "").toLowerCase().replace(/manadopost\.id/gi, "");
+    const cleanArticle = article
+      .replace(/<\/?[^>]+(>|$)/g, '')
+      .toLowerCase()
+      .replace(/manadopost\.id/gi, '');
 
     if (!isPlaying) {
       setSnackbarMessage('Mendengarkan artikel...');
