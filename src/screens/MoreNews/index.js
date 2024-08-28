@@ -18,6 +18,7 @@ import {latestEndPoint, loadSession, tagArticle} from '../../api';
 import axios from 'axios';
 import {AdsContext} from '../../context/AdsContext';
 import {Snackbar} from 'react-native-paper';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 const SPACING = 10;
 
@@ -30,21 +31,22 @@ const MoreNews = ({route}) => {
   const {medium} = useContext(AdsContext);
   const label = sectionList.find(item => item?.id === sectionId)?.name;
 
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
+
   const [activeTTS, setActiveTTS] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
 
   const handleTTSPress = id => {
     if (activeTTS !== null && activeTTS !== id) {
       setActiveTTS(null);
-      setShowPopup(false);
+      hideSnackbar(); // Tutup Snackbar jika TTS berbeda ditekan
     }
 
     if (activeTTS === id) {
       setActiveTTS(null);
-      setShowPopup(false);
+      hideSnackbar();
     } else {
       setActiveTTS(id);
-      setShowPopup(true);
+      showSnackbar('Text-to-Speech is active', 'black'); // Tampilkan Snackbar dengan pesan
     }
   };
   const navigation = useNavigation();
@@ -181,11 +183,6 @@ const MoreNews = ({route}) => {
           })}
         </View>
       </ScrollView>
-      <SnackbarNotification
-        visible={showPopup}
-        onDismiss={() => setShowPopup(false)}
-        style={styles.snackbar}
-      />
     </SafeAreaView>
   );
 };

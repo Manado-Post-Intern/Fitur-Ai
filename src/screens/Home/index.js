@@ -23,6 +23,7 @@ import {TokenContext} from '../../context/TokenContext';
 import {checkUserPreferences} from '../../utils/checkUserPreferences';
 import {AuthContext} from '../../context/AuthContext';
 import moment from 'moment';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 const data = [0, 1, 2];
 const daerah = ['Manado', 'Minahasa Utara', 'Bitung', 'Tondano'];
@@ -37,11 +38,10 @@ const Home = ({navigation}) => {
   const [latest, setLatest] = useState(null);
   const [story, setStory] = useState(null);
   const {top, bottom, second, full} = useContext(AdsContext);
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const handleShowSnackbar = (show, message) => {
-    setShowSnackbar(show);
-    setSnackbarMessage(message);
+  const {showSnackbar} = useSnackbar();
+
+  const handleSomeAction = () => {
+    showSnackbar('Snackbar message!', 'black');
   };
 
   const getHeadline = async () => {
@@ -208,7 +208,7 @@ const Home = ({navigation}) => {
               moment(b.published_date).diff(moment(a.published_date)),
             )}
             preferences={forYou?.preferences}
-            onShowSnackbar={handleShowSnackbar}
+            onShowSnackbar={handleSomeAction}
           />
 
           <Gap height={25} />
@@ -241,11 +241,7 @@ const Home = ({navigation}) => {
 
           <Gap height={screenHeightPercentage('11%')} />
         </ScrollView>
-        <SnackbarNotification
-          visible={showSnackbar}
-          onDismiss={() => setShowSnackbar(false)}
-          message={snackbarMessage}
-        />
+
         <CanalModal
           canalModalRef={canalModalRef}
           preferences={forYou?.preferences}

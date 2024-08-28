@@ -3,17 +3,11 @@ import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
 import {IcTtsArticlePlay, IcTtsArticlePause} from '../../../assets';
 import {Snackbar} from 'react-native-paper';
 import Tts from 'react-native-tts';
+import {useSnackbar} from '../../../context/SnackbarContext';
 
 const TtsArticleButton = ({scrollY, isActive, onPress, article}) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarError, setSnackbarError] = useState(false);
-  const [snackbarTop, setSnackbarTop] = useState(0);
-
-  useEffect(() => {
-    setSnackbarTop(scrollY);
-  }, [scrollY]);
+  const {showSnackbar} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
   const handlePress = () => {
     setIsPlaying(!isPlaying);
@@ -24,61 +18,42 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article}) => {
       .replace(/manadopost\.id/gi, '');
 
     if (!isPlaying) {
-      setSnackbarMessage('Mendengarkan artikel...');
-      setSnackbarError(false);
-      setShowSnackbar(true);
+      showSnackbar('Mendengarkan artikel...', '#024D91'); // Tampilkan Snackbar menggunakan context
       Tts.speak(cleanArticle);
       console.log(cleanArticle);
     } else {
-      setSnackbarMessage('Pemutaran dijeda');
-      setSnackbarError(false);
-      setShowSnackbar(true);
+      showSnackbar('Pemutaran dijeda', '#024D91'); // Tampilkan Snackbar untuk jeda
       Tts.stop();
     }
+
+    // Simulasi kesalahan dengan kemungkinan 20%
     if (Math.random() > 0.8) {
-      setSnackbarMessage('Terjadi kesalahan');
-      setSnackbarError(true);
-      setShowSnackbar(true);
+      showSnackbar('Terjadi kesalahan', 'red'); // Tampilkan Snackbar kesalahan menggunakan context
     }
   };
 
   return (
-    <>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          isPlaying ? styles.pauseButton : styles.playButton,
-        ]}
-        onPress={handlePress}>
-        <View style={styles.content}>
-          {isPlaying ? (
-            <IcTtsArticlePause width={13} height={13} />
-          ) : (
-            <IcTtsArticlePlay width={15} height={15} />
-          )}
-          <Text
-            style={[
-              styles.buttonText,
-              isPlaying ? styles.pauseText : styles.playText,
-            ]}>
-            {isPlaying ? 'Jeda' : 'Dengar'}
-          </Text>
-        </View>
-      </TouchableOpacity>
-
-      {}
-      <Snackbar
-        visible={showSnackbar}
-        onDismiss={() => setShowSnackbar(false)}
-        duration={3000}
-        style={[
-          styles.snackbar,
-          snackbarError ? styles.snackbarError : styles.snackbarProgress,
-        ]}
-        wrapperStyle={[styles.snackbarWrapper, {top: snackbarTop}]}>
-        <Text style={styles.snackbarText}>{snackbarMessage}</Text>
-      </Snackbar>
-    </>
+    <TouchableOpacity
+      style={[
+        styles.button,
+        isPlaying ? styles.pauseButton : styles.playButton,
+      ]}
+      onPress={handlePress}>
+      <View style={styles.content}>
+        {isPlaying ? (
+          <IcTtsArticlePause width={13} height={13} />
+        ) : (
+          <IcTtsArticlePlay width={15} height={15} />
+        )}
+        <Text
+          style={[
+            styles.buttonText,
+            isPlaying ? styles.pauseText : styles.playText,
+          ]}>
+          {isPlaying ? 'Jeda' : 'Dengar'}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -119,28 +94,6 @@ const styles = StyleSheet.create({
   },
   pauseText: {
     color: '#FFFFFF',
-  },
-  snackbar: {
-    position: 'absolute',
-    marginTop: 'auto',
-    marginHorizontal: 16,
-    borderRadius: 10,
-  },
-  snackbarProgress: {
-    backgroundColor: '#024D91',
-  },
-  snackbarError: {
-    backgroundColor: 'red',
-  },
-  snackbarText: {
-    color: '#FFFFFF',
-  },
-  snackbarWrapper: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
   },
 });
 
