@@ -75,6 +75,8 @@ import IcTtsArticlePause from './ic-TtsArticlePause.svg';
 import IcPlusButton from './ic-plusButton.svg';
 import IcCloseButton from './ic-xButton.svg';
 import IcSumButton from './ic-sumButton.svg';
+import IcAiChatButton from './ic-AiChatButton.svg';
+import IcAiChat from './ic-AiChat.svg';
 
 export {
   IcClosedEye,
@@ -154,4 +156,6 @@ export {
   IcPlusButton,
   IcCloseButton,
   IcSumButton,
+  IcAiChatButton,
+  IcAiChat,
 };

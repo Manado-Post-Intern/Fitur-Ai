@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {theme} from '../../assets';
@@ -11,6 +12,7 @@ import {TrendingSection} from './components';
 import {screenHeightPercentage} from '../../utils';
 import {loadSession, popular} from '../../api';
 import axios from 'axios';
+import FloatingActionButton from '../../components/atoms/AiChatButton';
 
 const Trending = ({navigation}) => {
   const [token, setToken] = useState(null);
@@ -58,6 +60,9 @@ const Trending = ({navigation}) => {
 
         <Gap height={screenHeightPercentage('11%')} />
       </ScrollView>
+      <View style={styles.wrapAiChatBtn}>
+        <FloatingActionButton />
+      </View>
     </SafeAreaView>
   );
 };
@@ -74,5 +79,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.white2,
     top: -20,
+  },
+  wrapAiChatBtn: {
+    bottom: '18%',
   },
 });

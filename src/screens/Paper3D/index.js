@@ -15,6 +15,7 @@ import {CardListDigital, CardListNewspaper, More} from './components';
 import {screenHeightPercentage} from '../../utils';
 import {MPDigitalContext} from '../../context/MPDigitalContext';
 import {AuthContext} from '../../context/AuthContext';
+import FloatingActionButton from '../../components/atoms/AiChatButton';
 
 const Paper3D = ({navigation}) => {
   const {loading, setLoading, fetchData} = useContext(MPDigitalContext);
@@ -122,6 +123,9 @@ const Paper3D = ({navigation}) => {
           </View>
         ) : null}
       </View>
+      <View style={styles.wrapAiChatBtn}>
+        <FloatingActionButton />
+      </View>
     </SafeAreaView>
   );
 };
@@ -160,5 +164,8 @@ const styles = StyleSheet.create({
     color: theme.colors.MPGrey2,
     fontWeight: '700',
     marginLeft: 16,
+  },
+  wrapAiChatBtn: {
+    bottom: '22.6%',
   },
 });

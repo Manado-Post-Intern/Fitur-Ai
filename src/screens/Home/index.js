@@ -1,6 +1,6 @@
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {theme} from '../../assets';
+import {IcAiChat, theme} from '../../assets';
 import {Banner1, Banner2, Gap, SnackbarNotification} from '../../components';
 import {
   ActionSection,
@@ -24,6 +24,7 @@ import {checkUserPreferences} from '../../utils/checkUserPreferences';
 import {AuthContext} from '../../context/AuthContext';
 import moment from 'moment';
 import {useSnackbar} from '../../context/SnackbarContext';
+import FloatingActionButton from '../../components/atoms/AiChatButton';
 
 const data = [0, 1, 2];
 const daerah = ['Manado', 'Minahasa Utara', 'Bitung', 'Tondano'];
@@ -241,7 +242,9 @@ const Home = ({navigation}) => {
 
           <Gap height={screenHeightPercentage('11%')} />
         </ScrollView>
-
+        <View style={styles.wrapAiChatBtn}>
+          <FloatingActionButton />
+        </View>
         <CanalModal
           canalModalRef={canalModalRef}
           preferences={forYou?.preferences}
@@ -266,5 +269,8 @@ const styles = StyleSheet.create({
 
   bodyContainer: {
     top: -20,
+  },
+  wrapAiChatBtn: {
+    bottom: '18%',
   },
 });
