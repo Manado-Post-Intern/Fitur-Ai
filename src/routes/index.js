@@ -35,6 +35,7 @@ import {
   MoreNews,
   WriteNews,
   ChannelTagSelection,
+  LoginWill,
 } from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {screenHeightPercentage} from '../utils';
@@ -115,6 +116,7 @@ const PrivateRoutes = () => {
       <Stack.Screen name="MoreNews" component={MoreNews} />
       <Stack.Screen name="MetaMore" component={MetaMore} />
       <Stack.Screen name="WriteNews" component={WriteNews} />
+      
       <Stack.Screen
         name="ChannelTagSelection"
         component={ChannelTagSelection}
@@ -136,6 +138,7 @@ const Routes = () => {
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Onboarding" component={Onboarding} />
+      <Stack.Screen name="LoginWill" component={LoginWill} />
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="OTPVerification" component={OTPVerification} />
       <Stack.Screen name="NewPassword" component={NewPassword} />
