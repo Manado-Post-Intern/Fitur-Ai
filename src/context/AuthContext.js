@@ -13,7 +13,9 @@ export const AuthProvider = ({children}) => {
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(user => {
       setUser(user);
-      if (initializing) setInitializing(false);
+      if (initializing) {
+        setInitializing(false);
+      }
     });
 
     return subscriber;
@@ -39,7 +41,9 @@ export const AuthProvider = ({children}) => {
     }
   }, [user]);
 
-  if (initializing) return null;
+  if (initializing) {
+    return null;
+  }
 
   return (
     <AuthContext.Provider value={{user, mpUser}}>
