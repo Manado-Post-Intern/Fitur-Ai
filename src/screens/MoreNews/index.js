@@ -47,7 +47,7 @@ const MoreNews = ({route}) => {
       hideSnackbar();
     } else {
       setActiveTTS(id);
-      showSnackbar(`${selectedTitle}`, 'black'); // Tampilkan Snackbar dengan pesan
+      showSnackbar(selectedTitle, 'black'); // Tampilkan Snackbar dengan pesan
     }
   };
 

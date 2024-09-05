@@ -5,7 +5,7 @@ import {Snackbar} from 'react-native-paper';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext';
 
-const TtsArticleButton = ({scrollY, isActive, onPress, article}) => {
+const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const {showSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
@@ -21,11 +21,11 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article}) => {
 
 
     if (!isPlaying) {
-      showSnackbar('Mendengarkan artikel...', '#024D91'); // Tampilkan Snackbar menggunakan context
+      showSnackbar(title, '#024D91'); // Tampilkan Snackbar menggunakan context
       Tts.speak(cleanArticle);
       
     } else {
-      showSnackbar('Pemutaran dijeda', '#024D91'); // Tampilkan Snackbar untuk jeda
+      // showSnackbar('Pemutaran dijeda', '#024D91'); // Tampilkan Snackbar untuk jeda
       Tts.stop();
     }
 
