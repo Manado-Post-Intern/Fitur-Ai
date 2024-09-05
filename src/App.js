@@ -53,7 +53,7 @@ const App = () => {
                     <NavigationContainer>
                       <View style={styles.container}>
                         <Routes />
-                        <SnackbarNotification />
+                        {/* <SnackbarNotification /> */}
                       </View>
                     </NavigationContainer>
                   </BottomSheetModalProvider>

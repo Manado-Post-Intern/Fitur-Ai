@@ -16,6 +16,7 @@ import Subscription from './Subscription';
 import Ads from './Ads';
 import Marketplace from './Marketplace';
 import MoreNews from './MoreNews';
+import AiChat from './AiChat';
 
 export * from './Authentication';
 export * from './ChooseCanal';
@@ -44,4 +45,5 @@ export {
   Ads,
   Marketplace,
   MoreNews,
+  AiChat,
 };

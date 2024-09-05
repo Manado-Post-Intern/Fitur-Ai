@@ -30,9 +30,11 @@ const Card = ({item, isActive, onPress}) => {
           {item?.description}
         </TextInter>
         <Gap height={8} />
-        <View style={styles.TtsButton}>
+        <View style={styles.wrapperButton}>
           <TimeStamp data={item?.published_date} />
-          <TTSButton isActive={isActive} onPress={onPress} />
+          <View style={styles.TtsButton}>
+            <TTSButton isActive={isActive} onPress={onPress} />
+          </View>
         </View>
         <Gap height={4} />
         <CategoryHorizontal />
@@ -100,6 +102,9 @@ const styles = StyleSheet.create({
     color: theme.colors.grey1,
   },
   TtsButton: {
+    right: '50%',
+  },
+  wrapperButton: {
     flexDirection: 'row',
   },
 });

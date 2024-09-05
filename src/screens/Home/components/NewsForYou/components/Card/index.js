@@ -70,11 +70,13 @@ const Card = ({item, isActive, onPress}) => {
         <Gap height={8} />
         <View style={styles.TtsButton}>
           <TimeStamp data={item?.published_date} />
-          <TTSButton
-            isActive={isActive}
-            onPress={onPress}
-            content={article?.content}
-          />
+          <View style={styles.wrapTts}>
+            <TTSButton
+              isActive={isActive}
+              onPress={onPress}
+              content={article?.content}
+            />
+          </View>
         </View>
         <Gap height={4} />
         <CategoryHorizontal />
@@ -117,5 +119,8 @@ const styles = StyleSheet.create({
   },
   TtsButton: {
     flexDirection: 'row',
+  },
+  wrapTts: {
+    right: 14,
   },
 });

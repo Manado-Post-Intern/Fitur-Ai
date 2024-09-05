@@ -31,14 +31,14 @@ const MoreNews = ({route}) => {
   const {medium} = useContext(AdsContext);
   const label = sectionList.find(item => item?.id === sectionId)?.name;
 
-  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
+  const {showSnackbar, hideSnackbar} = useSnackbar();
 
   const [activeTTS, setActiveTTS] = useState(null);
 
   const handleTTSPress = id => {
     if (activeTTS !== null && activeTTS !== id) {
       setActiveTTS(null);
-      hideSnackbar(); // Tutup Snackbar jika TTS berbeda ditekan
+      hideSnackbar();
     }
 
     if (activeTTS === id) {
@@ -46,7 +46,7 @@ const MoreNews = ({route}) => {
       hideSnackbar();
     } else {
       setActiveTTS(id);
-      showSnackbar('Text-to-Speech is active', 'black'); // Tampilkan Snackbar dengan pesan
+      showSnackbar('Judul', 'black');
     }
   };
   const navigation = useNavigation();

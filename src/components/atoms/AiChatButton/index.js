@@ -2,9 +2,13 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import {IcAiChat, theme} from '../../../assets'; // Adjust the icon import path
 
-const FloatingActionButton = ({onPress}) => {
+const AiChatButton = ({onPress, navigation}) => {
+  const handlePress = () => {
+    navigation.navigate('AiChat'); // Replace 'TargetScreen' with the name of your target screen
+  };
+
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={styles.button} onPress={handlePress}>
       <View style={styles.iconWrapper}>
         <IcAiChat />
       </View>
@@ -12,12 +16,12 @@ const FloatingActionButton = ({onPress}) => {
   );
 };
 
-export default FloatingActionButton;
+export default AiChatButton;
 
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    top: '83%',
+    // top: '83%',
     right: 10,
     transform: [{translateY: -30}],
     width: 60,
