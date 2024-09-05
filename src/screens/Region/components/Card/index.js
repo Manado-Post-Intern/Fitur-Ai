@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import TTSButton from '../../../../components/atoms/TtsButton';
 import { TokenContext } from '../../../../context/TokenContext';
 import { readArticle } from '../../../../api';
+import axios from 'axios';
 
 const Card = ({item, isActive, onPress}) => {
   const navigation = useNavigation();
@@ -51,7 +52,6 @@ const Card = ({item, isActive, onPress}) => {
   useEffect(() => {
     if (token) {
       getArticle();
-      console.log(article?.content);
     }
   }, [token]);
 

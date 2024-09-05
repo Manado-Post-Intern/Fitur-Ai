@@ -34,6 +34,7 @@ const MoreNews = ({route}) => {
   const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
 
   const [activeTTS, setActiveTTS] = useState(null);
+  const [selectedTitle, setSelectedTitle] = useState(''); // Menyimpan title yang diterima
 
   const handleTTSPress = id => {
     if (activeTTS !== null && activeTTS !== id) {
@@ -46,9 +47,15 @@ const MoreNews = ({route}) => {
       hideSnackbar();
     } else {
       setActiveTTS(id);
-      showSnackbar('Text-to-Speech is active', 'black'); // Tampilkan Snackbar dengan pesan
+      showSnackbar(`${selectedTitle}`, 'black'); // Tampilkan Snackbar dengan pesan
     }
   };
+
+  const handleSendTitle = title => {
+    console.log('Selected Title:', title);
+    setSelectedTitle(title); // Update title yang dipilih
+  };
+
   const navigation = useNavigation();
 
   const bottomReached = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -174,11 +181,12 @@ const MoreNews = ({route}) => {
           {moreNews?.map((item, index) => {
             return (
               <Card
-                key={index}
-                item={item}
-                isActive={activeTTS === item.id}
-                onPress={() => handleTTSPress(item.id)}
-              />
+              key={index}
+              item={item}
+              isActive={activeTTS === item.id}
+              onPress={() => handleTTSPress(item.id)}
+              onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
+      />
             );
           })}
         </View>

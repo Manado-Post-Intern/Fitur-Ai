@@ -1,7 +1,8 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {Snackbar} from 'react-native-paper';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TTSButton from '../components/atoms/TtsButton'; // Pastikan jalur impor sesuai
+import Tts from 'react-native-tts';
 
 const SnackbarContext = createContext();
 
@@ -11,6 +12,7 @@ export const SnackbarProvider = ({children}) => {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [textColor, setTextColor] = useState('white');
+  const [cleanArticle, setCleanArticle] = useState(''); //State clean article
   const [isActive, setIsActive] = useState(false); // State untuk mengelola status TTS
 
   const showSnackbar = (msg, color = 'white') => {
@@ -21,6 +23,7 @@ export const SnackbarProvider = ({children}) => {
 
   const hideSnackbar = () => {
     setVisible(false);
+    Tts.stop();
   };
 
   const toggleSnackbar = () => {
@@ -33,11 +36,16 @@ export const SnackbarProvider = ({children}) => {
 
   const toggleTTS = () => {
     setIsActive(!isActive); // Toggle isActive state
+    if (!isActive && cleanArticle) {
+      Tts.speak(cleanArticle);  // Ketika TTS diaktifkan, putar cleanArticle
+    } else {
+      Tts.stop(); // Stop TTS ketika di-deactivate
+    }
   };
 
   return (
     <SnackbarContext.Provider
-      value={{showSnackbar, hideSnackbar, toggleSnackbar}}>
+      value={{showSnackbar, hideSnackbar, toggleSnackbar, cleanArticle, setCleanArticle}}>
       {children}
       <View style={styles.snackbarWrapper}>
         <Snackbar
@@ -51,7 +59,7 @@ export const SnackbarProvider = ({children}) => {
                 <TTSButton
                   isActive={isActive}
                   onPress={toggleTTS}
-                  content="Ini adalah contoh konten TTS yang sedang dibaca."
+                  content={cleanArticle || "tidak ada content"} 
                 />
                 <TouchableOpacity onPress={hideSnackbar}>
                   <Text style={[styles.actionLabel, {color: textColor}]}>

@@ -7,7 +7,7 @@ import {useSnackbar} from '../../../context/SnackbarContext';
 
 const TtsArticleButton = ({scrollY, isActive, onPress, article}) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const {showSnackbar} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {showSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
   const handlePress = () => {
     setIsPlaying(!isPlaying);
@@ -17,10 +17,13 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article}) => {
       .toLowerCase()
       .replace(/manadopost\.id/gi, '');
 
+      setCleanArticle(cleanArticle);
+
+
     if (!isPlaying) {
       showSnackbar('Mendengarkan artikel...', '#024D91'); // Tampilkan Snackbar menggunakan context
       Tts.speak(cleanArticle);
-      console.log(cleanArticle);
+      
     } else {
       showSnackbar('Pemutaran dijeda', '#024D91'); // Tampilkan Snackbar untuk jeda
       Tts.stop();
