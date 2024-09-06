@@ -1,27 +1,82 @@
 import React, {useState} from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Modal, Text, StyleSheet} from 'react-native';
+import {
+  IcSummarizeSpark,
+  IcPopUpExit,
+  IcPopUpPause,
+  IcPopUpPlay,
+} from '../../../assets';
 
 const SummarizeFloatingButton = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const toggleButton = () => {
-    setIsOpen(!isOpen);
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const togglePlayPause = () => {
+    setIsPlaying(!isPlaying);
+    // tambahan logika buat play pause audio
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.floatingButton} onPress={toggleButton}>
-        <View style={styles.crossContainer}>
-          <View style={[styles.line, isOpen && styles.line1Open]} />
-          <View
-            style={[
-              styles.line,
-              styles.verticalLine,
-              isOpen && styles.line2Open,
-            ]}
-          />
-        </View>
+      <TouchableOpacity style={styles.floatingButton} onPress={toggleModal}>
+        <IcSummarizeSpark name="Spark" />
       </TouchableOpacity>
+
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="fade"
+        onRequestClose={toggleModal}>
+        <View style={styles.Overlay}>
+          <View style={styles.Content}>
+            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+              <IcPopUpExit name="close" />
+            </TouchableOpacity>
+
+            <Text style={styles.titleText}>
+              Beromset 15 Triliun, ManadoPost Disrupsi
+            </Text>
+
+            <View style={styles.Description}>
+              <Text style={styles.bulletPoint}>
+                • Politeknik Negeri Manado mengadakan Program Penerapan Iptek
+                kepada Masyarakat (PIM) di Jemaat GMIM Paulus Kauditan.
+              </Text>
+              <Text style={styles.bulletPoint}>
+                • Desa Kauditan II, Kecamatan Kauditan, berupa pelatihan
+                teknologi campuran beton untuk meningkatkan keterampilan tukang
+                bangunan pada 29 September lalu.
+              </Text>
+              <Text style={styles.bulletPoint}>
+                • Ketua Tim Pelaksana, Syanne Pangemanan ST MEng, bersama
+                anggota Helen G Mantiri SST MT dan Fery Sondakh ST MT,
+                menyatakan bahwa kegiatan ini bertujuan untuk
+              </Text>
+              <Text style={styles.bulletPoint}>
+                • meningkatkan pengetahuan dan keterampilan tukang bangunan
+                dalam memilih dan menggunakan material campuran beton, serta
+                membantu dalam pembuatan gudang penyimpanan barang milik GMIM
+                Paulus Kauditan.
+              </Text>
+            </View>
+
+            {/* Tombol Play/Pause */}
+            <TouchableOpacity
+              onPress={togglePlayPause}
+              style={styles.playPauseButton}>
+              {isPlaying ? (
+                <IcPopUpPause size={24} />
+              ) : (
+                <IcPopUpPlay size={24} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -33,44 +88,57 @@ const styles = StyleSheet.create({
     right: 30,
   },
   floatingButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
+    backgroundColor: '#005AAC',
+    borderRadius: 50,
+    padding: 15,
+    elevation: 10,
+    shadowColor: '#0B7DE5',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    shadowRadius: 3.84,
   },
-  crossContainer: {
+  Overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  Content: {
+    width: '85%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    alignItems: 'flex-start',
     position: 'relative',
-    width: 24,
-    height: 24,
+    elevation: 8,
   },
-  line: {
+  closeButton: {
     position: 'absolute',
-    width: 24,
-    height: 3,
-    backgroundColor: '#024D91',
-    top: '50%',
-    left: 0,
-    // transform: [{translateY: -1.5}],
+    top: 10,
+    right: 10,
   },
-  verticalLine: {
-    transform: [{rotate: '90deg'}],
+  titleText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    paddingTop: 30,
+    color: '#000000',
+    paddingLeft: 10,
   },
-  line1Open: {
-    transform: [{rotate: '45deg'}],
-    top: 10.5,
-    left: 0,
+  Description: {
+    marginBottom: 20,
+    paddingLeft: 20,
   },
-  line2Open: {
-    transform: [{rotate: '-45deg'}],
-    top: 10.5,
-    left: 0,
+  bulletPoint: {
+    fontSize: 14,
+    marginBottom: 5,
+    color: 'black',
+  },
+  playPauseButton: {
+    alignSelf: 'center',
+    borderRadius: 50,
+    padding: 15,
+    marginTop: 50,
   },
 });
 

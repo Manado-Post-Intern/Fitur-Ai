@@ -72,6 +72,10 @@ import IcTtsPlay from './ic-TtsPlay.svg';
 import IcTtsPause from './ic-TtsPause.svg';
 import IcTtsArticlePlay from './ic-TtsArticlePlay.svg';
 import IcTtsArticlePause from './ic-TtsArticlePause.svg';
+import IcSummarizeSpark from './ic-SummarizeSpark.svg';
+import IcPopUpExit from './ic-PopUpExit.svg';
+import IcPopUpPlay from './ic-PopUpPlay.svg';
+import IcPopUpPause from './ic-PopUpPause.svg';
 
 export {
   IcClosedEye,
@@ -148,4 +152,8 @@ export {
   IcTtsPause,
   IcTtsArticlePause,
   IcTtsArticlePlay,
+  IcSummarizeSpark,
+  IcPopUpExit,
+  IcPopUpPlay,
+  IcPopUpPause,
 };
