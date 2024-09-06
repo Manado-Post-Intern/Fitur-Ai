@@ -13,6 +13,7 @@ import {screenHeightPercentage} from '../../utils';
 import {loadSession, popular} from '../../api';
 import axios from 'axios';
 import FloatingActionButton from '../../components/atoms/AiChatButton';
+import AiChatButton from '../../components/atoms/AiChatButton';
 
 const Trending = ({navigation}) => {
   const [token, setToken] = useState(null);
@@ -61,7 +62,7 @@ const Trending = ({navigation}) => {
         <Gap height={screenHeightPercentage('11%')} />
       </ScrollView>
       <View style={styles.wrapAiChatBtn}>
-        <FloatingActionButton />
+        <AiChatButton navigation={navigation} />
       </View>
     </SafeAreaView>
   );

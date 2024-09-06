@@ -16,6 +16,7 @@ import {screenHeightPercentage} from '../../utils';
 import {MPDigitalContext} from '../../context/MPDigitalContext';
 import {AuthContext} from '../../context/AuthContext';
 import FloatingActionButton from '../../components/atoms/AiChatButton';
+import AiChatButton from '../../components/atoms/AiChatButton';
 
 const Paper3D = ({navigation}) => {
   const {loading, setLoading, fetchData} = useContext(MPDigitalContext);
@@ -124,7 +125,7 @@ const Paper3D = ({navigation}) => {
         ) : null}
       </View>
       <View style={styles.wrapAiChatBtn}>
-        <FloatingActionButton />
+        <AiChatButton navigation={navigation} />
       </View>
     </SafeAreaView>
   );

@@ -14,10 +14,11 @@ import {latestEndPoint, loadSession} from '../../api';
 import {regionList} from '../../data';
 import axios from 'axios';
 import FloatingActionButton from '../../components/atoms/AiChatButton';
+import AiChatButton from '../../components/atoms/AiChatButton';
 
 const story = ['Manado', 'Bitung', 'Tomohon', 'Minahasa', 'Minahasa Utara'];
 
-const Region = () => {
+const Region = ({navigation}) => {
   const [token, setToken] = useState(null);
   const [data, setData] = useState(null);
 
@@ -90,7 +91,7 @@ const Region = () => {
         <Gap height={screenHeightPercentage('11%')} />
       </ScrollView>
       <View style={styles.wrapAiChatBtn}>
-        <FloatingActionButton />
+        <AiChatButton navigation={navigation} />
       </View>
     </SafeAreaView>
   );
