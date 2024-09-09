@@ -3,7 +3,7 @@ import {Snackbar} from 'react-native-paper';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TTSButton from '../components/atoms/TtsButton'; // Pastikan jalur impor sesuai
 import Tts from 'react-native-tts';
-import {IcCloseButton} from '../assets';
+import {IcCloseButton, IcXmark, IcXSmall} from '../assets';
 
 const SnackbarContext = createContext();
 
@@ -69,9 +69,7 @@ export const SnackbarProvider = ({children}) => {
                   content={cleanArticle || 'tidak ada content'}
                 />
                 <TouchableOpacity onPress={hideSnackbar}>
-                  <IcCloseButton
-                    style={[styles.actionLabel, {color: textColor}]}
-                  />
+                  <IcXSmall style={[styles.actionLabel]} />
                 </TouchableOpacity>
               </View>
             ),
