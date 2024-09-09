@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   snackbarText: {
-    fontSize: 14,
+    fontSize: 10,
+    width: 80,
   },
   actionStyle: {
     flexDirection: 'row',

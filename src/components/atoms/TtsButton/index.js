@@ -18,7 +18,7 @@ const TTSButton = ({isActive, onPress, content}) => {
         .toLowerCase()
         .replace(/manadopost\.id/gi, '');
 
-        setCleanArticle(cleanContent); // Kirim cleanContent ke context
+      setCleanArticle(cleanContent); // Kirim cleanContent ke context
       // Trigger Tts.speak or Tts.stop based on isActive
       if (isActive) {
         Tts.stop();
