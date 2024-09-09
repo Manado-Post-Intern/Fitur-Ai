@@ -59,24 +59,24 @@ const NewsForYou = ({
   }, [token]);
 
   const handleTTSPress = id => {
-    let message = '';
+    // let message = '';
 
     if (activeTTS !== null && activeTTS !== id) {
       setActiveTTS(null);
-      message = 'Pemutaran dijeda';
-      onShowSnackbar(true, message);
+      // message = 'Pemutaran dijeda';
+      // onShowSnackbar(true, message);
     }
 
     if (activeTTS === id) {
       setActiveTTS(null);
-      message = 'Pemutaran dijeda';
-      onShowSnackbar(true, message);
+      // message = 'Pemutaran dijeda';
+      // onShowSnackbar(true, message);
       Tts.stop();
     } else {
       setActiveTTS(id);
-      message = 'Mendengarkan...';
-      onShowSnackbar(true, message);
-      console.log(article?.content);
+      // message = 'Mendengarkan...';
+      // onShowSnackbar(true, message);
+      // console.log(article?.content);
       // Tts.speak('kedepan harus tetap sama');
     }
   };
@@ -87,7 +87,7 @@ const NewsForYou = ({
     if (activeTTS === id) {
       hideSnackbar();
     } else {
-      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      onShowSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
     }
   };
