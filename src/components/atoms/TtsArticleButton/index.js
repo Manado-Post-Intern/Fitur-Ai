@@ -7,7 +7,7 @@ import {useSnackbar} from '../../../context/SnackbarContext';
 
 const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const {showSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {showSnackbar, hideSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
   const handlePress = () => {
     setIsPlaying(!isPlaying);
@@ -27,6 +27,8 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     } else {
       // showSnackbar('Pemutaran dijeda', '#024D91'); // Tampilkan Snackbar untuk jeda
       Tts.stop();
+      hideSnackbar();
+
     }
 
     // Simulasi kesalahan dengan kemungkinan 20%

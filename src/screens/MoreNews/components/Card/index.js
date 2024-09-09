@@ -76,7 +76,7 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
           <TimeStamp data={item?.published_date} />
           <TTSButton isActive={isActive} onPress={() => {
             onPress();
-            onSendTitle(item?.title);
+            onSendTitle(item?.title,item?.id);
             }}content={article?.content}/>
         </View>
         <Gap height={4} />

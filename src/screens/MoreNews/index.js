@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState,useRef} from 'react';
 import {IMGMPTextPrimary, IcBack, IcMagnifying, theme} from '../../assets';
 import {SnackbarNotification, TextInter} from '../../components';
 import {Card, MediumBanner} from './components';
@@ -34,9 +34,10 @@ const MoreNews = ({route}) => {
   const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
 
   const [activeTTS, setActiveTTS] = useState(null);
-  const [selectedTitle, setSelectedTitle] = useState(''); // Menyimpan title yang diterima
+  // const [selectedTitle, setSelectedTitle] = useState(''); // Menyimpan title yang diterima
+  // const titleRef = useRef(''); // Gunakan useRef untuk menyimpan title
 
-  const handleTTSPress = id => {
+  const handleTTSPress = (id,title) => {
     if (activeTTS !== null && activeTTS !== id) {
       setActiveTTS(null);
       hideSnackbar(); // Tutup Snackbar jika TTS berbeda ditekan
@@ -44,16 +45,22 @@ const MoreNews = ({route}) => {
 
     if (activeTTS === id) {
       setActiveTTS(null);
-      hideSnackbar();
+      // hideSnackbar();
     } else {
+      // showSnackbar(`${titleRef}`, 'black'); // Tampilkan Snackbar dengan pesan
       setActiveTTS(id);
-      showSnackbar(selectedTitle, 'black'); // Tampilkan Snackbar dengan pesan
     }
   };
 
-  const handleSendTitle = title => {
-    console.log('Selected Title:', title);
-    setSelectedTitle(title); // Update title yang dipilih
+  const handleSendTitle = (title,id) => {
+    // setSelectedTitle(title); // Update title yang dipilih
+    // titleRef.current = title; // Update nilai di useRef
+    if (activeTTS === id) {
+      hideSnackbar();
+    } else {
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
+    }
   };
 
   const navigation = useNavigation();
