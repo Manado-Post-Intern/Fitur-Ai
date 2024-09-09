@@ -37,7 +37,7 @@ export const SnackbarProvider = ({children}) => {
   const toggleTTS = () => {
     setIsActive(!isActive); // Toggle isActive state
     if (!isActive && cleanArticle) {
-      Tts.speak(cleanArticle);  // Ketika TTS diaktifkan, putar cleanArticle
+      Tts.speak(cleanArticle); // Ketika TTS diaktifkan, putar cleanArticle
     } else {
       Tts.stop(); // Stop TTS ketika di-deactivate
     }
@@ -45,7 +45,13 @@ export const SnackbarProvider = ({children}) => {
 
   return (
     <SnackbarContext.Provider
-      value={{showSnackbar, hideSnackbar, toggleSnackbar, cleanArticle, setCleanArticle}}>
+      value={{
+        showSnackbar,
+        hideSnackbar,
+        toggleSnackbar,
+        cleanArticle,
+        setCleanArticle,
+      }}>
       {children}
       <View style={styles.snackbarWrapper}>
         <Snackbar
@@ -59,7 +65,7 @@ export const SnackbarProvider = ({children}) => {
                 <TTSButton
                   isActive={isActive}
                   onPress={toggleTTS}
-                  content={cleanArticle || "tidak ada content"} 
+                  content={cleanArticle || 'tidak ada content'}
                 />
                 <TouchableOpacity onPress={hideSnackbar}>
                   <Text style={[styles.actionLabel, {color: textColor}]}>
@@ -85,7 +91,7 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: 'white',
     borderRadius: 8,
-    left: 95,
+    left: '84%',
   },
   snackbarWrapper: {
     flexDirection: 'row',

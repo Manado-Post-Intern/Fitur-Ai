@@ -70,10 +70,14 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
         <Gap height={8} />
         <View style={styles.TtsButton}>
           <TimeStamp data={item?.published_date} />
-          <TTSButton isActive={isActive} onPress={() => {
-            onPress();
-            onSendTitle(item?.title,item?.id);
-            }}content={article?.content}/>
+          <TTSButton
+            isActive={isActive}
+            onPress={() => {
+              onPress();
+              onSendTitle(item?.title, item?.id);
+            }}
+            content={article?.content}
+          />
         </View>
         <Gap height={4} />
         <CategoryHorizontal />

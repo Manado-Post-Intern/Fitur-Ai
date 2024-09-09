@@ -11,6 +11,7 @@ import {Card} from './components';
 import Tts from 'react-native-tts';
 import axios from 'axios';
 import {readArticle} from '../../../../api';
+import {useSnackbar} from '../../../../context/SnackbarContext';
 
 const NewsForYou = ({
   data,
@@ -22,6 +23,7 @@ const NewsForYou = ({
   const [activeTTS, setActiveTTS] = useState(null);
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
   const getArticle = async () => {
     if (!item?.id) {
       console.log('Item ID is undefined or null');
@@ -81,18 +83,16 @@ const NewsForYou = ({
     }
   };
 
-  const handleSendTitle = (title,id) => {
+  const handleSendTitle = (title, id) => {
     // setSelectedTitle(title); // Update title yang dipilih
     // titleRef.current = title; // Update nilai di useRef
     if (activeTTS === id) {
       hideSnackbar();
     } else {
-      onShowSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
     }
   };
-
-
 
   return (
     <View>
