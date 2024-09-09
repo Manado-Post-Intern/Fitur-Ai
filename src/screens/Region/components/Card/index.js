@@ -14,7 +14,7 @@ import { TokenContext } from '../../../../context/TokenContext';
 import { readArticle } from '../../../../api';
 import axios from 'axios';
 
-const Card = ({item, isActive, onPress}) => {
+const Card = ({item, isActive, onPress,onSendTitle}) => {
   const navigation = useNavigation();
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
@@ -71,7 +71,10 @@ const Card = ({item, isActive, onPress}) => {
         <Gap height={8} />
         <View style={styles.TtsButton}>
           <TimeStamp data={item?.published_date} />
-          <TTSButton isActive={isActive} onPress={onPress} content={article?.content} />
+          <TTSButton isActive={isActive} onPress={() => {
+            onPress();
+            onSendTitle(item?.title,item?.id);
+            }}content={article?.content}/>
         </View>
         <Gap height={4} />
         <CategoryHorizontal />

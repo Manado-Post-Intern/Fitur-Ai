@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState,useRef} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {IMGMPTextPrimary, IcBack, IcMagnifying, theme} from '../../assets';
 import {SnackbarNotification, TextInter} from '../../components';
 import {Card, MediumBanner} from './components';
@@ -37,7 +37,7 @@ const MoreNews = ({route}) => {
   // const [selectedTitle, setSelectedTitle] = useState(''); // Menyimpan title yang diterima
   // const titleRef = useRef(''); // Gunakan useRef untuk menyimpan title
 
-  const handleTTSPress = (id,title) => {
+  const handleTTSPress = id => {
     if (activeTTS !== null && activeTTS !== id) {
       setActiveTTS(null);
       hideSnackbar(); // Tutup Snackbar jika TTS berbeda ditekan

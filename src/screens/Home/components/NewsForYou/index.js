@@ -81,6 +81,19 @@ const NewsForYou = ({
     }
   };
 
+  const handleSendTitle = (title,id) => {
+    // setSelectedTitle(title); // Update title yang dipilih
+    // titleRef.current = title; // Update nilai di useRef
+    if (activeTTS === id) {
+      hideSnackbar();
+    } else {
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
+    }
+  };
+
+
+
   return (
     <View>
       <View style={styles.titleContainer}>
@@ -114,6 +127,7 @@ const NewsForYou = ({
           item={item}
           isActive={activeTTS === item.id}
           onPress={() => handleTTSPress(item.id)}
+          onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
         />
       ))}
       <More forYou item={item} />
