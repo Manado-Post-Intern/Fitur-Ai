@@ -3,6 +3,7 @@ import {Snackbar} from 'react-native-paper';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TTSButton from '../components/atoms/TtsButton'; // Pastikan jalur impor sesuai
 import Tts from 'react-native-tts';
+import {IcCloseButton, IcXmark, IcXSmall} from '../assets';
 
 const SnackbarContext = createContext();
 
@@ -70,9 +71,7 @@ export const SnackbarProvider = ({children}) => {
                   content={cleanArticle || 'tidak ada content'}
                 />
                 <TouchableOpacity onPress={hideSnackbar}>
-                  <Text style={[styles.actionLabel, {color: textColor}]}>
-                    X
-                  </Text>
+                  <IcXSmall style={[styles.actionLabel]} />
                 </TouchableOpacity>
               </View>
             ),
@@ -93,22 +92,22 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: 'white',
     borderRadius: 8,
-    left: '84%',
   },
   snackbarWrapper: {
-    flexDirection: 'row',
-    bottom: 16,
-    left: 16,
-    right: 16,
     position: 'absolute',
+    bottom: 16,
+    left: '50%', // Mengatur posisi kiri ke 50% layar
+    transform: [{translateX: -90}], // Menggeser snackbar setengah dari lebarnya agar tepat di tengah
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   actionLabel: {
-    marginLeft: 10,
-    fontSize: 16,
-    fontWeight: 'bold',
+    left: 10,
+    top: 2,
   },
   snackbarText: {
-    fontSize: 14,
+    fontSize: 10,
+    width: 80,
   },
   actionStyle: {
     flexDirection: 'row',
