@@ -8,7 +8,7 @@ import {useSnackbar} from '../../../context/SnackbarContext';
 const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isPlaying, setIsPlaying] = useState(false); // state untuk playing
   const [isLoading, setIsLoading] = useState(false); // State untuk loading
-  const {showSnackbar, hideSnackbar, setCleanArticle, visible, setVisible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {showSnackbar, hideSnackbar, setCleanArticle, visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
   useEffect(() => {
     // Setiap kali visible berubah, jalankan logika ini
@@ -17,6 +17,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       console.log("tetap stick!");
     } else {
       setIsPlaying(false);
+      setIsLoading(false);
       console.log("kembali ke style dengar");
     }
   }, [visible]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
@@ -30,8 +31,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     });
     // Event listener ketika TTS selesai berbicara
     Tts.addEventListener('tts-finish', () => setIsPlaying(false));  // Suara selesai, atur tombol ke "Dengar"
-    Tts.addEventListener('tts-cancel', () => {setIsPlaying(false) 
-    
+    Tts.addEventListener('tts-cancel', () => {setIsPlaying(false)
   setIsLoading(false)});  // Jika dibatalkan, tombol kembali ke "Dengar"
 
     return () => {
