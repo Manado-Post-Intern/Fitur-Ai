@@ -123,7 +123,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
         styles.button,
         isPlaying ? styles.pauseButton : styles.playButton,
       ]}
-      onPress={handlePress}>
+      onPress={handlePress} disabled={isLoading}>
       <View style={styles.content}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses

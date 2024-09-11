@@ -3,7 +3,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-/* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
@@ -21,6 +20,17 @@ const TTSButton = ({isActive, onPress, content}) => {
   const [isConnected, setIsConnected] = useState(true); // State for connection status
   const [isLoading, setIsLoading] = useState(false); // State for loading
   const [isPlaying, setIsPlaying] = useState(false); // State for play/pause
+
+  useEffect(() => {
+    // Setiap kali visible berubah, jalankan logika ini
+    if (visible &&  isLoading) {
+      setIsPlaying(true);
+      console.log('stck');
+    } else {
+      setIsPlaying(false);
+      console.log('bck');
+    }
+  }, [visible,isLoading]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -43,7 +53,6 @@ const TTSButton = ({isActive, onPress, content}) => {
     });
     Tts.addEventListener('tts-cancel', () => {
       setIsPlaying(false);
-      setIsLoading(false);
       console.log("tts cancel");
     });
     return () => {
@@ -66,8 +75,7 @@ const TTSButton = ({isActive, onPress, content}) => {
         .replace(/manadopost\.id/gi, '');
 
       setCleanArticle(cleanContent);
-      Tts.setDefaultLanguage('id-ID');
-
+      Tts.setDefaultLanguage('id-ID');  
       if (!isPlaying) {
         setIsLoading(true);
         Tts.speak(cleanContent);
@@ -87,7 +95,7 @@ const TTSButton = ({isActive, onPress, content}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress} style={styles.button}>
+      <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoading}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#0000ff" />
         ) : (
