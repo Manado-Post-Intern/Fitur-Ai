@@ -4,39 +4,71 @@ import {IcTtsArticlePlay, IcTtsArticlePause} from '../../../assets';
 import {Snackbar} from 'react-native-paper';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext';
+import {useErrorNotification} from '../../../context/ErrorNotificationContext'; // Import context
+import NetInfo from '@react-native-community/netinfo';
 
 const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const {showSnackbar, hideSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
+  const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
 
-  const handlePress = () => {
-    setIsPlaying(!isPlaying);
+  useEffect(() => {
+    // Listener untuk memantau perubahan koneksi
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log('Connection type', state.type);
+      console.log('Is connected?', state.isConnected);
+      setIsConnected(state.isConnected); // Simpan status koneksi
+    });
+
+    // Unsubscribe saat komponen di-unmount
+    return () => unsubscribe();
+  }, []);
+
+  const handlePress = async () => {
+    // Cek apakah ada koneksi internet
+    if (!isConnected) {
+      showError('Oops, cannot play article sound. Please try again.'); // Tampilkan notifikasi error
+      return;
+    }
+
     // Bersihkan HTML tags dari artikel
-    const cleanArticle = article
-      .replace(/<\/?[^>]+(>|$)/g, '')
-      .toLowerCase()
-      .replace(/manadopost\.id/gi, '');
+    let cleanArticle;
+    try {
+      cleanArticle = article
+        .replace(/<\/?[^>]+(>|$)/g, '')
+        .toLowerCase()
+        .replace(/manadopost\.id/gi, '');
+    } catch (error) {
+      showError('Terjadi kesalahan saat membersihkan artikel.'); // Tampilkan notifikasi error
+      console.error('Regex error:', error);
+      return; // Hentikan eksekusi jika terjadi error
+    }
 
-      setCleanArticle(cleanArticle);
-
+    setCleanArticle(cleanArticle);
 
     if (!isPlaying) {
       showSnackbar(title, '#024D91'); // Tampilkan Snackbar menggunakan context
-      Tts.speak(cleanArticle);
-      
+      Tts.setDefaultLanguage('id-ID');
+      try {
+        Tts.speak(cleanArticle);
+      } catch (error) {
+        showError('Terjadi kesalahan saat memulai TTS.'); // Tampilkan notifikasi error
+        console.error('TTS error:', error);
+      }
     } else {
-      // showSnackbar('Pemutaran dijeda', '#024D91'); // Tampilkan Snackbar untuk jeda
       Tts.stop();
       hideSnackbar();
-
     }
 
     // Simulasi kesalahan dengan kemungkinan 20%
     if (Math.random() > 0.8) {
-      showSnackbar('Terjadi kesalahan', 'red'); // Tampilkan Snackbar kesalahan menggunakan context
+      showError('Terjadi kesalahan saat memutar artikel.'); // Tampilkan notifikasi kesalahan menggunakan context
     }
-  };
 
+    // Toggle status pemutaran
+    setIsPlaying(!isPlaying);
+  };
   return (
     <TouchableOpacity
       style={[
