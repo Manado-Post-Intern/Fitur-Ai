@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useEffect,useState} from 'react';
+import {TouchableOpacity, StyleSheet,ActivityIndicator,View} from 'react-native';
 import {IcTtsPlay, IcTtsPause} from '../../../assets';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext'; // Import context
@@ -59,18 +61,92 @@ const TTSButton = ({isActive, onPress, content}) => {
 
     if (onPress) {
       onPress();
+  const {setCleanArticle,visible} = useSnackbar(); // Dapatkan fungsi setCleanContent dari context
+  const [isLoading, setIsLoading] = useState(false); // State untuk loading
+  const [isPlaying, setIsPlaying] = useState(false); // State untuk play/pause
+
+  // useEffect(() => {
+  //   // Setiap kali visible berubah, jalankan logika ini
+  //   if (visible) {
+  //     // setIsPlaying(true);
+  //     setIsLoading(false);
+  //     console.log("tetap stick!");
+  //   } else {
+  //     setIsPlaying(false);
+  //     console.log("kembali ke style dengar");
+  //   }
+  // }, [visible]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
+
+  useEffect(() => {
+    // Event listener ketika TTS mulai berbicara
+    Tts.addEventListener('tts-start', () => {
+      setIsLoading(false);  // Matikan loading ketika suara mulai berbunyi
+      setIsPlaying(true);   // Atur tombol menjadi "Jeda"
+      console.log("tts start");
+    });
+    // Event listener ketika TTS selesai berbicara
+    Tts.addEventListener('tts-finish', () => {setIsPlaying(false)
+      console.log("tts finish");
+    });  // Suara selesai, atur tombol ke "Dengar"
+    Tts.addEventListener('tts-cancel', () => {setIsPlaying(false)
+      setIsLoading(false)
+    console.log("tts cancel");});  // Jika dibatalkan, tombol kembali ke "Dengar"
+
+    return () => {
+      Tts.removeAllListeners('tts-start');
+      Tts.removeAllListeners('tts-finish');
+      Tts.removeAllListeners('tts-cancel');
+    };
+  }, [isPlaying]);
+
+  const handlePress = () => {
+    // if (isPlaying) {
+    //   Tts.stop();  // Hentikan TTS jika sedang berjalan
+    //   console.log("berhenti memutar");
+    //   setIsLoading(false);
+    // } else {
+    //   if (content) {
+    //     const cleanContent = content.replace(/<\/?[^>]+(>|$)/g, '').toLowerCase();  // Bersihkan konten
+    //     Tts.setDefaultLanguage('id-ID');  // Set bahasa ke Indonesian
+    //     setIsLoading(true);  // Tampilkan loading
+    //     Tts.speak(cleanContent);  // Mulai TTS
+    //     setCleanArticle(cleanContent);  // Kirim cleanContent ke context
+    //     console.log("memutar");
+    //   }
+    // }
+    setIsPlaying(!isPlaying);
+    const cleanContent = content
+      .replace(/<\/?[^>]+(>|$)/g, '')
+      .toLowerCase()
+      .replace(/manadopost\.id/gi, '');
+    setCleanArticle(cleanContent);  // Kirim cleanContent ke context
+    Tts.setDefaultLanguage('id-ID');  // Set bahasa ke Indonesian
+    if (!isPlaying) {
+      setIsLoading(true);  // Tampilkan loading
+      Tts.speak(cleanContent);  // Mulai TTS
+      console.log("memutar");
+    } else{
+      Tts.stop();  // Hentikan TTS jika sedang berjalan
+      console.log("berhenti memutar");
     }
+  
+    // Panggil onPress jika ada
+    onPress?.();
   };
   return (
-    <>
+    <View style={styles.container}>
       <TouchableOpacity onPress={handlePress} style={styles.button}>
-        {isActive ? (
-          <IcTtsPause width={24} height={24} />
+        {isLoading ? (  // Jika sedang loading, tampilkan ActivityIndicator
+          <ActivityIndicator size="small" color="#0000ff" />
         ) : (
-          <IcTtsPlay width={24} height={24} />
+          isPlaying ? (  // Jika sedang bermain, tampilkan tombol jeda
+            <IcTtsPause width={24} height={24} />
+          ) : (  // Jika tidak sedang bermain, tampilkan tombol dengar
+            <IcTtsPlay width={24} height={24} />
+          )
         )}
       </TouchableOpacity>
-    </>
+    </View>
   );
 };
 

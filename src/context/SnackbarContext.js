@@ -52,6 +52,8 @@ export const SnackbarProvider = ({children}) => {
         toggleSnackbar,
         cleanArticle,
         setCleanArticle,
+        visible,
+        setVisible,
       }}>
       {children}
       <View style={styles.snackbarWrapper}>

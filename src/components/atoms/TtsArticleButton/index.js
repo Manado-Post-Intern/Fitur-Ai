@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import {IcTtsArticlePlay, IcTtsArticlePause} from '../../../assets';
 import {Snackbar} from 'react-native-paper';
 import Tts from 'react-native-tts';
@@ -31,6 +37,42 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       showError('Oops, cannot play article sound. Please try again.'); // Tampilkan notifikasi error
       return;
     }
+    const [isPlaying, setIsPlaying] = useState(false); // state untuk playing
+    const [isLoading, setIsLoading] = useState(false); // State untuk loading
+    const {showSnackbar, hideSnackbar, setCleanArticle, visible} =
+      useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+
+    useEffect(() => {
+      // Setiap kali visible berubah, jalankan logika ini
+      if (visible) {
+        setIsPlaying(true);
+        console.log('tetap stick!');
+      } else {
+        setIsPlaying(false);
+        setIsLoading(false);
+        console.log('kembali ke style dengar');
+      }
+    }, [visible]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
+
+    useEffect(() => {
+      // Event listener ketika TTS mulai berbicara
+      Tts.addEventListener('tts-start', () => {
+        setIsLoading(false); // Matikan loading ketika suara mulai berbunyi
+        setIsPlaying(true); // Atur tombol menjadi "Jeda"
+      });
+      // Event listener ketika TTS selesai berbicara
+      Tts.addEventListener('tts-finish', () => setIsPlaying(false)); // Suara selesai, atur tombol ke "Dengar"
+      Tts.addEventListener('tts-cancel', () => {
+        setIsPlaying(false);
+        setIsLoading(false);
+      }); // Jika dibatalkan, tombol kembali ke "Dengar"
+
+      return () => {
+        Tts.removeAllListeners('tts-start');
+        Tts.removeAllListeners('tts-finish');
+        Tts.removeAllListeners('tts-cancel');
+      };
+    }, [isPlaying]);
 
     // Bersihkan HTML tags dari artikel
     let cleanArticle;
@@ -64,6 +106,11 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     // Simulasi kesalahan dengan kemungkinan 20%
     if (Math.random() > 0.8) {
       showError('Terjadi kesalahan saat memutar artikel.'); // Tampilkan notifikasi kesalahan menggunakan context
+      setIsLoading(true);
+      Tts.speak(cleanArticle);
+    } else {
+      Tts.stop();
+      hideSnackbar();
     }
 
     // Toggle status pemutaran
@@ -77,7 +124,9 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       ]}
       onPress={handlePress}>
       <View style={styles.content}>
-        {isPlaying ? (
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses
+        ) : isPlaying ? (
           <IcTtsArticlePause width={13} height={13} />
         ) : (
           <IcTtsArticlePlay width={15} height={15} />
