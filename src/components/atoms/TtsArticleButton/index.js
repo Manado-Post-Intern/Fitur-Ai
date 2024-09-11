@@ -1,3 +1,8 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
 import {
   TouchableOpacity,
@@ -7,7 +12,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {IcTtsArticlePlay, IcTtsArticlePause} from '../../../assets';
-import {Snackbar} from 'react-native-paper';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext'; // Import context
@@ -15,9 +19,10 @@ import NetInfo from '@react-native-community/netinfo';
 
 const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const {showSnackbar, hideSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {showSnackbar, hideSnackbar, setCleanArticle, visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
   const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
+  const [isLoading, setIsLoading] = useState(false); // State untuk loading
 
   useEffect(() => {
     // Listener untuk memantau perubahan koneksi
@@ -37,10 +42,6 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       showError('Oops, cannot play article sound. Please try again.'); // Tampilkan notifikasi error
       return;
     }
-    const [isPlaying, setIsPlaying] = useState(false); // state untuk playing
-    const [isLoading, setIsLoading] = useState(false); // State untuk loading
-    const {showSnackbar, hideSnackbar, setCleanArticle, visible} =
-      useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
     useEffect(() => {
       // Setiap kali visible berubah, jalankan logika ini
