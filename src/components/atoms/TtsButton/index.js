@@ -23,14 +23,16 @@ const TTSButton = ({isActive, onPress, content}) => {
 
   useEffect(() => {
     // Setiap kali visible berubah, jalankan logika ini
-    if (visible &&  isLoading) {
+    if (visible &&  isPlaying) {
       setIsPlaying(true);
+      // setIsLoading(false);
       console.log('stck');
     } else {
       setIsPlaying(false);
+      setIsLoading(false);
       console.log('bck');
     }
-  }, [visible,isLoading]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
+  }, [visible,isPlaying]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -53,6 +55,7 @@ const TTSButton = ({isActive, onPress, content}) => {
     });
     Tts.addEventListener('tts-cancel', () => {
       setIsPlaying(false);
+      setIsLoading(false);
       console.log("tts cancel");
     });
     return () => {
