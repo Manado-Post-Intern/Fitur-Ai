@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-unused-vars */
 import {
   FlatList,
   Pressable,
@@ -114,11 +116,6 @@ const Onboarding = () => {
           <SocialSignIn type={'google'} />
           <Gap height={75} />
         </View>
-        {/* Invisible Button in Top Right Corner */}
-        <Pressable
-          style={styles.invisibleButton}
-          onPress={() => navigation.navigate('LoginWill')}
-        />
       </View>
     </SafeAreaView>
   );
@@ -173,13 +170,5 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.inter.medium,
     fontSize: 16,
     color: theme.colors.primary,
-  },
-  invisibleButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 50,
-    height: 50,
-    backgroundColor: 'transparent',
   },
 });
