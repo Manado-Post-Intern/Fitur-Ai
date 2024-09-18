@@ -16,23 +16,10 @@ import NetInfo from '@react-native-community/netinfo';
 
 const TTSButton = ({isActive, onPress, content}) => {
   const {showError} = useErrorNotification(); // Get the showError function from context
-  const {setCleanArticle, visible} = useSnackbar(); // Get setCleanArticle function from context
+  const {setCleanArticle} = useSnackbar(); // Get setCleanArticle function from context
   const [isConnected, setIsConnected] = useState(true); // State for connection status
   const [isLoading, setIsLoading] = useState(false); // State for loading
   const [isPlaying, setIsPlaying] = useState(false); // State for play/pause
-
-  useEffect(() => {
-    // Setiap kali visible berubah, jalankan logika ini
-    if (visible &&  isPlaying) {
-      setIsPlaying(true);
-      // setIsLoading(false);
-      console.log('stck');
-    } else {
-      setIsPlaying(false);
-      setIsLoading(false);
-      console.log('bck');
-    }
-  }, [visible,isPlaying]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
