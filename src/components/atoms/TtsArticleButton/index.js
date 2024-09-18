@@ -36,6 +36,38 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    // Event listener ketika TTS mulai berbicara
+    Tts.addEventListener('tts-start', () => {
+      setIsLoading(false); // Matikan loading ketika suara mulai berbunyi
+      setIsPlaying(true); // Atur tombol menjadi "Jeda"
+    });
+    // Event listener ketika TTS selesai berbicara
+    Tts.addEventListener('tts-finish', () => setIsPlaying(false)); // Suara selesai, atur tombol ke "Dengar"
+    Tts.addEventListener('tts-cancel', () => {
+      setIsPlaying(false);
+      setIsLoading(false);
+    }); // Jika dibatalkan, tombol kembali ke "Dengar"
+
+    return () => {
+      Tts.removeAllListeners('tts-start');
+      Tts.removeAllListeners('tts-finish');
+      Tts.removeAllListeners('tts-cancel');
+    };
+  }, [isPlaying]);
+
+  // useEffect(() => {
+  //   // Setiap kali visible berubah, jalankan logika ini
+  //   if (visible) {
+  //     setIsPlaying(true);
+  //     console.log('tetap stick!');
+  //   } else {
+  //     setIsPlaying(false);
+  //     setIsLoading(false);
+  //     console.log('kembali ke style dengar');
+  //   }
+  // }, [visible]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
+
   const handlePress = async () => {
     // Cek apakah ada koneksi internet
     if (!isConnected) {
@@ -43,70 +75,17 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       return;
     }
 
-    useEffect(() => {
-      // Setiap kali visible berubah, jalankan logika ini
-      if (visible) {
-        setIsPlaying(true);
-        console.log('tetap stick!');
-      } else {
-        setIsPlaying(false);
-        setIsLoading(false);
-        console.log('kembali ke style dengar');
-      }
-    }, [visible]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
-
-    useEffect(() => {
-      // Event listener ketika TTS mulai berbicara
-      Tts.addEventListener('tts-start', () => {
-        setIsLoading(false); // Matikan loading ketika suara mulai berbunyi
-        setIsPlaying(true); // Atur tombol menjadi "Jeda"
-      });
-      // Event listener ketika TTS selesai berbicara
-      Tts.addEventListener('tts-finish', () => setIsPlaying(false)); // Suara selesai, atur tombol ke "Dengar"
-      Tts.addEventListener('tts-cancel', () => {
-        setIsPlaying(false);
-        setIsLoading(false);
-      }); // Jika dibatalkan, tombol kembali ke "Dengar"
-
-      return () => {
-        Tts.removeAllListeners('tts-start');
-        Tts.removeAllListeners('tts-finish');
-        Tts.removeAllListeners('tts-cancel');
-      };
-    }, [isPlaying]);
-
     // Bersihkan HTML tags dari artikel
-    let cleanArticle;
-    try {
-      cleanArticle = article
+      const cleanArticle = article
         .replace(/<\/?[^>]+(>|$)/g, '')
         .toLowerCase()
         .replace(/manadopost\.id/gi, '');
-    } catch (error) {
-      showError('Terjadi kesalahan saat membersihkan artikel.'); // Tampilkan notifikasi error
-      console.error('Regex error:', error);
-      return; // Hentikan eksekusi jika terjadi error
-    }
 
     setCleanArticle(cleanArticle);
 
     if (!isPlaying) {
-      showSnackbar(title, '#024D91'); // Tampilkan Snackbar menggunakan context
+      showSnackbar(title, '#024D91');
       Tts.setDefaultLanguage('id-ID');
-      try {
-        Tts.speak(cleanArticle);
-      } catch (error) {
-        showError('Terjadi kesalahan saat memulai TTS.'); // Tampilkan notifikasi error
-        console.error('TTS error:', error);
-      }
-    } else {
-      Tts.stop();
-      hideSnackbar();
-    }
-
-    // Simulasi kesalahan dengan kemungkinan 20%
-    if (Math.random() > 0.8) {
-      showError('Terjadi kesalahan saat memutar artikel.'); // Tampilkan notifikasi kesalahan menggunakan context
       setIsLoading(true);
       Tts.speak(cleanArticle);
     } else {
