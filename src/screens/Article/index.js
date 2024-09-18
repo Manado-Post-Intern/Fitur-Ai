@@ -145,7 +145,7 @@ const Article = ({route, navigation}) => {
             <Gap height={7} />
             <View style={styles.TtsButton}>
               <TimeStamp data={article?.published_date} />
-              <TtsArticleButton article={article?.content} />
+              <TtsArticleButton article={article?.content} title={article?.title}/>
             </View>
             <Gap height={7} />
             {article?.author.map((item, index) => {

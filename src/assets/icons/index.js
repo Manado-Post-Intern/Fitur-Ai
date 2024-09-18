@@ -73,8 +73,10 @@ import IcTtsPause from './ic-TtsPause.svg';
 import IcTtsArticlePlay from './ic-TtsArticlePlay.svg';
 import IcTtsArticlePause from './ic-TtsArticlePause.svg';
 import IcPlusButton from './ic-plusButton.svg';
-import IcCloseButton from './ic-xButton.svg';
+import IcXButton from './ic-xButton.svg';
 import IcSumButton from './ic-sumButton.svg';
+import IcCloseButton from './ic-closeButton.svg';
+import IcError from './ic-error.svg';
 
 export {
   IcClosedEye,
@@ -154,4 +156,6 @@ export {
   IcPlusButton,
   IcCloseButton,
   IcSumButton,
+  IcXButton,
+  IcError,
 };

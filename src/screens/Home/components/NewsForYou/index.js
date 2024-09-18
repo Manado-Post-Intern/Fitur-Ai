@@ -11,6 +11,7 @@ import {Card} from './components';
 import Tts from 'react-native-tts';
 import axios from 'axios';
 import {readArticle} from '../../../../api';
+import {useSnackbar} from '../../../../context/SnackbarContext';
 
 const NewsForYou = ({
   data,
@@ -22,6 +23,7 @@ const NewsForYou = ({
   const [activeTTS, setActiveTTS] = useState(null);
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
   const getArticle = async () => {
     if (!item?.id) {
       console.log('Item ID is undefined or null');
@@ -59,25 +61,36 @@ const NewsForYou = ({
   }, [token]);
 
   const handleTTSPress = id => {
-    let message = '';
+    // let message = '';
 
     if (activeTTS !== null && activeTTS !== id) {
       setActiveTTS(null);
-      message = 'Pemutaran dijeda';
-      onShowSnackbar(true, message);
+      // message = 'Pemutaran dijeda';
+      // onShowSnackbar(true, message);
     }
 
     if (activeTTS === id) {
       setActiveTTS(null);
-      message = 'Pemutaran dijeda';
-      onShowSnackbar(true, message);
+      // message = 'Pemutaran dijeda';
+      // onShowSnackbar(true, message);
       Tts.stop();
     } else {
       setActiveTTS(id);
-      message = 'Mendengarkan...';
-      onShowSnackbar(true, message);
-      console.log(article?.content);
+      // message = 'Mendengarkan...';
+      // onShowSnackbar(true, message);
+      // console.log(article?.content);
       // Tts.speak('kedepan harus tetap sama');
+    }
+  };
+
+  const handleSendTitle = (title, id) => {
+    // setSelectedTitle(title); // Update title yang dipilih
+    // titleRef.current = title; // Update nilai di useRef
+    if (activeTTS === id) {
+      hideSnackbar();
+    } else {
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
     }
   };
 
@@ -114,6 +127,7 @@ const NewsForYou = ({
           item={item}
           isActive={activeTTS === item.id}
           onPress={() => handleTTSPress(item.id)}
+          onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
         />
       ))}
       <More forYou item={item} />
