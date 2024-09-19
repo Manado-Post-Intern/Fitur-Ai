@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -48,6 +49,7 @@ const Trending = ({navigation}) => {
         console.log(error);
       });
   }, []);
+  const {width} = Dimensions.get('window');
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView style={styles.container}>
@@ -82,6 +84,12 @@ const styles = StyleSheet.create({
     top: -20,
   },
   wrapAiChatBtn: {
-    bottom: '18%',
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

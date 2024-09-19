@@ -1,4 +1,11 @@
-import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {Gap, NotFound, TextInter, TopBar} from '../../components';
 import {IcBack, IMGCallUsBanner, theme} from '../../assets';
@@ -40,7 +47,7 @@ const Meta = ({navigation}) => {
   useEffect(() => {
     fetchData();
   }, []);
-
+  const {width} = Dimensions.get('window');
   return (
     <SafeAreaView>
       <View style={styles.topBarContainer}>
@@ -125,6 +132,12 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   wrapAiChatBtn: {
-    bottom: '21.2%',
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 112, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });
