@@ -3,7 +3,7 @@ import {Snackbar} from 'react-native-paper';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TTSButton from '../components/atoms/TtsButton'; // Pastikan jalur impor sesuai
 import Tts from 'react-native-tts';
-import {IcCloseButton, IcXmark, IcXSmall} from '../assets';
+import {IcCloseButton, IcXmark, IcXSmall, theme} from '../assets';
 
 const SnackbarContext = createContext();
 
@@ -76,8 +76,11 @@ export const SnackbarProvider = ({children}) => {
               </View>
             ),
           }}>
-          <Text style={[styles.snackbarText, {color: textColor}]}>
-            {message}
+          <Text
+            style={styles.snackbarText}
+            numberOfLines={2}
+            ellipsizeMode="tail">
+            {message.length > 30 ? `${message.substring(0, 30)}...` : message}
           </Text>
         </Snackbar>
       </View>
@@ -106,9 +109,13 @@ const styles = StyleSheet.create({
     top: 2,
   },
   snackbarText: {
-    fontSize: 10,
-    width: 80,
+    color: 'black',
+    fontSize: 10, // Kurangi ukuran font agar lebih banyak karakter yang muat
+    width: 90, // Lebar lebih besar agar bisa memuat lebih banyak teks
+    height: 30, // Tetap sesuai dengan kebutuhan
+    overflow: 'hidden', // Pastikan teks yang tidak muat tersembunyi
   },
+
   actionStyle: {
     flexDirection: 'row',
   },

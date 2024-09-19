@@ -1,5 +1,5 @@
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import React,{useEffect, useContext, useState} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {IMGDummyNews, theme} from '../../../../assets';
 import {
   Actions,
@@ -10,8 +10,8 @@ import {
 } from '../../../../components';
 import {useNavigation} from '@react-navigation/native';
 import TTSButton from '../../../../components/atoms/TtsButton';
-import { TokenContext } from '../../../../context/TokenContext';
-import { readArticle } from '../../../../api';
+import {TokenContext} from '../../../../context/TokenContext';
+import {readArticle} from '../../../../api';
 import axios from 'axios';
 
 const Card = ({item, isActive, onPress, onSendTitle}) => {
@@ -74,10 +74,16 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
         <Gap height={8} />
         <View style={styles.TtsButton}>
           <TimeStamp data={item?.published_date} />
-          <TTSButton isActive={isActive} onPress={() => {
-            onPress();
-            onSendTitle(item?.title,item?.id);
-            }}content={article?.content}/>
+          <View style={styles.WrapTts}>
+            <TTSButton
+              isActive={isActive}
+              onPress={() => {
+                onPress();
+                onSendTitle(item?.title, item?.id);
+              }}
+              content={article?.content}
+            />
+          </View>
         </View>
         <Gap height={4} />
         <CategoryHorizontal />
@@ -146,5 +152,8 @@ const styles = StyleSheet.create({
   },
   TtsButton: {
     flexDirection: 'row',
+  },
+  WrapTts: {
+    right: 10,
   },
 });

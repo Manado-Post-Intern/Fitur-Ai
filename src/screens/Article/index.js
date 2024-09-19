@@ -145,7 +145,12 @@ const Article = ({route, navigation}) => {
             <Gap height={7} />
             <View style={styles.TtsButton}>
               <TimeStamp data={article?.published_date} />
-              <TtsArticleButton article={article?.content} title={article?.title}/>
+              <View style={styles.WrapTts}>
+                <TtsArticleButton
+                  article={article?.content}
+                  title={article?.title}
+                />
+              </View>
             </View>
             <Gap height={7} />
             {article?.author.map((item, index) => {
@@ -314,5 +319,8 @@ const styles = StyleSheet.create({
   },
   TtsButton: {
     flexDirection: 'row',
+  },
+  WrapTts: {
+    left: 80,
   },
 });

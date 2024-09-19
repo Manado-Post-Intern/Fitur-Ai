@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable react-hooks/exhaustive-deps */
+
 /* eslint-disable prettier/prettier */
-/* eslint-disable react-hooks/rules-of-hooks */
+
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
 import {
@@ -76,10 +76,10 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     }
 
     // Bersihkan HTML tags dari artikel
-      const cleanArticle = article
-        .replace(/<\/?[^>]+(>|$)/g, '')
-        .toLowerCase()
-        .replace(/manadopost\.id/gi, '');
+    const cleanArticle = article
+      .replace(/<\/?[^>]+(>|$)/g, '')
+      .toLowerCase()
+      .replace(/manadopost\.id/gi, '');
 
     setCleanArticle(cleanArticle);
 
@@ -102,7 +102,8 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
         styles.button,
         isPlaying ? styles.pauseButton : styles.playButton,
       ]}
-      onPress={handlePress} disabled={isLoading}>
+      onPress={handlePress}
+      disabled={isLoading}>
       <View style={styles.content}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses
@@ -133,7 +134,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 18,
     alignItems: 'center',
-    marginLeft: 230,
     flexDirection: 'row',
   },
   pauseButton: {
