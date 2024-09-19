@@ -322,5 +322,6 @@ const styles = StyleSheet.create({
   },
   WrapTts: {
     left: 80,
+    top: 10,
   },
 });

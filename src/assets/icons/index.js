@@ -77,6 +77,8 @@ import IcXButton from './ic-xButton.svg';
 import IcSumButton from './ic-sumButton.svg';
 import IcCloseButton from './ic-closeButton.svg';
 import IcError from './ic-error.svg';
+import IcTtsArticleStop from './ic-TtsArticleStop.svg';
+import IcTtsStop from './ic-TtsStop.svg';
 
 export {
   IcClosedEye,
@@ -158,4 +160,6 @@ export {
   IcSumButton,
   IcXButton,
   IcError,
+  IcTtsArticleStop,
+  IcTtsStop,
 };

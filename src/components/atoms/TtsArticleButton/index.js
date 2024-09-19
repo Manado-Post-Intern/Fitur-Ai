@@ -11,7 +11,12 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import {IcTtsArticlePlay, IcTtsArticlePause} from '../../../assets';
+import {
+  IcTtsArticlePlay,
+  IcTtsArticlePause,
+  IcTtsArticlePauseNew,
+  IcTtsArticleStop,
+} from '../../../assets';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext'; // Import context
@@ -108,7 +113,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
         {isLoading ? (
           <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses
         ) : isPlaying ? (
-          <IcTtsArticlePause width={13} height={13} />
+          <IcTtsArticleStop width={13} height={13} />
         ) : (
           <IcTtsArticlePlay width={15} height={15} />
         )}
@@ -117,7 +122,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
             styles.buttonText,
             isPlaying ? styles.pauseText : styles.playText,
           ]}>
-          {isPlaying ? 'Jeda' : 'Dengar'}
+          {isPlaying ? 'Berhenti' : 'Dengar'}
         </Text>
       </View>
     </TouchableOpacity>
@@ -131,8 +136,8 @@ const styles = StyleSheet.create({
     borderColor: '#024D91',
     borderWidth: 2,
     paddingVertical: 3,
-    paddingHorizontal: 10,
-    borderRadius: 18,
+    paddingHorizontal: 15,
+    borderRadius: 10,
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -140,10 +145,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#024D91',
     paddingVertical: 5,
-    paddingHorizontal: 20,
-    borderRadius: 18,
+    paddingHorizontal: 14.5,
+    borderRadius: 10,
     alignItems: 'center',
-    marginLeft: 230,
     flexDirection: 'row',
   },
   content: {
@@ -152,8 +156,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'medium',
-    marginLeft: 8,
-    fontSize: 15,
+    marginLeft: 9,
+    fontSize: 11,
   },
   playText: {
     color: '#024D91',

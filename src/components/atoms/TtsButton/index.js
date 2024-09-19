@@ -1,18 +1,23 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable eol-last */
+
 /* eslint-disable prettier/prettier */
-/* eslint-disable quotes */
+
 /* eslint-disable prettier/prettier */
 /* eslint-disable prettier/prettier */
-/* eslint-disable no-trailing-spaces */
+
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
-import {TouchableOpacity, StyleSheet, ActivityIndicator, View} from 'react-native';
-import {IcTtsPlay, IcTtsPause} from '../../../assets';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  View,
+} from 'react-native';
+import {IcTtsPlay, IcTtsPause, IcTtsStop} from '../../../assets';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext'; // Import context
-import {useErrorNotification} from '../../../context/ErrorNotificationContext'; 
-import NetInfo from '@react-native-community/netinfo'; 
+import {useErrorNotification} from '../../../context/ErrorNotificationContext';
+import NetInfo from '@react-native-community/netinfo';
 
 const TTSButton = ({isActive, onPress, content}) => {
   const {showError} = useErrorNotification(); // Get the showError function from context
@@ -34,16 +39,16 @@ const TTSButton = ({isActive, onPress, content}) => {
     Tts.addEventListener('tts-start', () => {
       setIsLoading(false);
       setIsPlaying(true);
-      console.log("tts start");
+      console.log('tts start');
     });
     Tts.addEventListener('tts-finish', () => {
       setIsPlaying(false);
-      console.log("tts finish");
+      console.log('tts finish');
     });
     Tts.addEventListener('tts-cancel', () => {
       setIsPlaying(false);
       setIsLoading(false);
-      console.log("tts cancel");
+      console.log('tts cancel');
     });
     return () => {
       Tts.removeAllListeners('tts-start');
@@ -65,14 +70,14 @@ const TTSButton = ({isActive, onPress, content}) => {
         .replace(/manadopost\.id/gi, '');
 
       setCleanArticle(cleanContent);
-      Tts.setDefaultLanguage('id-ID');  
+      Tts.setDefaultLanguage('id-ID');
       if (!isPlaying) {
         setIsLoading(true);
         Tts.speak(cleanContent);
-        console.log("Playing TTS");
+        console.log('Playing TTS');
       } else {
         Tts.stop();
-        console.log("Stopped TTS");
+        console.log('Stopped TTS');
       }
 
       setIsPlaying(!isPlaying);
@@ -85,15 +90,16 @@ const TTSButton = ({isActive, onPress, content}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoading}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={styles.button}
+        disabled={isLoading}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#0000ff" />
+        ) : isPlaying ? (
+          <IcTtsStop width={24} height={24} />
         ) : (
-          isPlaying ? (
-            <IcTtsPause width={24} height={24} />
-          ) : (
-            <IcTtsPlay width={24} height={24} />
-          )
+          <IcTtsPlay width={24} height={24} />
         )}
       </TouchableOpacity>
     </View>
