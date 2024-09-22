@@ -31,37 +31,34 @@ const MoreNews = ({route}) => {
   const {medium} = useContext(AdsContext);
   const label = sectionList.find(item => item?.id === sectionId)?.name;
 
-  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar();
 
   const [activeTTS, setActiveTTS] = useState(null);
-  // const [selectedTitle, setSelectedTitle] = useState(''); // Menyimpan title yang diterima
-  // const titleRef = useRef(''); // Gunakan useRef untuk menyimpan title
 
-  const handleTTSPress = id => {
-    if (activeTTS !== null && activeTTS !== id) {
-      setActiveTTS(null);
-      hideSnackbar(); // Tutup Snackbar jika TTS berbeda ditekan
+const handleTTSPress = (id) => {
+  if (activeTTS === id) {
+    // If the same button is pressed again, deactivate it
+    setActiveTTS(null);
+    hideSnackbar();
+  } else {
+    // Deactivate previous button and activate the new one
+    setActiveTTS(id);
+    const selectedItem = moreNews.find(item => item.id === id);
+    if (selectedItem) {
+      showSnackbar(`${selectedItem.title}`, 'black');
     }
+  }
+};
 
-    if (activeTTS === id) {
-      setActiveTTS(null);
-      // hideSnackbar();
-    } else {
-      // showSnackbar(`${titleRef}`, 'black'); // Tampilkan Snackbar dengan pesan
-      setActiveTTS(id);
-    }
-  };
+const handleSendTitle = (title, id) => {
+  if (activeTTS === id) {
+    hideSnackbar();
+  } else {
+    showSnackbar(`${title}`, 'black');
+    console.log(title);
+  }
+};
 
-  const handleSendTitle = (title,id) => {
-    // setSelectedTitle(title); // Update title yang dipilih
-    // titleRef.current = title; // Update nilai di useRef
-    if (activeTTS === id) {
-      hideSnackbar();
-    } else {
-      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
-      console.log(title);
-    }
-  };
 
   const navigation = useNavigation();
 
@@ -145,6 +142,7 @@ const MoreNews = ({route}) => {
         console.log(error);
       });
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -188,12 +186,12 @@ const MoreNews = ({route}) => {
           {moreNews?.map((item, index) => {
             return (
               <Card
-              key={index}
-              item={item}
-              isActive={activeTTS === item.id}
-              onPress={() => handleTTSPress(item.id)}
-              onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
-      />
+                key={index}
+                item={item}
+                isActive={activeTTS === item.id}
+                onPress={() => handleTTSPress(item.id)}
+                onSendTitle={handleSendTitle}
+              />
             );
           })}
         </View>

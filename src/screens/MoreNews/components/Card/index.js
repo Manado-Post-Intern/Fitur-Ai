@@ -18,6 +18,7 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
   const navigation = useNavigation();
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
+
   const getArticle = async () => {
     if (!item?.id) {
       console.log('Item ID is undefined or null');
@@ -35,20 +36,18 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
       console.log('Article Content:', response.data.data.detail.content);
     } catch (error) {
       if (error.response) {
-        // Server responded with a status code outside 2xx range
         console.log('Error data:', error.response.data);
         console.log('Error status:', error.response.status);
         console.log('Error headers:', error.response.headers);
       } else if (error.request) {
-        // Request was made but no response received
         console.log('Error request:', error.request);
       } else {
-        // Something happened in setting up the request
         console.log('Error message:', error.message);
       }
       console.log('Error config:', error.config);
     }
   };
+
   useEffect(() => {
     if (token) {
       getArticle();
@@ -78,7 +77,7 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
             <TTSButton
               isActive={isActive}
               onPress={() => {
-                onPress();
+                onPress(item?.id); // Pastikan mengirim ID yang benar
                 onSendTitle(item?.title, item?.id);
               }}
               content={article?.content}

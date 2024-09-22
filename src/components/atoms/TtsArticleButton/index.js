@@ -24,7 +24,7 @@ import NetInfo from '@react-native-community/netinfo';
 
 const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const {showSnackbar, hideSnackbar, setCleanArticle, visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {showSnackbar, hideSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
   const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
   const [isLoading, setIsLoading] = useState(false); // State untuk loading
@@ -61,18 +61,6 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     };
   }, [isPlaying]);
 
-  // useEffect(() => {
-  //   // Setiap kali visible berubah, jalankan logika ini
-  //   if (visible) {
-  //     setIsPlaying(true);
-  //     console.log('tetap stick!');
-  //   } else {
-  //     setIsPlaying(false);
-  //     setIsLoading(false);
-  //     console.log('kembali ke style dengar');
-  //   }
-  // }, [visible]); // Tambahkan visible sebagai dependency agar useEffect dipicu setiap kali visible berubah
-
   const handlePress = async () => {
     // Cek apakah ada koneksi internet
     if (!isConnected) {
@@ -93,9 +81,11 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       Tts.setDefaultLanguage('id-ID');
       setIsLoading(true);
       Tts.speak(cleanArticle);
+      console.log("playing tts");
     } else {
       Tts.stop();
       hideSnackbar();
+      console.log("stop tts");
     }
 
     // Toggle status pemutaran
@@ -108,7 +98,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
         isPlaying ? styles.pauseButton : styles.playButton,
       ]}
       onPress={handlePress}
-      disabled={isLoading}>
+      >
       <View style={styles.content}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses

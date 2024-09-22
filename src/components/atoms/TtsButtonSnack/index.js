@@ -1,67 +1,87 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, StyleSheet, ActivityIndicator, View} from 'react-native';
 import {IcTtsPlay, IcTtsStop} from '../../../assets';
 import Tts from 'react-native-tts';
-import { useSnackbar } from '../../../context/SnackbarContext';
+import {useSnackbar} from '../../../context/SnackbarContext';
 import NetInfo from '@react-native-community/netinfo';
 
-const TTSButton = ({isActive, onPress, content}) => {
+const TTSButtonSnackbar = ({isActive, onPress, content}) => {
+  const {setCleanArticle, showSnackbar} = useSnackbar();
   const [isConnected, setIsConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const {setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
+      console.log(`Internet connection: ${state.isConnected}`);
     });
     return () => unsubscribe();
   }, []);
 
-
   useEffect(() => {
-    Tts.addEventListener('tts-start', () => {
+    const onTtsStart = () => {
       setIsLoading(false);
       setIsPlaying(true);
-    });
-    Tts.addEventListener('tts-finish', () => {
+      console.log('TTS started');
+    };
+  
+    const onTtsFinish = () => {
       setIsPlaying(false);
-    });
-    Tts.addEventListener('tts-cancel', () => {
+      console.log('TTS finished');
+    };
+  
+    const onTtsCancel = () => {
       setIsPlaying(false);
       setIsLoading(false);
-    });
+      console.log('TTS cancelled');
+    };
+  
+    Tts.addEventListener('tts-start', onTtsStart);
+    Tts.addEventListener('tts-finish', onTtsFinish);
+    Tts.addEventListener('tts-cancel', onTtsCancel);
+  
     return () => {
-      Tts.removeAllListeners('tts-start');
-      Tts.removeAllListeners('tts-finish');
-      Tts.removeAllListeners('tts-cancel');
+      Tts.removeEventListener('tts-start', onTtsStart);
+      Tts.removeEventListener('tts-finish', onTtsFinish);
+      Tts.removeEventListener('tts-cancel', onTtsCancel);
     };
   }, [isPlaying]);
 
   const handlePress = async () => {
     if (!isConnected) {
-      console.error('No internet connection.');
+      showSnackbar('No internet connection.');
       return;
     }
-
+  
     if (content) {
-      const cleanContent = content.replace(/<\/?[^>]+(>|$)/g, '')
-      .toLowerCase()
-      .replace(/manadopost\.id/gi, '');
+      const cleanContent = content.replace(/<\/?[^>]+(>|$)/g, '').toLowerCase();
       setCleanArticle(cleanContent);
       Tts.setDefaultLanguage('id-ID');
+  
       if (!isPlaying) {
         setIsLoading(true);
-        Tts.speak(cleanContent);
+        console.log('Starting TTS with content:', cleanContent);
+        try {
+          await Tts.speak(cleanContent); // Add async handling to wait for the speaking process
+          console.log('TTS speak executed successfully');
+        } catch (error) {
+          console.error('Error during TTS execution:', error);
+        }
       } else {
-        Tts.stop();
+        console.log('Stopping TTS');
+        Tts.stop(); // Hentikan pemutaran TTS
       }
-      setIsPlaying(!isPlaying);
+    } else {
+      console.log('No content to read');
     }
-    onPress?.();
+  
+    if (onPress) {
+      onPress(); // Panggil onPress jika ada
+    }
   };
-
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoading}>
@@ -85,4 +105,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TTSButton;
+export default TTSButtonSnackbar;
