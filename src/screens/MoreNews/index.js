@@ -41,11 +41,9 @@ const MoreNews = ({route}) => {
 
   const handleTTSPress = (id) => {
     if (activeTTS === id) {
-      // If the same button is pressed again, deactivate it
       setActiveTTS(null);
       hideSnackbar();
     } else {
-      // Deactivate previous button and activate the new one
       setActiveTTS(id);
       const selectedItem = moreNews.find(item => item.id === id);
       if (selectedItem) {
@@ -53,6 +51,7 @@ const MoreNews = ({route}) => {
       }
     }
   };
+  
 
   const handleSendTitle = (title, id) => {
     if (activeTTS === id) {
@@ -188,6 +187,7 @@ const MoreNews = ({route}) => {
 
         <View>
           {moreNews?.map((item, index) => {
+            const isDisabled = activeTTS !== null && activeTTS !== item.id; // Disable if another button is active
             return (
               <Card
                 key={index}
@@ -195,6 +195,7 @@ const MoreNews = ({route}) => {
                 isActive={activeTTS === item.id}
                 onPress={() => handleTTSPress(item.id)}
                 onSendTitle={handleSendTitle}
+                disabled={isDisabled}
               />
             );
           })}

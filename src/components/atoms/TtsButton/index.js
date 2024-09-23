@@ -6,7 +6,7 @@ import Tts from 'react-native-tts';
 import { useSnackbar } from '../../../context/SnackbarContext';
 import NetInfo from '@react-native-community/netinfo';
 
-const TTSButton = ({isActive, onPress, content}) => {
+const TTSButton = ({isActive, onPress, content,disabled}) => {
   const [isConnected, setIsConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -66,7 +66,7 @@ const TTSButton = ({isActive, onPress, content}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoading}>
+      <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoading || disabled}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#0000ff" />
         ) : isPlaying ? (
