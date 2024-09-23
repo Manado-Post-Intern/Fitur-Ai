@@ -78,7 +78,7 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
         <View
           style={[
             styles.TtsButton,
-            {width: width * 0.5, height: height * 0.02},
+            {width: width * 0.5, height: height * 0.03},
           ]}>
           <TimeStamp data={item?.published_date} />
           <View style={styles.WrapTts}>
