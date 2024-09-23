@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useContext, useState} from 'react';
 import {IMGDummyNews, theme} from '../../../../assets';
 import {
@@ -20,6 +26,7 @@ const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
   const navigation = useNavigation();
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
+  const {width, height} = Dimensions.get('window');
 
   const getArticle = async () => {
     if (!item?.id) {
@@ -73,7 +80,11 @@ const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
           {item?.description}
         </TextInter>
         <Gap height={8} />
-        <View style={styles.TtsButton}>
+        <View
+          style={[
+            styles.TtsButton,
+            {width: width * 0.5, height: height * 0.02},
+          ]}>
           <TimeStamp data={item?.published_date} />
           <View style={styles.WrapTts}>
             <TTSButton
@@ -154,8 +165,10 @@ const styles = StyleSheet.create({
   },
   TtsButton: {
     flexDirection: 'row',
+    justifyContent: 'space-between', // Tambahkan ini jika perlu
+    alignItems: 'center',
   },
   WrapTts: {
-    right: 10,
+    right: 25,
   },
 });

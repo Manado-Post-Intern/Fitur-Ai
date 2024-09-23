@@ -1,7 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {theme} from '../../../../../../assets';
 import {
   Actions,
@@ -19,6 +25,7 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
   const navigation = useNavigation();
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
+  const {width, height} = Dimensions.get('window');
   const getArticle = async () => {
     if (!item?.id) {
       console.log('Item ID is undefined or null');
@@ -68,7 +75,11 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
       <View style={styles.informationContainer}>
         <TextInter style={styles.title}>{item?.title}</TextInter>
         <Gap height={8} />
-        <View style={styles.TtsButton}>
+        <View
+          style={[
+            styles.TtsButton,
+            {width: width * 0.5, height: height * 0.02},
+          ]}>
           <TimeStamp data={item?.published_date} />
           <View style={styles.WrapTts}>
             <TTSButton
@@ -122,8 +133,10 @@ const styles = StyleSheet.create({
   },
   TtsButton: {
     flexDirection: 'row',
+    justifyContent: 'space-between', // Tambahkan ini jika perlu
+    alignItems: 'center',
   },
   WrapTts: {
-    right: 10,
+    right: 25,
   },
 });
