@@ -10,7 +10,9 @@ const TTSButton = ({isActive, onPress, content}) => {
   const [isConnected, setIsConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const {setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {setCleanArticle,visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+
+
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {

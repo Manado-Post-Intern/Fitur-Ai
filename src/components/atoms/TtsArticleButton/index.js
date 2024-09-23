@@ -1,4 +1,8 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable quotes */
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
+/* eslint-disable prettier/prettier */
 
 /* eslint-disable prettier/prettier */
 
@@ -23,11 +27,11 @@ import {useErrorNotification} from '../../../context/ErrorNotificationContext'; 
 import NetInfo from '@react-native-community/netinfo';
 
 const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlayingArticle, setIsPlayingArticle] = useState(false);
   const {showSnackbar, hideSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
   const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
-  const [isLoading, setIsLoading] = useState(false); // State untuk loading
+  const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
 
   useEffect(() => {
     // Listener untuk memantau perubahan koneksi
@@ -44,14 +48,14 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   useEffect(() => {
     // Event listener ketika TTS mulai berbicara
     Tts.addEventListener('tts-start', () => {
-      setIsLoading(false); // Matikan loading ketika suara mulai berbunyi
-      setIsPlaying(true); // Atur tombol menjadi "Jeda"
+      setIsLoadingArticle(false); // Matikan loading ketika suara mulai berbunyi
+      setIsPlayingArticle(true); // Atur tombol menjadi "Jeda"
     });
     // Event listener ketika TTS selesai berbicara
-    Tts.addEventListener('tts-finish', () => setIsPlaying(false)); // Suara selesai, atur tombol ke "Dengar"
+    Tts.addEventListener('tts-finish', () => setIsPlayingArticle(false)); // Suara selesai, atur tombol ke "Dengar"
     Tts.addEventListener('tts-cancel', () => {
-      setIsPlaying(false);
-      setIsLoading(false);
+      setIsPlayingArticle(false);
+      setIsLoadingArticle(false);
     }); // Jika dibatalkan, tombol kembali ke "Dengar"
 
     return () => {
@@ -59,7 +63,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
     };
-  }, [isPlaying]);
+  }, [isPlayingArticle]);
 
   const handlePress = async () => {
     // Cek apakah ada koneksi internet
@@ -76,10 +80,10 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
 
     setCleanArticle(cleanArticle);
 
-    if (!isPlaying) {
+    if (!isPlayingArticle) {
       showSnackbar(title, '#024D91');
       Tts.setDefaultLanguage('id-ID');
-      setIsLoading(true);
+      setIsLoadingArticle(true);
       Tts.speak(cleanArticle);
       console.log("playing tts");
     } else {
@@ -89,20 +93,20 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     }
 
     // Toggle status pemutaran
-    setIsPlaying(!isPlaying);
+    setIsPlayingArticle(!isPlayingArticle);
   };
   return (
     <TouchableOpacity
       style={[
         styles.button,
-        isPlaying ? styles.pauseButton : styles.playButton,
+        isPlayingArticle ? styles.pauseButton : styles.playButton,
       ]}
       onPress={handlePress}
-      >
+      disabled={isLoadingArticle}>
       <View style={styles.content}>
-        {isLoading ? (
+        {isLoadingArticle ? (
           <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses
-        ) : isPlaying ? (
+        ) : isPlayingArticle ? (
           <IcTtsArticleStop width={13} height={13} />
         ) : (
           <IcTtsArticlePlay width={15} height={15} />
@@ -110,9 +114,9 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
         <Text
           style={[
             styles.buttonText,
-            isPlaying ? styles.pauseText : styles.playText,
+            isPlayingArticle ? styles.pauseText : styles.playText,
           ]}>
-          {isPlaying ? 'Berhenti' : 'Dengar'}
+          {isPlayingArticle ? 'Berhenti' : 'Dengar'}
         </Text>
       </View>
     </TouchableOpacity>

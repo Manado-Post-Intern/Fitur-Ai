@@ -1,3 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
 import {
   Image,
   RefreshControl,
@@ -35,29 +39,29 @@ const MoreNews = ({route}) => {
 
   const [activeTTS, setActiveTTS] = useState(null);
 
-const handleTTSPress = (id) => {
-  if (activeTTS === id) {
-    // If the same button is pressed again, deactivate it
-    setActiveTTS(null);
-    hideSnackbar();
-  } else {
-    // Deactivate previous button and activate the new one
-    setActiveTTS(id);
-    const selectedItem = moreNews.find(item => item.id === id);
-    if (selectedItem) {
-      showSnackbar(`${selectedItem.title}`, 'black');
+  const handleTTSPress = (id) => {
+    if (activeTTS === id) {
+      // If the same button is pressed again, deactivate it
+      setActiveTTS(null);
+      hideSnackbar();
+    } else {
+      // Deactivate previous button and activate the new one
+      setActiveTTS(id);
+      const selectedItem = moreNews.find(item => item.id === id);
+      if (selectedItem) {
+        showSnackbar(`${selectedItem.title}`, 'black');
+      }
     }
-  }
-};
+  };
 
-const handleSendTitle = (title, id) => {
-  if (activeTTS === id) {
-    hideSnackbar();
-  } else {
-    showSnackbar(`${title}`, 'black');
-    console.log(title);
-  }
-};
+  const handleSendTitle = (title, id) => {
+    if (activeTTS === id) {
+      hideSnackbar();
+    } else {
+      showSnackbar(`${title}`, 'black');
+      console.log(title);
+    }
+  };
 
 
   const navigation = useNavigation();

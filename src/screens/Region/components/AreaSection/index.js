@@ -34,8 +34,6 @@ const AreaSection = ({item}) => {
   };
 
   const handleSendTitle = (title,id) => {
-    // setSelectedTitle(title); // Update title yang dipilih
-    // titleRef.current = title; // Update nilai di useRef
     if (activeTTS === id) {
       hideSnackbar();
     } else {
