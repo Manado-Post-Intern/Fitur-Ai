@@ -124,15 +124,19 @@ const NewsForYou = ({
         </View>
       </View>
       <Gap height={4} />
-      {item?.slice(0, 5).map((item, i) => (
+      {item?.slice(0, 5).map((item, i) => {
+        const isDisabled = activeTTS !== null && activeTTS !== item.id;
+        return(
         <Card
           key={i}
           item={item}
           isActive={activeTTS === item.id}
           onPress={() => handleTTSPress(item.id)}
           onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
+          disabled={isDisabled}// Pass disabled state
         />
-      ))}
+        );
+      })}
       <More forYou item={item} />
     </View>
   );

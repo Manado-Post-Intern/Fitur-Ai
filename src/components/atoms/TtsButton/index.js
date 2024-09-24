@@ -27,13 +27,16 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
     Tts.addEventListener('tts-start', () => {
       setIsLoading(false);
       setIsPlaying(true);
+      console.log("tts sedang start");
     });
     Tts.addEventListener('tts-finish', () => {
       setIsPlaying(false);
+      console.log("tts telah selesai diputar");
     });
     Tts.addEventListener('tts-cancel', () => {
       setIsPlaying(false);
       setIsLoading(false);
+      console.log("mengcancel tts button");
     });
     return () => {
       Tts.removeAllListeners('tts-start');
@@ -53,14 +56,18 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
       .toLowerCase()
       .replace(/manadopost\.id/gi, '');
       setCleanArticle(cleanContent);
+      console.log("ketika content ada maka akan dilakukan pembersihan content");
       Tts.setDefaultLanguage('id-ID');
       if (!isPlaying) {
         setIsLoading(true);
         Tts.speak(cleanContent);
+        console.log("tts sedang diputar");
       } else {
         Tts.stop();
+        console.log("stop tts button");
       }
       setIsPlaying(!isPlaying);
+      console.log("set !!isplaying")
     }
     onPress?.();
   };

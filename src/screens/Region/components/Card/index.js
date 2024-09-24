@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Dimensions,
   Image,
@@ -20,11 +22,12 @@ import {TokenContext} from '../../../../context/TokenContext';
 import {readArticle} from '../../../../api';
 import axios from 'axios';
 
-const Card = ({item, isActive, onPress, onSendTitle}) => {
+const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
   const navigation = useNavigation();
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
   const {width, height} = Dimensions.get('window');
+
   const getArticle = async () => {
     if (!item?.id) {
       console.log('Item ID is undefined or null');
@@ -90,6 +93,7 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
                 onSendTitle(item?.title, item?.id);
               }}
               content={article?.content}
+              disabled={disabled}
             />
           </View>
         </View>

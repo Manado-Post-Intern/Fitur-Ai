@@ -83,7 +83,7 @@ const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
         <View
           style={[
             styles.TtsButton,
-            {width: width * 0.5, height: height * 0.03},
+            {width: width * 0.5, height: height * 0.02},
           ]}>
           <TimeStamp data={item?.published_date} />
           <View style={styles.WrapTts}>
@@ -96,6 +96,7 @@ const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
               content={article?.content}
               disabled={disabled}
             />
+            {console.log(`Button is ${disabled ? 'disabled' : 'enabled'}`)}
           </View>
         </View>
         <Gap height={4} />

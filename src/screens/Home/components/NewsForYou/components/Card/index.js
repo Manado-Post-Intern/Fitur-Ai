@@ -21,7 +21,7 @@ import TTSButton from '../../../../../../components/atoms/TtsButton';
 import {TokenContext} from '../../../../../../context/TokenContext';
 import {readArticle} from '../../../../../../api';
 
-const Card = ({item, isActive, onPress, onSendTitle}) => {
+const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
   const navigation = useNavigation();
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
@@ -89,6 +89,7 @@ const Card = ({item, isActive, onPress, onSendTitle}) => {
                 onSendTitle(item?.title, item?.id);
               }}
               content={article?.content}
+              disabled={disabled}
             />
           </View>
         </View>
