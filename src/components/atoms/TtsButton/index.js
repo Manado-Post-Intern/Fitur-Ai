@@ -14,6 +14,15 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
   const {setCleanArticle,visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
 
+  useEffect(() => {
+    if (visible){
+      // setIsPlaying(true);
+      console.log("berubah menjadi icon stop");
+    } else {
+      setIsPlaying(false);
+      console.log("kembali menjadi icon play");
+    }
+  },[visible]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
