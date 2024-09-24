@@ -83,7 +83,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoading || disabled}>
+      <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoading}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#0000ff" />
         ) : isPlaying ? (
