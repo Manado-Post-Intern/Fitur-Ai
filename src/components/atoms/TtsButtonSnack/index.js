@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';

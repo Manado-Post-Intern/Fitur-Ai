@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
 import {TouchableOpacity, StyleSheet, ActivityIndicator, View} from 'react-native';
@@ -6,7 +7,7 @@ import Tts from 'react-native-tts';
 import { useSnackbar } from '../../../context/SnackbarContext';
 import NetInfo from '@react-native-community/netinfo';
 
-const TTSButton = ({isActive, onPress, content,disabled}) => {
+const TTSButton = ({isActive, onPress, content, disabled}) => {
   const [isConnected, setIsConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
