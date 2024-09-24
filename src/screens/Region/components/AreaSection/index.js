@@ -61,7 +61,6 @@ const AreaSection = ({item}) => {
             isActive={activeTTS === item.id}
             onPress={() => handleTTSPress(item.id)}
             onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
-            disabled={isDisabled}
           />
         );
       })}

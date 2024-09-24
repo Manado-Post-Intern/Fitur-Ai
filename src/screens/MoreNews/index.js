@@ -23,6 +23,7 @@ import axios from 'axios';
 import {AdsContext} from '../../context/AdsContext';
 import {Snackbar} from 'react-native-paper';
 import {useSnackbar} from '../../context/SnackbarContext';
+import Tts from 'react-native-tts';
 
 const SPACING = 10;
 
@@ -39,19 +40,19 @@ const MoreNews = ({route}) => {
 
   const [activeTTS, setActiveTTS] = useState(null);
 
-  const handleTTSPress = (id) => {
+  const handleTTSPress = id => {
+    if (activeTTS !== null && activeTTS !== id) {
+      Tts.stop(); // Stop the currently active TTS
+      setActiveTTS(null); // Reset the active state
+    }
+
     if (activeTTS === id) {
-      setActiveTTS(null);
-      hideSnackbar();
+      setActiveTTS(null); // If the same button is pressed, stop the process
+      Tts.stop();
     } else {
-      setActiveTTS(id);
-      const selectedItem = moreNews.find(item => item.id === id);
-      if (selectedItem) {
-        showSnackbar(`${selectedItem.title}`, 'black');
-      }
+      setActiveTTS(id); // Set the newly pressed button as active
     }
   };
-  
 
   const handleSendTitle = (title, id) => {
     if (activeTTS === id) {
@@ -61,7 +62,6 @@ const MoreNews = ({route}) => {
       console.log(title);
     }
   };
-
 
   const navigation = useNavigation();
 
@@ -195,7 +195,6 @@ const MoreNews = ({route}) => {
                 isActive={activeTTS === item.id}
                 onPress={() => handleTTSPress(item.id)}
                 onSendTitle={handleSendTitle}
-                disabled={isDisabled}
               />
             );
           })}
