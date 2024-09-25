@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -42,9 +43,11 @@ const MoreNews = ({route}) => {
   const handleTTSPress = (id) => {
     if (activeTTS === id) {
       setActiveTTS(null);
+      console.log("more news id kosong");
       hideSnackbar();
     } else {
       setActiveTTS(id);
+      console.log("more news id tracking",id);
       const selectedItem = moreNews.find(item => item.id === id);
       if (selectedItem) {
         showSnackbar(`${selectedItem.title}`, 'black');
@@ -56,9 +59,10 @@ const MoreNews = ({route}) => {
   const handleSendTitle = (title, id) => {
     if (activeTTS === id) {
       hideSnackbar();
+      console.log("tts tidak aktif more news");
     } else {
       showSnackbar(`${title}`, 'black');
-      console.log(title);
+      console.log("menampilkan judul dari tombol tts more news = ",title);
     }
   };
 
@@ -188,6 +192,8 @@ const MoreNews = ({route}) => {
         <View>
           {moreNews?.map((item, index) => {
             const isDisabled = activeTTS !== null && activeTTS !== item.id; // Disable if another button is active
+            // Tambahkan console log untuk tracking isDisabled
+            console.log(`Item ID: ${item.id}, isDisabled: ${isDisabled}`);
             return (
               <Card
                 key={index}
@@ -195,7 +201,7 @@ const MoreNews = ({route}) => {
                 isActive={activeTTS === item.id}
                 onPress={() => handleTTSPress(item.id)}
                 onSendTitle={handleSendTitle}
-                disabled={isDisabled}
+                disabled={isDisabled}// Pass disabled state
               />
             );
           })}

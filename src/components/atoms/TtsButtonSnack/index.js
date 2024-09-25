@@ -60,11 +60,12 @@ const TTSButtonSnackbar = ({isActive, onPress, content}) => {
       const cleanContent = content.replace(/<\/?[^>]+(>|$)/g, '').toLowerCase();
       setCleanArticle(cleanContent);
       Tts.setDefaultLanguage('id-ID');
+      console.log("content berhasil diterima");
   
       if (!isPlayingSnack) {
         setIsLoadingSnack(true);
-        console.log('Starting TTS with content:', cleanContent);
         Tts.speak(cleanContent);
+        console.log("memutar tts dari snackbar");
       } else {
         console.log('Stopping TTS');
         Tts.stop(); // Hentikan pemutaran TTS

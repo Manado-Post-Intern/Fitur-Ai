@@ -1,28 +1,31 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
-import {TouchableOpacity, StyleSheet, ActivityIndicator, View} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  View,
+} from 'react-native';
 import {IcTtsPlay, IcTtsStop} from '../../../assets';
 import Tts from 'react-native-tts';
-import { useSnackbar } from '../../../context/SnackbarContext';
+import {useSnackbar} from '../../../context/SnackbarContext';
 import NetInfo from '@react-native-community/netinfo';
 
 const TTSButton = ({isActive, onPress, content, disabled}) => {
   const [isConnected, setIsConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const {setCleanArticle,visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
-
+  const {setCleanArticle, visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
   useEffect(() => {
-    if (visible){
+    if (visible) {
       // setIsPlaying(true);
-      console.log("berubah menjadi icon stop");
+      console.log('berubah menjadi icon stop');
     } else {
       setIsPlaying(false);
-      console.log("kembali menjadi icon play");
+      console.log('kembali menjadi icon play');
     }
-  },[visible]);
+  }, [visible]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -31,21 +34,27 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (!isActive) {
+      setIsLoading(false);
+      setIsPlaying(false); // Reset status jika tombol ini tidak aktif
+    }
+  }, [isActive]);
 
   useEffect(() => {
     Tts.addEventListener('tts-start', () => {
       setIsLoading(false);
       setIsPlaying(true);
-      console.log("tts sedang start");
+      console.log('tts sedang start');
     });
     Tts.addEventListener('tts-finish', () => {
       setIsPlaying(false);
-      console.log("tts telah selesai diputar");
+      console.log('tts telah selesai diputar');
     });
     Tts.addEventListener('tts-cancel', () => {
       setIsPlaying(false);
       setIsLoading(false);
-      console.log("mengcancel tts button");
+      console.log('mengcancel tts button');
     });
     return () => {
       Tts.removeAllListeners('tts-start');
@@ -61,29 +70,33 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
     }
 
     if (content) {
-      const cleanContent = content.replace(/<\/?[^>]+(>|$)/g, '')
-      .toLowerCase()
-      .replace(/manadopost\.id/gi, '');
+      const cleanContent = content
+        .replace(/<\/?[^>]+(>|$)/g, '')
+        .toLowerCase()
+        .replace(/manadopost\.id/gi, '');
       setCleanArticle(cleanContent);
-      console.log("ketika content ada maka akan dilakukan pembersihan content");
+      console.log('ketika content ada maka akan dilakukan pembersihan content');
       Tts.setDefaultLanguage('id-ID');
       if (!isPlaying) {
         setIsLoading(true);
         Tts.speak(cleanContent);
-        console.log("tts sedang diputar");
+        console.log('tts sedang diputar');
       } else {
         Tts.stop();
-        console.log("stop tts button");
+        console.log('stop tts button');
       }
       setIsPlaying(!isPlaying);
-      console.log("set !!isplaying")
+      console.log('set !!isplaying');
     }
     onPress?.();
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoading}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={styles.button}
+        disabled={isLoading || disabled}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#0000ff" />
         ) : isPlaying ? (

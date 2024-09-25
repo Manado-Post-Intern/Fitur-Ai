@@ -10,39 +10,39 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 
 const data = [0, 1, 2];
 
-const AreaSection = ({item}) => {
+const AreaSection = ({item, activeTTS, handleTtsPress, handleSendTitle}) => {
   const regionId = regionList.find(region => region.name === item?.region)?.id;
   const regionLogo = regionList.find(
     region => region.name === item?.region,
   )?.icon_url;
 
-  const {showSnackbar, hideSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
+  // const {showSnackbar, hideSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
 
-  const [activeTTS, setActiveTTS] = useState(null);
+  // const [activeTTS, setActiveTTS] = useState(null);
 
-  const handleTTSPress = id => {
-    if (activeTTS !== null && activeTTS !== id) {
-      setActiveTTS(null);
-      hideSnackbar(); // Tutup Snackbar jika TTS berbeda ditekan
-    }
+  // const handleTTSPress = id => {
+  //   if (activeTTS !== null && activeTTS !== id) {
+  //     setActiveTTS(null);
+  //     hideSnackbar(); // Tutup Snackbar jika TTS berbeda ditekan
+  //   }
 
-    if (activeTTS === id) {
-      setActiveTTS(null);
-      hideSnackbar();
-    } else {
-      setActiveTTS(id);
-      // showSnackbar('Text-to-Speech is active', 'black'); // Tampilkan Snackbar dengan pesan
-    }
-  };
+  //   if (activeTTS === id) {
+  //     setActiveTTS(null);
+  //     hideSnackbar();
+  //   } else {
+  //     setActiveTTS(id);
+  //     // showSnackbar('Text-to-Speech is active', 'black'); // Tampilkan Snackbar dengan pesan
+  //   }
+  // };
 
-  const handleSendTitle = (title, id) => {
-    if (activeTTS === id) {
-      hideSnackbar();
-    } else {
-      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
-      console.log(title);
-    }
-  };
+  // const handleSendTitle = (title, id) => {
+  //   if (activeTTS === id) {
+  //     hideSnackbar();
+  //   } else {
+  //     showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+  //     console.log(title);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -53,15 +53,14 @@ const AreaSection = ({item}) => {
       </View>
 
       {item?.latest?.slice(0, 3).map((item, i) => {
-        const isDisabled = activeTTS !== null && activeTTS !== item.id;
+        // const isDisabled = activeTTS !== null && activeTTS !== item.id;
         return (
           <Card
             key={i}
             item={item}
             isActive={activeTTS === item.id}
-            onPress={() => handleTTSPress(item.id)}
+            onPress={() => handleTtsPress(item.id)}
             onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
-            disabled={isDisabled}
           />
         );
       })}

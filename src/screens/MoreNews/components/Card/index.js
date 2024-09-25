@@ -94,7 +94,6 @@ const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
                 onSendTitle(item?.title, item?.id);
               }}
               content={article?.content}
-              disabled={disabled}
             />
             {console.log(`Button is ${disabled ? 'disabled' : 'enabled'}`)}
           </View>
