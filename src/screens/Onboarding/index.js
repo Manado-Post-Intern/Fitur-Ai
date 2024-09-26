@@ -117,10 +117,10 @@ const Onboarding = () => {
           <Gap height={75} />
         </View>
         {/* Invisible Button in Top Right Corner */}
-        <Pressable
+        {/* <Pressable
           style={styles.invisibleButton}
           onPress={() => navigation.navigate('LoginWill')}
-        />
+        /> */}
       </View>
     </SafeAreaView>
   );

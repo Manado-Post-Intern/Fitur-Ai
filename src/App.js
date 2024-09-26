@@ -1,6 +1,13 @@
 /* eslint-disable prettier/prettier */
 
-import {StyleSheet, Alert, Linking, BackHandler, AppState} from 'react-native';
+import {
+  StyleSheet,
+  Alert,
+  Linking,
+  BackHandler,
+  AppState,
+  View,
+} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routes';
