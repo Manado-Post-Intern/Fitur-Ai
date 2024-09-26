@@ -50,12 +50,17 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     Tts.addEventListener('tts-start', () => {
       setIsLoadingArticle(false); // Matikan loading ketika suara mulai berbunyi
       setIsPlayingArticle(true); // Atur tombol menjadi "Jeda"
+      console.log("tts telah diputar article");
     });
     // Event listener ketika TTS selesai berbicara
-    Tts.addEventListener('tts-finish', () => setIsPlayingArticle(false)); // Suara selesai, atur tombol ke "Dengar"
+    Tts.addEventListener('tts-finish', () => {
+      setIsPlayingArticle(false)
+      console.log("tts telah selesai diputar article")
+  }); // Suara selesai, atur tombol ke "Dengar"
     Tts.addEventListener('tts-cancel', () => {
       setIsPlayingArticle(false);
       setIsLoadingArticle(false);
+      console.log("memcancel tts article");
     }); // Jika dibatalkan, tombol kembali ke "Dengar"
 
     return () => {
@@ -76,9 +81,11 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     const cleanArticle = article
       .replace(/<\/?[^>]+(>|$)/g, '')
       .toLowerCase()
-      .replace(/manadopost\.id/gi, '');
+      .replace(/manadopost\.id/gi, '')
+      .replace(/[^a-zA-Z0-9.,!? ]/g, '');
 
     setCleanArticle(cleanArticle);
+    console.log("berhasil menerima article content");
 
     if (!isPlayingArticle) {
       showSnackbar(title, '#024D91');

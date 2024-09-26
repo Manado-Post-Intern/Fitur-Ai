@@ -97,7 +97,8 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
       const cleanContent = content
         .replace(/<\/?[^>]+(>|$)/g, '')
         .toLowerCase()
-        .replace(/manadopost\.id/gi, '');
+        .replace(/manadopost\.id/gi, '')
+        .replace(/[^a-zA-Z0-9.,!? ]/g, '');
       setCleanArticle(cleanContent);
       console.log('ketika content ada maka akan dilakukan pembersihan content');
       Tts.setDefaultLanguage('id-ID');

@@ -8,7 +8,7 @@ import {useSnackbar} from '../../../context/SnackbarContext';
 import NetInfo from '@react-native-community/netinfo';
 
 const TTSButtonSnackbar = ({isActive, onPress, content}) => {
-  const {setCleanArticle, showSnackbar} = useSnackbar();
+  const {showSnackbar} = useSnackbar();
   const [isConnected, setIsConnected] = useState(true);
   const [isLoadingSnack, setIsLoadingSnack] = useState(false);
   const [isPlayingSnack, setIsPlayingSnack] = useState(false);
@@ -63,14 +63,12 @@ const TTSButtonSnackbar = ({isActive, onPress, content}) => {
     }
   
     if (content) {
-      const cleanContent = content.replace(/<\/?[^>]+(>|$)/g, '').toLowerCase();
-      setCleanArticle(cleanContent);
       Tts.setDefaultLanguage('id-ID');
       console.log("content berhasil diterima");
-  
       if (!isPlayingSnack) {
+        Tts.stop();
         setIsLoadingSnack(true);
-        Tts.speak(cleanContent);
+        Tts.speak(content);
         console.log("memutar tts dari snackbar");
       } else {
         console.log('Stopping TTS');
