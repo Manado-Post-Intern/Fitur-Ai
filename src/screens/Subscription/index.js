@@ -98,11 +98,15 @@ const Subscription = () => {
       })
       .then(() => {
         getSubscriptions({skus: items})
+          .then(res => {
+            if (res && Array.isArray(res)) {
+              setProducts(res);
+            } else {
+              console.log('No products found or invalid response format');
+            }
+          })
           .catch(error => {
             console.log('error finding items ', error);
-          })
-          .then(res => {
-            setProducts(res);
           });
 
         purchaseUpdateSubscription = purchaseUpdatedListener(async purchase => {
@@ -165,7 +169,9 @@ const Subscription = () => {
     const lotteryWinnerRef = database().ref('/lottery/winner/');
     lotteryWinnerRef.on('value', snapshot => {
       const data = snapshot.val();
-      if (!data) return;
+      if (!data) {
+        return;
+      }
       setWinner(data);
     });
 
@@ -268,29 +274,31 @@ const Subscription = () => {
         </View>
 
         <View>
-          {products.map((item, index) => {
-            if (
-              mpUser?.subscription?.productId === item.productId &&
-              mpUser?.subscription?.isExpired === false
-            )
-              return null;
-            return (
-              <Pressable
-                key={index}
-                style={styles.subscriptionBannerContainer}
-                onPress={() => {
-                  handleSubscribe(
-                    item.productId,
-                    item.subscriptionOfferDetails[0].offerToken,
-                  );
-                }}>
-                <Image
-                  style={styles.subscriptionBanner}
-                  source={productBaner[index]}
-                />
-              </Pressable>
-            );
-          })}
+          {products?.length > 0 &&
+            products.map((item, index) => {
+              if (
+                mpUser?.subscription?.productId === item.productId &&
+                mpUser?.subscription?.isExpired === false
+              ) {
+                return null;
+              }
+              return (
+                <Pressable
+                  key={index}
+                  style={styles.subscriptionBannerContainer}
+                  onPress={() => {
+                    handleSubscribe(
+                      item.productId,
+                      item.subscriptionOfferDetails[0].offerToken,
+                    );
+                  }}>
+                  <Image
+                    style={styles.subscriptionBanner}
+                    source={productBaner[index]}
+                  />
+                </Pressable>
+              );
+            })}
 
           {/* <Pressable
             style={styles.subscriptionBannerContainer}
