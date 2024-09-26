@@ -15,6 +15,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
   const [isConnected, setIsConnected] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [ttsReady, setTtsReady] = useState(false); // State to check if TTS is initialized
   const {setCleanArticle, visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
 
   useEffect(() => {
@@ -42,10 +43,27 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
   }, [isActive]);
 
   useEffect(() => {
+
+    // Checking TTS initialization status
+    Tts.getInitStatus()
+      .then(() => {
+        setTtsReady(true); // TTS is ready
+        console.log('TTS is initialized');
+      })
+      .catch(error => {
+        console.error('TTS initialization failed:', error);
+        setTtsReady(false); // TTS initialization failed
+      });
+    
     Tts.addEventListener('tts-start', () => {
       setIsLoading(false);
       setIsPlaying(true);
       console.log('tts sedang start');
+    });
+    Tts.addEventListener('tts-progress', () => {
+      setIsPlaying(true);
+      setIsLoading(false);
+      console.log("sedang berbicara");
     });
     Tts.addEventListener('tts-finish', () => {
       setIsPlaying(false);
@@ -58,14 +76,20 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
     });
     return () => {
       Tts.removeAllListeners('tts-start');
+      Tts.removeAllListeners('tts-progress');
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
     };
-  }, [isPlaying]);
+  }, [isPlaying,isLoading]);
 
   const handlePress = async () => {
     if (!isConnected) {
       console.error('No internet connection.');
+      return;
+    }
+
+    if (!ttsReady) {
+      console.error('TTS is not ready');
       return;
     }
 
@@ -78,6 +102,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
       console.log('ketika content ada maka akan dilakukan pembersihan content');
       Tts.setDefaultLanguage('id-ID');
       if (!isPlaying) {
+        Tts.stop();
         setIsLoading(true);
         Tts.speak(cleanContent);
         console.log('tts sedang diputar');

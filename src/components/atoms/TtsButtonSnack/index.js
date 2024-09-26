@@ -27,6 +27,11 @@ const TTSButtonSnackbar = ({isActive, onPress, content}) => {
       setIsPlayingSnack(true);
       console.log('TTS started');
     };
+
+    const onTtsProgress = () => {
+      setIsLoadingSnack(false);
+      setIsPlayingSnack(true);
+    }
   
     const onTtsFinish = () => {
       setIsPlayingSnack(false);
@@ -40,6 +45,7 @@ const TTSButtonSnackbar = ({isActive, onPress, content}) => {
     };
   
     Tts.addEventListener('tts-start', onTtsStart);
+    Tts.addEventListener('tts-progress', onTtsProgress);
     Tts.addEventListener('tts-finish', onTtsFinish);
     Tts.addEventListener('tts-cancel', onTtsCancel);
   

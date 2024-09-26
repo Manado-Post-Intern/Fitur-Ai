@@ -191,9 +191,9 @@ const MoreNews = ({route}) => {
 
         <View>
           {moreNews?.map((item, index) => {
-            const isDisabled = activeTTS !== null && activeTTS !== item.id; // Disable if another button is active
+            // const isDisabled = activeTTS !== null && activeTTS !== item.id; // Disable if another button is active
             // Tambahkan console log untuk tracking isDisabled
-            console.log(`Item ID: ${item.id}, isDisabled: ${isDisabled}`);
+            // console.log(`Item ID: ${item.id}, isDisabled: ${isDisabled}`);
             return (
               <Card
                 key={index}
@@ -201,7 +201,7 @@ const MoreNews = ({route}) => {
                 isActive={activeTTS === item.id}
                 onPress={() => handleTTSPress(item.id)}
                 onSendTitle={handleSendTitle}
-                disabled={isDisabled}// Pass disabled state
+                // disabled={isDisabled}// Pass disabled state
               />
             );
           })}

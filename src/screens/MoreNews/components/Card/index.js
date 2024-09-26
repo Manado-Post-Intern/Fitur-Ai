@@ -22,7 +22,7 @@ import {TokenContext} from '../../../../context/TokenContext';
 import {readArticle} from '../../../../api';
 import axios from 'axios';
 
-const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
+const Card = ({item, isActive, onPress, onSendTitle}) => {
   const navigation = useNavigation();
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
@@ -95,7 +95,7 @@ const Card = ({item, isActive, onPress, onSendTitle, disabled}) => {
               }}
               content={article?.content}
             />
-            {console.log(`Button is ${disabled ? 'disabled' : 'enabled'}`)}
+            {/* {console.log(`Button is ${disabled ? 'disabled' : 'enabled'}`)} */}
           </View>
         </View>
         <Gap height={4} />
