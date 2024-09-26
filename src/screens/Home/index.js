@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {theme} from '../../assets';
-import {Banner1, Banner2, Gap} from '../../components';
+import {Banner1, Banner2, Gap, SnackbarNotification} from '../../components';
 import {
   ActionSection,
   BottomBanner,
@@ -32,6 +32,8 @@ import {checkUserPreferences} from '../../utils/checkUserPreferences';
 import {AuthContext} from '../../context/AuthContext';
 import moment from 'moment';
 import database from '@react-native-firebase/database';
+import {useSnackbar} from '../../context/SnackbarContext';
+
 const data = [0, 1, 2];
 const daerah = ['Manado', 'Minahasa Utara', 'Bitung', 'Tondano'];
 
@@ -96,6 +98,11 @@ const Home = ({navigation}) => {
     return () =>
       database().ref('/isRealTimeActive').off('value', onfetchRealtimeHarga);
   }, []);
+  const {showSnackbar} = useSnackbar();
+
+  const handleSomeAction = () => {
+    showSnackbar('Snackbar message!', 'black');
+  };
 
   const getHeadline = async () => {
     try {
@@ -261,6 +268,7 @@ const Home = ({navigation}) => {
               moment(b.published_date).diff(moment(a.published_date)),
             )}
             preferences={forYou?.preferences}
+            onShowSnackbar={handleSomeAction}
           />
 
           <Gap height={25} />

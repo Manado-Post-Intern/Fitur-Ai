@@ -16,6 +16,16 @@ import {MPDigitalProvider} from './context/MPDigitalContext';
 import {TokenProvider} from './context/TokenContext';
 import VersionCheck from 'react-native-version-check';
 
+import PersistentText from './components/atoms/PersistenText';
+import {SnackbarNotification} from './components';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SnackbarProvider} from './context/SnackbarContext';
+import {
+  ErrorNotificationProvider,
+  useErrorNotification,
+} from './context/ErrorNotificationContext'; // Import context
+import ErrorNotification from './components/atoms/ErrorNotification'; // Import komponen notifikasi
+
 GoogleSignin.configure({
   webClientId:
     '782626479856-89khocqerprpe29tscrpvdn5vb8ghan0.apps.googleusercontent.com',
@@ -93,21 +103,31 @@ const App = () => {
   }, []);
 
   return (
-    <AuthProvider>
-      <TokenProvider>
-        <AdsProvider>
-          <MPDigitalProvider>
-            <GestureHandlerRootView style={styles.gestureHandlerRootView}>
-              <BottomSheetModalProvider>
-                <NavigationContainer>
-                  <Routes />
-                </NavigationContainer>
-              </BottomSheetModalProvider>
-            </GestureHandlerRootView>
-          </MPDigitalProvider>
-        </AdsProvider>
-      </TokenProvider>
-    </AuthProvider>
+    <SafeAreaProvider>
+      <ErrorNotificationProvider>
+        <AuthProvider>
+          <TokenProvider>
+            <AdsProvider>
+              <MPDigitalProvider>
+                <SnackbarProvider>
+                  <GestureHandlerRootView style={styles.gestureHandlerRootView}>
+                    <BottomSheetModalProvider>
+                      <NavigationContainer>
+                        <View style={styles.container}>
+                          <Routes />
+                          <SnackbarNotification />
+                          <ErrorNotification />
+                        </View>
+                      </NavigationContainer>
+                    </BottomSheetModalProvider>
+                  </GestureHandlerRootView>
+                </SnackbarProvider>
+              </MPDigitalProvider>
+            </AdsProvider>
+          </TokenProvider>
+        </AuthProvider>
+      </ErrorNotificationProvider>
+    </SafeAreaProvider>
   );
 };
 
@@ -115,6 +135,9 @@ export default App;
 
 const styles = StyleSheet.create({
   gestureHandlerRootView: {
+    flex: 1,
+  },
+  container: {
     flex: 1,
   },
 });

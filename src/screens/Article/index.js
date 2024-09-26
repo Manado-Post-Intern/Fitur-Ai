@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-shadow */
 import {
   Image,
   Linking,
@@ -25,6 +27,7 @@ import {latestEndPoint, readArticle, search} from '../../api';
 import axios from 'axios';
 import RenderHtml from 'react-native-render-html';
 import {TokenContext} from '../../context/TokenContext';
+import TtsArticleButton from '../../components/atoms/TtsArticleButton';
 
 LogBox.ignoreLogs([
   'You should always pass contentWidth',
@@ -140,7 +143,15 @@ const Article = ({route, navigation}) => {
               </TextInter>
             )}
             <Gap height={7} />
-            <TimeStamp data={article?.published_date} />
+            <View style={styles.TtsButton}>
+              <TimeStamp data={article?.published_date} />
+              <View style={styles.WrapTts}>
+                <TtsArticleButton
+                  article={article?.content}
+                  title={article?.title}
+                />
+              </View>
+            </View>
             <Gap height={7} />
             {article?.author.map((item, index) => {
               return (
@@ -305,5 +316,12 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderColor: 'rgba(0,0,0,0.07)',
     zIndex: 20,
+  },
+  TtsButton: {
+    flexDirection: 'row',
+  },
+  WrapTts: {
+    left: 80,
+    top: 10,
   },
 });
