@@ -80,7 +80,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
     };
-  }, [isPlaying,isLoading]);
+  }, [isPlaying]);
 
   const handlePress = async () => {
     if (!isConnected) {
