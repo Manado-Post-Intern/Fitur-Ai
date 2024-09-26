@@ -1,5 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+/* eslint-disable prettier/prettier */
+
+import {StyleSheet, Alert, Linking, BackHandler, AppState} from 'react-native';
+import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routes';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -12,6 +14,8 @@ import {AuthProvider} from './context/AuthContext';
 import {AdsProvider} from './context/AdsContext';
 import {MPDigitalProvider} from './context/MPDigitalContext';
 import {TokenProvider} from './context/TokenContext';
+import VersionCheck from 'react-native-version-check';
+
 import PersistentText from './components/atoms/PersistenText';
 import {SnackbarNotification} from './components';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -28,6 +32,11 @@ GoogleSignin.configure({
 });
 
 const App = () => {
+  const latestVersion = '2.1.1'; // akan diganti dengan link dinamis
+  const playStoreUrl =
+    'https://play.google.com/store/apps/details?id=com.mp.manadopost&pcampaignid=web_share';
+  const appState = useRef(AppState.currentState);
+
   const storeSession = async detail => {
     try {
       await EncryptedStorage.setItem('detail', JSON.stringify(detail));
@@ -35,6 +44,35 @@ const App = () => {
       console.log(error);
     }
   };
+
+  const checkForSpecificVersion = async () => {
+    try {
+      const currentVersion = await VersionCheck.getCurrentVersion();
+
+      if (currentVersion !== latestVersion) {
+        Alert.alert(
+          'Update Required',
+          "You're using older version. Please update to the latest version.",
+          [
+            {
+              text: 'Update Now',
+              onPress: () => {
+                Linking.openURL(playStoreUrl)
+                  .catch(err => console.error('Failed to open URL', err))
+                  .finally(() => {
+                    BackHandler.exitApp();
+                  });
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    } catch (error) {
+      console.log('Error checking version:', error);
+    }
+  };
+
   useEffect(() => {
     axios
       .post(promediaAuth, authData, authConfig)
@@ -45,6 +83,23 @@ const App = () => {
       .catch(error => {
         console.log(error);
       });
+
+    checkForSpecificVersion();
+
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        checkForSpecificVersion();
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   return (

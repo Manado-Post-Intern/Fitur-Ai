@@ -68,6 +68,10 @@ import IcBigCheckmark from './ic-big-checkmark.svg';
 import IcFilter from './ic-filter.svg';
 import IcPinpoint from './ic-pinpoint.svg';
 import IcWhatsappExtraSmall from './ic-whatsapp-extra-small.svg';
+import IcGanti from './ic-ganti.svg';
+import Icrefreshpoll from './ic-refresh-poll.svg';
+import IcGreenIndicator from './ic-up-indicator.svg';
+import IcRedIndicator from './ic-down-indicator.svg';
 import IcTtsPlay from './ic-TtsPlay.svg';
 import IcTtsPause from './ic-TtsPause.svg';
 import IcTtsArticlePlay from './ic-TtsArticlePlay.svg';
@@ -81,6 +85,8 @@ import IcTtsArticleStop from './ic-TtsArticleStop.svg';
 import IcTtsStop from './ic-TtsStop.svg';
 
 export {
+  Icrefreshpoll,
+  IcGanti,
   IcClosedEye,
   IcOpenedEye,
   IcFacebook,
@@ -151,6 +157,8 @@ export {
   IcFilter,
   IcPinpoint,
   IcWhatsappExtraSmall,
+  IcGreenIndicator,
+  IcRedIndicator,
   IcTtsPlay,
   IcTtsPause,
   IcTtsArticlePause,
