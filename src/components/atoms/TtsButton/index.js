@@ -98,11 +98,11 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
         .replace(/<\/?[^>]+(>|$)/g, '')
         .toLowerCase()
         .replace(/manadopost\.id/gi, '')
-        .replace(/[^a-zA-Z0-9.,!? ]/g, '');
+        .replace(/[^a-zA-Z0-9.,!? /\\]/g, '');
       setCleanArticle(cleanContent);
       console.log('ketika content ada maka akan dilakukan pembersihan content');
-      Tts.setDefaultLanguage('id-ID');
       if (!isPlaying) {
+        Tts.setDefaultLanguage('id-ID');
         Tts.stop();
         setIsLoading(true);
         Tts.speak(cleanContent);

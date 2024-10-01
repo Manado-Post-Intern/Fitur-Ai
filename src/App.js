@@ -20,7 +20,7 @@ import {
   ErrorNotificationProvider,
   useErrorNotification,
 } from './context/ErrorNotificationContext'; // Import context
-import ErrorNotification from './components/atoms/ErrorNotification'; // Import komponen notifikasi
+import ErrorNotification from './components/atoms/ErrorNotification'; // Import komponen notifikasI
 
 GoogleSignin.configure({
   webClientId:

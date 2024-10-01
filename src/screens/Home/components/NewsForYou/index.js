@@ -134,7 +134,6 @@ const NewsForYou = ({
             isActive={activeTTS === item.id}
             onPress={() => handleTTSPress(item.id)}
             onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
-            // Pass disabled state
           />
         );
       })}

@@ -50,9 +50,9 @@ const TTSButtonSnackbar = ({isActive, onPress, content}) => {
     Tts.addEventListener('tts-cancel', onTtsCancel);
   
     return () => {
-      Tts.removeEventListener('tts-start', onTtsStart);
-      Tts.removeEventListener('tts-finish', onTtsFinish);
-      Tts.removeEventListener('tts-cancel', onTtsCancel);
+      Tts.removeAllListeners('tts-start', onTtsStart);
+      Tts.removeAllListeners('tts-finish', onTtsFinish);
+      Tts.removeAllListeners('tts-cancel', onTtsCancel);
     };
   }, [isPlayingSnack]);
 

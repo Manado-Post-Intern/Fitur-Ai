@@ -28,10 +28,27 @@ import NetInfo from '@react-native-community/netinfo';
 
 const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isPlayingArticle, setIsPlayingArticle] = useState(false);
-  const {showSnackbar, hideSnackbar, setCleanArticle} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {showSnackbar, hideSnackbar, setCleanArticle,visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
   const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
   const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
+
+  useEffect(() => {
+    if (!isActive) {
+      setIsLoadingArticle(false);
+      setIsPlayingArticle(false); // Reset status jika tombol ini tidak aktif
+    }
+  }, [isActive]);
+
+  useEffect(() => {
+    if (visible) {
+      // setIsPlaying(true);
+      console.log('berubah menjadi icon stop');
+    } else {
+      setIsPlayingArticle(false);
+      console.log('kembali menjadi icon play');
+    }
+  }, [visible]);
 
   useEffect(() => {
     // Listener untuk memantau perubahan koneksi
@@ -82,7 +99,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       .replace(/<\/?[^>]+(>|$)/g, '')
       .toLowerCase()
       .replace(/manadopost\.id/gi, '')
-      .replace(/[^a-zA-Z0-9.,!? ]/g, '');
+      .replace(/[^a-zA-Z0-9.,!? /\\]/g, '');
 
     setCleanArticle(cleanArticle);
     console.log("berhasil menerima article content");
