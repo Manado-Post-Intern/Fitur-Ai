@@ -10,6 +10,7 @@ import {IcTtsPlay, IcTtsStop} from '../../../assets';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext';
 import NetInfo from '@react-native-community/netinfo';
+import {useErrorNotification} from '../../../context/ErrorNotificationContext';
 
 const TTSButton = ({isActive, onPress, content, disabled}) => {
   const [isConnected, setIsConnected] = useState(true);
@@ -17,7 +18,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [ttsReady, setTtsReady] = useState(false); // State to check if TTS is initialized
   const {setCleanArticle, visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
-
+  const {showError} = useErrorNotification();
   useEffect(() => {
     if (visible) {
       // setIsPlaying(true);
@@ -31,9 +32,13 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
+      if (!state.isConnected && isPlaying) {
+        Tts.stop(); // Stop TTS jika koneksi terputus
+        showError('Koneksi internet terputus, fitur TTS dihentikan.'); // Tampilkan pesan error
+      }
     });
     return () => unsubscribe();
-  }, []);
+  }, [isPlaying]);
 
   useEffect(() => {
     if (!isActive) {
@@ -43,7 +48,6 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
   }, [isActive]);
 
   useEffect(() => {
-
     // Checking TTS initialization status
     Tts.getInitStatus()
       .then(() => {
@@ -54,7 +58,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
         console.error('TTS initialization failed:', error);
         setTtsReady(false); // TTS initialization failed
       });
-    
+
     Tts.addEventListener('tts-start', () => {
       setIsLoading(false);
       setIsPlaying(true);
@@ -63,7 +67,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
     Tts.addEventListener('tts-progress', () => {
       setIsPlaying(true);
       setIsLoading(false);
-      console.log("sedang berbicara");
+      console.log('sedang berbicara');
     });
     Tts.addEventListener('tts-finish', () => {
       setIsPlaying(false);
@@ -85,6 +89,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
   const handlePress = async () => {
     if (!isConnected) {
       console.error('No internet connection.');
+      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
       return;
     }
 

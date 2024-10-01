@@ -5,7 +5,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 // import TTSButtonSnackbar from '../components/atoms/TtsButtonSnack';
 import TTSButtonSnackbar from '../components/atoms/TtsButtonSnack';
 import Tts from 'react-native-tts';
-import {IcCloseButton, IcXmark, IcXSmall} from '../assets';
+import {IcCloseButton, IcXmark, IcXSmall, theme} from '../assets';
+import TtsSnackbarButton from '../components/atoms/TtsButtonSnack';
 
 const SnackbarContext = createContext();
 
@@ -67,7 +68,7 @@ export const SnackbarProvider = ({children}) => {
           action={{
             label: (
               <View style={styles.actionStyle}>
-                <TTSButtonSnackbar
+                <TtsSnackbarButton
                   isActive={isActive}
                   onPress={toggleTTS}
                   content={cleanArticle || 'tidak ada content'}

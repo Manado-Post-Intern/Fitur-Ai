@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable quotes */
+
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
@@ -34,6 +34,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
 
   useEffect(() => {
+<<<<<<< HEAD
     if (!isActive) {
       setIsLoadingArticle(false);
       setIsPlayingArticle(false); // Reset status jika tombol ini tidak aktif
@@ -52,32 +53,34 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
 
   useEffect(() => {
     // Listener untuk memantau perubahan koneksi
+=======
+>>>>>>> 62dc7ad7200fc301318a19bbdcf969bf3aec224f
     const unsubscribe = NetInfo.addEventListener(state => {
-      console.log('Connection type', state.type);
-      console.log('Is connected?', state.isConnected);
-      setIsConnected(state.isConnected); // Simpan status koneksi
+      setIsConnected(state.isConnected);
+      if (!state.isConnected && isPlayingArticle) {
+        Tts.stop(); // Stop TTS jika koneksi terputus
+        showError('Koneksi internet terputus, fitur TTS dihentikan.'); // Tampilkan pesan error
+      }
     });
-
-    // Unsubscribe saat komponen di-unmount
     return () => unsubscribe();
-  }, []);
+  }, [isPlayingArticle]);
 
   useEffect(() => {
     // Event listener ketika TTS mulai berbicara
     Tts.addEventListener('tts-start', () => {
       setIsLoadingArticle(false); // Matikan loading ketika suara mulai berbunyi
       setIsPlayingArticle(true); // Atur tombol menjadi "Jeda"
-      console.log("tts telah diputar article");
+      console.log('tts telah diputar article');
     });
     // Event listener ketika TTS selesai berbicara
     Tts.addEventListener('tts-finish', () => {
-      setIsPlayingArticle(false)
-      console.log("tts telah selesai diputar article")
-  }); // Suara selesai, atur tombol ke "Dengar"
+      setIsPlayingArticle(false);
+      console.log('tts telah selesai diputar article');
+    }); // Suara selesai, atur tombol ke "Dengar"
     Tts.addEventListener('tts-cancel', () => {
       setIsPlayingArticle(false);
       setIsLoadingArticle(false);
-      console.log("memcancel tts article");
+      console.log('memcancel tts article');
     }); // Jika dibatalkan, tombol kembali ke "Dengar"
 
     return () => {
@@ -90,7 +93,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const handlePress = async () => {
     // Cek apakah ada koneksi internet
     if (!isConnected) {
-      showError('Oops, cannot play article sound. Please try again.'); // Tampilkan notifikasi error
+      showError('Oops, tidak bisa memutar suara artikel.'); // Tampilkan notifikasi error
       return;
     }
 
@@ -102,18 +105,18 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       .replace(/[^a-zA-Z0-9.,!? /\\]/g, '');
 
     setCleanArticle(cleanArticle);
-    console.log("berhasil menerima article content");
+    console.log('berhasil menerima article content');
 
     if (!isPlayingArticle) {
       showSnackbar(title, '#024D91');
       Tts.setDefaultLanguage('id-ID');
       setIsLoadingArticle(true);
       Tts.speak(cleanArticle);
-      console.log("playing tts");
+      console.log('playing tts');
     } else {
       Tts.stop();
       hideSnackbar();
-      console.log("stop tts");
+      console.log('stop tts');
     }
 
     // Toggle status pemutaran
