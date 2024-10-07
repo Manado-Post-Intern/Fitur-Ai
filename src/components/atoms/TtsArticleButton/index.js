@@ -34,7 +34,6 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
 
   useEffect(() => {
-<<<<<<< HEAD
     if (!isActive) {
       setIsLoadingArticle(false);
       setIsPlayingArticle(false); // Reset status jika tombol ini tidak aktif
@@ -53,8 +52,6 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
 
   useEffect(() => {
     // Listener untuk memantau perubahan koneksi
-=======
->>>>>>> 62dc7ad7200fc301318a19bbdcf969bf3aec224f
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
       if (!state.isConnected && isPlayingArticle) {

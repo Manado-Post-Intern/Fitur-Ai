@@ -67,17 +67,16 @@ const NewsForYou = ({
     // let message = '';
 
     if (activeTTS !== null && activeTTS !== id) {
-      Tts.stop();
-      setActiveTTS(null);
+      setActiveTTS(id);
       // message = 'Pemutaran dijeda';
       // onShowSnackbar(true, message);
     }
 
     if (activeTTS === id) {
-      setActiveTTS(null);
+      setActiveTTS(id);
       // message = 'Pemutaran dijeda';
       // onShowSnackbar(true, message);
-      Tts.stop();
+      // Tts.stop();
     } else {
       setActiveTTS(id);
       // message = 'Mendengarkan...';
@@ -91,7 +90,9 @@ const NewsForYou = ({
     // setSelectedTitle(title); // Update title yang dipilih
     // titleRef.current = title; // Update nilai di useRef
     if (activeTTS === id) {
-      hideSnackbar();
+      // hideSnackbar();
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
     } else {
       showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);

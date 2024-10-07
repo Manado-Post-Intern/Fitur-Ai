@@ -54,11 +54,10 @@ const Region = () => {
 
   const handleTtsPress = id => {
     if (activeTTS !== null && activeTTS !== id) {
-      setActiveTTS(null);
+      setActiveTTS(id);
     }
-
     if (activeTTS === id) {
-      setActiveTTS(null);
+      setActiveTTS(id);
     } else {
       setActiveTTS(id);
     }
@@ -66,13 +65,13 @@ const Region = () => {
 
   const handleSendTitle = (title, id) => {
     if (activeTTS === id) {
-      hideSnackbar();
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
     } else {
       showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
     }
   };
-
 
 
   useEffect(() => {
