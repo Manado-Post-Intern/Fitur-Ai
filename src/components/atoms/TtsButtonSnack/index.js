@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {
   TouchableOpacity,
@@ -9,11 +10,19 @@ import Tts from 'react-native-tts';
 import {IcTtsPlay, IcTtsStop} from '../../../assets';
 import {useSnackbar} from '../../../context/SnackbarContext';
 
-const TtsSnackbarButton = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+const TtsSnackbarButton = ({isActive}) => {
+  // const [isPlaying, setIsPlaying] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [ttsReady, setTtsReady] = useState(false);
-  const {cleanArticle} = useSnackbar(); // Get content from SnackbarContext
+  const {cleanArticle, isPlayingSnack, setIsPlayingSnack, isLoadingSnack, setIsLoadingSnack} =
+    useSnackbar(); // Get content from SnackbarContext
+
+  // useEffect(() => {
+  //   if (!isActive) {
+  //     setIsLoading(false);
+  //     setIsPlaying(false); // Reset status jika tombol ini tidak aktif
+  //   }
+  // }, [isActive]);
 
   useEffect(() => {
     // Check TTS initialization status
@@ -27,22 +36,27 @@ const TtsSnackbarButton = () => {
       });
 
     const handleTtsStart = () => {
-      setIsPlaying(true); // TTS is playing
-      setIsLoading(false); // Stop loading when TTS starts
+      setIsPlayingSnack(true); // TTS is playing
+      setIsLoadingSnack(false); // Stop loading when TTS starts
+    };
+    const handleTtsProgress = () => {
+      setIsPlayingSnack(true); // Playback finished
+      setIsLoadingSnack(false); // Ensure loading is stopped
     };
 
     const handleTtsFinish = () => {
-      setIsPlaying(false); // Playback finished
-      setIsLoading(false); // Ensure loading is stopped
+      setIsPlayingSnack(false); // Playback finished
+      setIsLoadingSnack(false); // Ensure loading is stopped
     };
 
     const handleTtsCancel = () => {
-      setIsPlaying(false); // Playback canceled
-      setIsLoading(false); // Ensure loading is stopped
+      setIsPlayingSnack(false); // Playback canceled
+      setIsLoadingSnack(false); // Ensure loading is stopped
     };
 
     // Add event listeners for TTS events
     Tts.addEventListener('tts-start', handleTtsStart);
+    Tts.addEventListener('tts-progress', handleTtsProgress);
     Tts.addEventListener('tts-finish', handleTtsFinish);
     Tts.addEventListener('tts-cancel', handleTtsCancel);
 
@@ -53,7 +67,7 @@ const TtsSnackbarButton = () => {
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
     };
-  }, []);
+  }, [isPlayingSnack]);
 
   const handleTtsPress = () => {
     if (!ttsReady) {
@@ -62,11 +76,11 @@ const TtsSnackbarButton = () => {
     }
 
     if (cleanArticle) {
-      if (isPlaying) {
+      if (isPlayingSnack) {
         // Stop TTS if already playing
         Tts.stop(); // Stop TTS playback
       } else {
-        setIsLoading(true); // Show loading when starting
+        setIsLoadingSnack(true); // Show loading when starting
         Tts.speak(cleanArticle); // Speak the content
       }
     } else {
@@ -77,9 +91,9 @@ const TtsSnackbarButton = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleTtsPress}>
-        {isLoading ? (
+        {isLoadingSnack ? (
           <ActivityIndicator size="small" color="#0000ff" />
-        ) : isPlaying ? (
+        ) : isPlayingSnack ? (
           <IcTtsStop width={24} height={24} />
         ) : (
           <IcTtsPlay width={24} height={24} />

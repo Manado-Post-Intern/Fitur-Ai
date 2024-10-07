@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
 import {
@@ -17,7 +18,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [ttsReady, setTtsReady] = useState(false); // State to check if TTS is initialized
-  const {setCleanArticle, visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {setCleanArticle, visible, setIsActive, setIsPlayingSnack, setIsLoadingSnack} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification();
   useEffect(() => {
     if (visible) {
@@ -64,11 +65,11 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
       setIsPlaying(true);
       console.log('tts sedang start');
     });
-    Tts.addEventListener('tts-progress', () => {
-      setIsPlaying(true);
-      setIsLoading(false);
-      console.log('sedang berbicara');
-    });
+    // Tts.addEventListener('tts-progress', () => {
+    //   setIsPlaying(true);
+    //   setIsLoading(false);
+    //   console.log('sedang berbicara');
+    // });
     Tts.addEventListener('tts-finish', () => {
       setIsPlaying(false);
       console.log('tts telah selesai diputar');
@@ -80,7 +81,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
     });
     return () => {
       Tts.removeAllListeners('tts-start');
-      Tts.removeAllListeners('tts-progress');
+      // Tts.removeAllListeners('tts-progress');
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
     };
@@ -104,6 +105,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
         .toLowerCase()
         .replace(/manadopost\.id/gi, '')
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '');
+      setIsActive(isActive);
       setCleanArticle(cleanContent);
       console.log('ketika content ada maka akan dilakukan pembersihan content');
       if (!isPlaying) {
@@ -127,7 +129,7 @@ const TTSButton = ({isActive, onPress, content, disabled}) => {
       <TouchableOpacity
         onPress={handlePress}
         style={styles.button}
-        disabled={isLoading || disabled}>
+        disabled={isLoading}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#0000ff" />
         ) : isPlaying ? (

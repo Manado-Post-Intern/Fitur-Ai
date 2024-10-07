@@ -18,6 +18,8 @@ export const SnackbarProvider = ({children}) => {
   const [textColor, setTextColor] = useState('white');
   const [cleanArticle, setCleanArticle] = useState(''); //State clean article
   const [isActive, setIsActive] = useState(false); // State untuk mengelola status TTS
+  const [isPlayingSnack, setIsPlayingSnack] = useState(false);
+  const [isLoadingSnack, setIsLoadingSnack] = useState(false);
 
   const showSnackbar = (msg, color = 'white') => {
     setMessage(msg);
@@ -57,6 +59,12 @@ export const SnackbarProvider = ({children}) => {
         setCleanArticle,
         visible,
         setVisible,
+        setIsActive,
+        isActive,
+        isPlayingSnack,
+        setIsPlayingSnack,
+        isLoadingSnack,
+        setIsLoadingSnack,
       }}>
       {children}
       <View style={styles.snackbarWrapper}>
@@ -70,7 +78,6 @@ export const SnackbarProvider = ({children}) => {
               <View style={styles.actionStyle}>
                 <TtsSnackbarButton
                   isActive={isActive}
-                  onPress={toggleTTS}
                   content={cleanArticle || 'tidak ada content'}
                 />
                 <TouchableOpacity onPress={hideSnackbar}>
