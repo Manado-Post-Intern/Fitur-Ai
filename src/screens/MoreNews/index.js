@@ -42,9 +42,15 @@ const MoreNews = ({route}) => {
 
   const handleTTSPress = (id) => {
     if (activeTTS === id) {
-      setActiveTTS(null);
-      console.log("more news id kosong");
-      hideSnackbar();
+      // setActiveTTS(null);
+      // console.log("more news id kosong");
+      // hideSnackbar();
+      setActiveTTS(id);
+      console.log("more news id tracking",id);
+      const selectedItem = moreNews.find(item => item.id === id);
+      if (selectedItem) {
+        showSnackbar(`${selectedItem.title}`, 'black');
+      }
     } else {
       setActiveTTS(id);
       console.log("more news id tracking",id);
@@ -58,8 +64,10 @@ const MoreNews = ({route}) => {
 
   const handleSendTitle = (title, id) => {
     if (activeTTS === id) {
-      hideSnackbar();
-      console.log("tts tidak aktif more news");
+      // hideSnackbar();
+      // console.log("tts tidak aktif more news");
+      showSnackbar(`${title}`, 'black');
+      console.log("menampilkan judul dari tombol tts more news = ",title);
     } else {
       showSnackbar(`${title}`, 'black');
       console.log("menampilkan judul dari tombol tts more news = ",title);
