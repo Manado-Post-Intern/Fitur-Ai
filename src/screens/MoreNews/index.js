@@ -42,9 +42,7 @@ const MoreNews = ({route}) => {
 
   const handleTTSPress = (id) => {
     if (activeTTS === id) {
-      // setActiveTTS(null);
-      // console.log("more news id kosong");
-      // hideSnackbar();
+
       setActiveTTS(id);
       console.log("more news id tracking",id);
       const selectedItem = moreNews.find(item => item.id === id);

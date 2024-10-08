@@ -67,7 +67,6 @@ const NewsForYou = ({
     // let message = '';
 
     if (activeTTS !== null && activeTTS !== id) {
-      // Tts.stop();
       setActiveTTS(id);
       // message = 'Pemutaran dijeda';
       // onShowSnackbar(true, message);

@@ -24,10 +24,20 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
   const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
+
   const dispatch = useDispatch();
   const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false); // Get playing state for the specific button
   const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false); // Get loading state for the specific button
 
+  const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
+
+  useEffect(() => {
+    if (!isActive) {
+      setIsLoadingArticle(false);
+      setIsPlayingArticle(false); // Reset status jika tombol ini tidak aktif
+    }
+  }, [isActive]);
+  
   useEffect(() => {
     if (visible) {
       // setIsPlaying(true);
