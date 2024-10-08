@@ -106,6 +106,15 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     }
     dispatch(resetAllTtsExcept(id));
 
+    if (isPlaying) {
+      // If the current button is already playing, stop the TTS
+      Tts.stop();
+      hideSnackbar();
+      dispatch(setPlaying({id, value: false})); // Mark this button as not playing
+      dispatch(setLoading({id, value: false})); // Reset loading state
+      return; // Exit the function
+    }
+
     if (content) {
       const cleanContent = content
         .replace(/<\/?[^>]+(>|$)/g, '')
