@@ -12,7 +12,11 @@ import {useSnackbar} from '../../../context/SnackbarContext';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext';
 import {useDispatch, useSelector} from 'react-redux';
-import {setPlaying, setLoading} from '../../../redux/ttsSlice';
+import {
+  setPlaying,
+  setLoading,
+  resetAllTtsExcept,
+} from '../../../redux/ttsSlice';
 
 const TTSButton = ({id, isActive, onPress, content}) => {
   const [isConnected, setIsConnected] = useState(true);
@@ -100,6 +104,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       console.error('TTS is not ready');
       return;
     }
+    dispatch(resetAllTtsExcept(id));
 
     if (content) {
       const cleanContent = content
@@ -108,27 +113,28 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         .replace(/manadopost\.id/gi, '')
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, ' ');
+
       setId(id);
       setCleanArticle(cleanContent);
-      console.log('ketika content ada maka akan dilakukan pembersihan content');
-      if (!isPlaying) {
-        Tts.setDefaultLanguage('id-ID');
-        Tts.stop();
-        // setIsLoading(true);
-        dispatch(setLoading({id, value: true}));
-        Tts.speak(cleanContent);
-        console.log('tts sedang diputar');
-      } else {
-        Tts.stop();
-        // hideSnackbar();
-        console.log('stop tts button');
+
+      // Set loading state for the new TTS
+      dispatch(setLoading({id, value: true}));
+
+      // Set the new TTS to speak
+      Tts.setDefaultLanguage('id-ID');
+      try {
+        await Tts.stop();
+        Tts.speak(cleanContent); // Speak the new content
+        dispatch(setPlaying({id, value: true})); // Mark the new button as playing
+      } catch (error) {
+        console.error('Error during TTS:', error);
+      } finally {
+        dispatch(setLoading({id, value: false})); // Reset loading after speaking or error
       }
-      dispatch(setPlaying({id, value: !isPlaying}));
-      console.log('toggle change');
     }
+
     onPress?.();
   };
-
   return (
     <View style={styles.container}>
       <TouchableOpacity
