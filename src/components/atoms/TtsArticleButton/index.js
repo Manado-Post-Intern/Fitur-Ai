@@ -20,14 +20,13 @@ import NetInfo from '@react-native-community/netinfo';
 import {useDispatch, useSelector} from 'react-redux';
 import {setPlaying, setLoading} from '../../../redux/ttsSlice';
 
-const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
-  // const [isPlayingArticle, setIsPlayingArticle] = useState(false);
-  const {showSnackbar, hideSnackbar, setCleanArticle, visible} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
+  const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
   const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
-  // const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
   const dispatch = useDispatch();
-  const {isPlaying, isLoading} = useSelector(state => state.tts);
+  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false); // Get playing state for the specific button
+  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false); // Get loading state for the specific button
 
   useEffect(() => {
     if (visible) {
@@ -35,7 +34,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       console.log('berubah menjadi icon stop');
     } else {
       // setIsPlayingArticle(false);
-      dispatch(setPlaying(false));
+      dispatch(setPlaying({id, value: false}));
       console.log('kembali menjadi icon play');
     }
   }, [visible]);
@@ -55,36 +54,23 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
   useEffect(() => {
     // Event listener ketika TTS mulai berbicara
     Tts.addEventListener('tts-start', () => {
-      // setIsLoadingArticle(false); // Matikan loading ketika suara mulai berbunyi
-      // setIsPlayingArticle(true); // Atur tombol menjadi "Jeda"
-      dispatch(setLoading(false));
-      dispatch(setPlaying(true));
+      dispatch(setLoading({id, value: false}));
+      dispatch(setPlaying({id, value: true}));
       console.log('tts telah diputar article');
     });
-    Tts.addEventListener('tts-progress', () => {
-      // setIsLoadingArticle(false); // Matikan loading ketika suara mulai berbunyi
-      // setIsPlayingArticle(true); // Atur tombol menjadi "Jeda"
-      dispatch(setLoading(false));
-      dispatch(setPlaying(true));
-      console.log('tts sedang berjalan article');
-    });
-    // Event listener ketika TTS selesai berbicara
+
     Tts.addEventListener('tts-finish', () => {
-      // setIsPlayingArticle(false);
-      dispatch(setPlaying(false));
+      dispatch(setPlaying({id, value: false}));
       console.log('tts telah selesai diputar article');
     }); // Suara selesai, atur tombol ke "Dengar"
     Tts.addEventListener('tts-cancel', () => {
-      // setIsPlayingArticle(false);
-      // setIsLoadingArticle(false);
-      dispatch(setLoading(false));
-      dispatch(setPlaying(false));
+      dispatch(setPlaying({id, value: false}));
+      dispatch(setLoading({id, value: false}));
       console.log('memcancel tts article');
     }); // Jika dibatalkan, tombol kembali ke "Dengar"
 
     return () => {
       Tts.removeAllListeners('tts-start');
-      Tts.removeAllListeners('tts-progress');
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
     };
@@ -104,7 +90,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       .replace(/manadopost\.id/gi, '')
       .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
       .replace(/(\r\n|\n|\r)/g, ' ');
-
+    setId(id);
     setCleanArticle(cleanArticle);
     console.log('berhasil menerima article content');
 
@@ -112,7 +98,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
       showSnackbar(title, '#024D91');
       Tts.setDefaultLanguage('id-ID');
       // setIsLoadingArticle(true);
-      dispatch(setLoading(true));
+      dispatch(setLoading({id, value: true}));
       Tts.speak(cleanArticle);
       console.log('playing tts');
     } else {
@@ -122,7 +108,7 @@ const TtsArticleButton = ({scrollY, isActive, onPress, article, title}) => {
     }
 
     // Toggle status pemutaran
-    dispatch(setPlaying(!isPlaying));
+    dispatch(setPlaying({id, value: !isPlaying}));
   };
   return (
     <TouchableOpacity

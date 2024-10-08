@@ -209,6 +209,7 @@ const MoreNews = ({route}) => {
                 isActive={activeTTS === item.id}
                 onPress={() => handleTTSPress(item.id)}
                 onSendTitle={handleSendTitle}
+                id={item.id}
                 // disabled={isDisabled}// Pass disabled state
               />
             );

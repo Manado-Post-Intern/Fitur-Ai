@@ -12,6 +12,7 @@ const SnackbarContext = createContext();
 export const useSnackbar = () => useContext(SnackbarContext);
 
 export const SnackbarProvider = ({children}) => {
+  const [id, setId] = useState(null);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [textColor, setTextColor] = useState('white');
@@ -56,6 +57,7 @@ export const SnackbarProvider = ({children}) => {
         setCleanArticle,
         visible,
         setVisible,
+        setId,
       }}>
       {children}
       <View style={styles.snackbarWrapper}>
@@ -71,6 +73,7 @@ export const SnackbarProvider = ({children}) => {
                   isActive={isActive}
                   onPress={toggleTTS}
                   content={cleanArticle || 'tidak ada content'}
+                  id={id}
                 />
                 <TouchableOpacity onPress={hideSnackbar}>
                   <IcXSmall style={[styles.actionLabel]} />
