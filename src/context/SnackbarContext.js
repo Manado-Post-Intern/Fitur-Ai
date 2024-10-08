@@ -3,7 +3,6 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {Snackbar} from 'react-native-paper';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 // import TTSButtonSnackbar from '../components/atoms/TtsButtonSnack';
-import TTSButtonSnackbar from '../components/atoms/TtsButtonSnack';
 import Tts from 'react-native-tts';
 import {IcCloseButton, IcXmark, IcXSmall, theme} from '../assets';
 import TtsSnackbarButton from '../components/atoms/TtsButtonSnack';
@@ -13,6 +12,7 @@ const SnackbarContext = createContext();
 export const useSnackbar = () => useContext(SnackbarContext);
 
 export const SnackbarProvider = ({children}) => {
+  const [id, setId] = useState(null);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [textColor, setTextColor] = useState('white');
@@ -57,6 +57,7 @@ export const SnackbarProvider = ({children}) => {
         setCleanArticle,
         visible,
         setVisible,
+        setId,
       }}>
       {children}
       <View style={styles.snackbarWrapper}>
@@ -72,6 +73,7 @@ export const SnackbarProvider = ({children}) => {
                   isActive={isActive}
                   onPress={toggleTTS}
                   content={cleanArticle || 'tidak ada content'}
+                  id={id}
                 />
                 <TouchableOpacity onPress={hideSnackbar}>
                   <IcXSmall style={[styles.actionLabel]} />

@@ -67,6 +67,7 @@ const Region = () => {
     if (activeTTS === id) {
       showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
+
     } else {
       showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);

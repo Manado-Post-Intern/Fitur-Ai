@@ -90,7 +90,6 @@ const NewsForYou = ({
     // setSelectedTitle(title); // Update title yang dipilih
     // titleRef.current = title; // Update nilai di useRef
     if (activeTTS === id) {
-      // hideSnackbar();
       showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
     } else {
