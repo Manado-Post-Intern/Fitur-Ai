@@ -31,12 +31,12 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
 
   const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
 
-  useEffect(() => {
-    if (!isActive) {
-      setIsLoadingArticle(false);
-      setIsPlayingArticle(false); // Reset status jika tombol ini tidak aktif
-    }
-  }, [isActive]);
+  // useEffect(() => {
+  //   if (!isActive) {
+  //     setIsLoadingArticle(false);
+  //     setIsPlayingArticle(false); // Reset status jika tombol ini tidak aktif
+  //   }
+  // }, [isActive]);
   
   useEffect(() => {
     if (visible) {

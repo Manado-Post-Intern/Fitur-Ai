@@ -105,6 +105,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       return;
     }
     dispatch(resetAllTtsExcept(id));
+    console.log("resetAllId");
 
     if (content) {
       const cleanContent = content
@@ -126,11 +127,16 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         await Tts.stop();
         Tts.speak(cleanContent); // Speak the new content
         dispatch(setPlaying({id, value: true})); // Mark the new button as playing
+        console.log("try button tts");
       } catch (error) {
         console.error('Error during TTS:', error);
       } finally {
         dispatch(setLoading({id, value: false})); // Reset loading after speaking or error
+        console.log("finally button tts");
       }
+      dispatch(setPlaying({id, value: !isPlaying}));
+    } else {
+      Tts.stop();
     }
 
     onPress?.();
