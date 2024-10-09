@@ -1,93 +1,94 @@
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable prettier/prettier */
-import React, {useEffect, useState} from 'react';
-import {TouchableOpacity, StyleSheet, ActivityIndicator, View} from 'react-native';
-import {IcTtsPlay, IcTtsStop} from '../../../assets';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect} from 'react';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import Tts from 'react-native-tts';
+import {IcTtsPlay, IcTtsStop} from '../../../assets';
 import {useSnackbar} from '../../../context/SnackbarContext';
-import NetInfo from '@react-native-community/netinfo';
+import {useDispatch, useSelector} from 'react-redux';
+import {setPlaying, setLoading} from '../../../redux/ttsSlice';
 
-const TTSButtonSnackbar = ({isActive, onPress, content}) => {
-  const {showSnackbar} = useSnackbar();
-  const [isConnected, setIsConnected] = useState(true);
-  const [isLoadingSnack, setIsLoadingSnack] = useState(false);
-  const [isPlayingSnack, setIsPlayingSnack] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setIsConnected(state.isConnected);
-      console.log(`Internet connection: ${state.isConnected}`);
-    });
-    return () => unsubscribe();
-  }, []);
+const TtsSnackbarButton = ({id}) => {
+  const dispatch = useDispatch();
+  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
+  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
+  const [ttsReady, setTtsReady] = useState(false);
+  const {cleanArticle} = useSnackbar(); // Get content from SnackbarContext
 
   useEffect(() => {
-    const onTtsStart = () => {
-      setIsLoadingSnack(false);
-      setIsPlayingSnack(true);
-      console.log('TTS started');
+    // Check TTS initialization status
+    Tts.getInitStatus()
+      .then(() => {
+        setTtsReady(true); // TTS is ready to use
+      })
+      .catch(error => {
+        console.error('TTS initialization failed:', error);
+        setTtsReady(false); // Failed to initialize TTS
+      });
+
+    const handleTtsStart = () => {
+      dispatch(setLoading({id, value: false}));
+      dispatch(setPlaying({id, value: true}));
+    };
+    
+    // const handleTtsProgress = () => {
+    //   dispatch(setLoading(false)); // Set loading false when TTS starts
+    //   dispatch(setPlaying(true)); // Set playing true when TTS starts
+    // };
+
+    const handleTtsFinish = () => {
+      dispatch(setPlaying({id, value: false}));
     };
 
-    const onTtsProgress = () => {
-      setIsLoadingSnack(false);
-      setIsPlayingSnack(true);
-    }
-  
-    const onTtsFinish = () => {
-      setIsPlayingSnack(false);
-      console.log('TTS finished');
+    const handleTtsCancel = () => {
+      dispatch(setLoading({id, value: false}));
+      dispatch(setPlaying({id, value: false}));
     };
-  
-    const onTtsCancel = () => {
-      setIsPlayingSnack(false);
-      setIsLoadingSnack(false);
-      console.log('TTS cancelled');
-    };
-  
-    Tts.addEventListener('tts-start', onTtsStart);
-    Tts.addEventListener('tts-progress', onTtsProgress);
-    Tts.addEventListener('tts-finish', onTtsFinish);
-    Tts.addEventListener('tts-cancel', onTtsCancel);
-  
+
+    // Add event listeners for TTS events
+    Tts.addEventListener('tts-start', handleTtsStart);
+    // Tts.addEventListener('tts-progress', handleTtsProgress);
+    Tts.addEventListener('tts-finish', handleTtsFinish);
+    Tts.addEventListener('tts-cancel', handleTtsCancel);
+
     return () => {
-      Tts.removeEventListener('tts-start', onTtsStart);
-      Tts.removeEventListener('tts-finish', onTtsFinish);
-      Tts.removeEventListener('tts-cancel', onTtsCancel);
+      // Cleanup event listeners
+      Tts.removeAllListeners('tts-start');
+      // Tts.removeAllListeners('tts-progress');
+      Tts.removeAllListeners('tts-finish');
+      Tts.removeAllListeners('tts-cancel');
     };
-  }, [isPlayingSnack]);
+  }, [isPlaying]);
 
-  const handlePress = async () => {
-    if (!isConnected) {
-      showSnackbar('No internet connection.');
+  const handleTtsPress = () => {
+    if (!ttsReady) {
+      console.error('TTS is not ready.');
       return;
     }
-  
-    if (content) {
-      Tts.setDefaultLanguage('id-ID');
-      console.log("content berhasil diterima");
-      if (!isPlayingSnack) {
-        Tts.stop();
-        setIsLoadingSnack(true);
-        Tts.speak(content);
-        console.log("memutar tts dari snackbar");
+
+    if (cleanArticle) {
+      if (isPlaying) {
+        // Stop TTS if already playing
+        Tts.stop(); // Stop TTS playback
       } else {
-        console.log('Stopping TTS');
-        Tts.stop(); // Hentikan pemutaran TTS
+        dispatch(setLoading({id, value: true}));
+        Tts.speak(cleanArticle); // Speak the content
       }
     } else {
-      console.log('No content to read');
-    }
-  
-    if (onPress) {
-      onPress(); // Panggil onPress jika ada
+      console.error('No content to play.');
     }
   };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress} style={styles.button} disabled={isLoadingSnack}>
-        {isLoadingSnack ? (
+      <TouchableOpacity onPress={handleTtsPress}>
+        {isLoading ? (
           <ActivityIndicator size="small" color="#0000ff" />
-        ) : isPlayingSnack ? (
+        ) : isPlaying ? (
           <IcTtsStop width={24} height={24} />
         ) : (
           <IcTtsPlay width={24} height={24} />
@@ -98,11 +99,10 @@ const TTSButtonSnackbar = ({isActive, onPress, content}) => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
+  container: {
     justifyContent: 'center',
-    borderRadius: 5,
+    alignItems: 'center',
   },
 });
 
-export default TTSButtonSnackbar;
+export default TtsSnackbarButton;

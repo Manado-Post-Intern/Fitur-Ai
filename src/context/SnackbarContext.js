@@ -1,15 +1,18 @@
+/* eslint-disable no-unused-vars */
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {Snackbar} from 'react-native-paper';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import TTSButton from '../components/atoms/TtsButton'; // Pastikan jalur impor sesuai
+// import TTSButtonSnackbar from '../components/atoms/TtsButtonSnack';
 import Tts from 'react-native-tts';
 import {IcCloseButton, IcXmark, IcXSmall, theme} from '../assets';
+import TtsSnackbarButton from '../components/atoms/TtsButtonSnack';
 
 const SnackbarContext = createContext();
 
 export const useSnackbar = () => useContext(SnackbarContext);
 
 export const SnackbarProvider = ({children}) => {
+  const [id, setId] = useState(null);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [textColor, setTextColor] = useState('white');
@@ -54,6 +57,7 @@ export const SnackbarProvider = ({children}) => {
         setCleanArticle,
         visible,
         setVisible,
+        setId,
       }}>
       {children}
       <View style={styles.snackbarWrapper}>
@@ -65,10 +69,10 @@ export const SnackbarProvider = ({children}) => {
           action={{
             label: (
               <View style={styles.actionStyle}>
-                <TTSButton
+                <TtsSnackbarButton
                   isActive={isActive}
-                  onPress={toggleTTS}
                   content={cleanArticle || 'tidak ada content'}
+                  id={id}
                 />
                 <TouchableOpacity onPress={hideSnackbar}>
                   <IcXSmall style={[styles.actionLabel]} />
@@ -76,11 +80,8 @@ export const SnackbarProvider = ({children}) => {
               </View>
             ),
           }}>
-          <Text
-            style={styles.snackbarText}
-            numberOfLines={2}
-            ellipsizeMode="tail">
-            {message.length > 30 ? `${message.substring(0, 30)}...` : message}
+          <Text style={[styles.snackbarText, {color: textColor}]}>
+            {message}
           </Text>
         </Snackbar>
       </View>
@@ -109,13 +110,9 @@ const styles = StyleSheet.create({
     top: 2,
   },
   snackbarText: {
-    color: 'black',
-    fontSize: 10, // Kurangi ukuran font agar lebih banyak karakter yang muat
-    width: 90, // Lebar lebih besar agar bisa memuat lebih banyak teks
-    height: 30, // Tetap sesuai dengan kebutuhan
-    overflow: 'hidden', // Pastikan teks yang tidak muat tersembunyi
+    fontSize: 10,
+    width: 80,
   },
-
   actionStyle: {
     flexDirection: 'row',
   },
