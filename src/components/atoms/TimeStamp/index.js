@@ -16,7 +16,7 @@ export default TimeStamp;
 
 const styles = StyleSheet.create({
   timeStamp: {
-    fontSize: 10,
+    fontSize: 9,
     color: theme.colors.headlines.timeStamps.color,
   },
   small: {

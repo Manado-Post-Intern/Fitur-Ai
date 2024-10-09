@@ -1,21 +1,29 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
 import {
   Image,
   RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {IMGMPTextPrimary, IcBack, IcMagnifying, theme} from '../../assets';
-import {TextInter} from '../../components';
+import {SnackbarNotification, TextInter} from '../../components';
 import {Card, MediumBanner} from './components';
 import {useNavigation} from '@react-navigation/native';
 import {regionList, sectionList} from '../../data';
 import {latestEndPoint, loadSession, tagArticle} from '../../api';
 import axios from 'axios';
 import {AdsContext} from '../../context/AdsContext';
+import {Snackbar} from 'react-native-paper';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 const SPACING = 10;
 
@@ -27,6 +35,43 @@ const MoreNews = ({route}) => {
   const {sectionId, tag, latest, forYou, newsForYou} = route.params;
   const {medium} = useContext(AdsContext);
   const label = sectionList.find(item => item?.id === sectionId)?.name;
+
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar();
+
+  const [activeTTS, setActiveTTS] = useState(null);
+
+  const handleTTSPress = (id) => {
+    if (activeTTS === id) {
+
+      setActiveTTS(id);
+      console.log("more news id tracking",id);
+      const selectedItem = moreNews.find(item => item.id === id);
+      if (selectedItem) {
+        showSnackbar(`${selectedItem.title}`, 'black');
+      }
+    } else {
+      setActiveTTS(id);
+      console.log("more news id tracking",id);
+      const selectedItem = moreNews.find(item => item.id === id);
+      if (selectedItem) {
+        showSnackbar(`${selectedItem.title}`, 'black');
+      }
+    }
+  };
+  
+
+  const handleSendTitle = (title, id) => {
+    if (activeTTS === id) {
+      // hideSnackbar();
+      // console.log("tts tidak aktif more news");
+      showSnackbar(`${title}`, 'black');
+      console.log("menampilkan judul dari tombol tts more news = ",title);
+    } else {
+      showSnackbar(`${title}`, 'black');
+      console.log("menampilkan judul dari tombol tts more news = ",title);
+    }
+  };
+
 
   const navigation = useNavigation();
 
@@ -110,6 +155,7 @@ const MoreNews = ({route}) => {
         console.log(error);
       });
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -151,7 +197,20 @@ const MoreNews = ({route}) => {
 
         <View>
           {moreNews?.map((item, index) => {
-            return <Card key={index} item={item} />;
+            // const isDisabled = activeTTS !== null && activeTTS !== item.id; // Disable if another button is active
+            // Tambahkan console log untuk tracking isDisabled
+            // console.log(`Item ID: ${item.id}, isDisabled: ${isDisabled}`);
+            return (
+              <Card
+                key={index}
+                item={item}
+                isActive={activeTTS === item.id}
+                onPress={() => handleTTSPress(item.id)}
+                onSendTitle={handleSendTitle}
+                id={item.id}
+                // disabled={isDisabled}// Pass disabled state
+              />
+            );
           })}
         </View>
       </ScrollView>
@@ -178,5 +237,20 @@ const styles = StyleSheet.create({
     color: theme.colors.MPGrey2,
     fontWeight: '700',
     marginLeft: 16,
+  },
+  snackbar: {
+    position: 'static',
+    bottom: 60,
+    width: 400,
+    height: 20,
+    marginVertical: 10,
+    backgroundColor: 'rgba(0, 0, 255, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  textSnacbar: {
+    color: 'white',
+    textAlign: 'center',
   },
 });

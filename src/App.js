@@ -1,6 +1,13 @@
 /* eslint-disable prettier/prettier */
 
-import {StyleSheet, Alert, Linking, BackHandler, AppState} from 'react-native';
+import {
+  StyleSheet,
+  Alert,
+  Linking,
+  BackHandler,
+  AppState,
+  View,
+} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routes';
@@ -15,6 +22,18 @@ import {AdsProvider} from './context/AdsContext';
 import {MPDigitalProvider} from './context/MPDigitalContext';
 import {TokenProvider} from './context/TokenContext';
 import VersionCheck from 'react-native-version-check';
+
+import PersistentText from './components/atoms/PersistenText';
+import {SnackbarNotification} from './components';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SnackbarProvider} from './context/SnackbarContext';
+import {
+  ErrorNotificationProvider,
+  useErrorNotification,
+} from './context/ErrorNotificationContext'; // Import context
+import ErrorNotification from './components/atoms/ErrorNotification'; // Import komponen notifikasI
+import { Provider } from 'react-redux'; // Import Redux Provider
+import { store } from './redux/store'; // Import the Redux store
 
 GoogleSignin.configure({
   webClientId:
@@ -93,21 +112,33 @@ const App = () => {
   }, []);
 
   return (
-    <AuthProvider>
-      <TokenProvider>
-        <AdsProvider>
-          <MPDigitalProvider>
-            <GestureHandlerRootView style={styles.gestureHandlerRootView}>
-              <BottomSheetModalProvider>
-                <NavigationContainer>
-                  <Routes />
-                </NavigationContainer>
-              </BottomSheetModalProvider>
-            </GestureHandlerRootView>
-          </MPDigitalProvider>
-        </AdsProvider>
-      </TokenProvider>
-    </AuthProvider>
+    <SafeAreaProvider>
+      <ErrorNotificationProvider>
+        <AuthProvider>
+          <TokenProvider>
+            <AdsProvider>
+              <MPDigitalProvider>
+              <Provider store={store}> 
+                <SnackbarProvider>
+                  <GestureHandlerRootView style={styles.gestureHandlerRootView}>
+                    <BottomSheetModalProvider>
+                      <NavigationContainer>
+                        <View style={styles.container}>
+                          <Routes />
+                          <SnackbarNotification />
+                          <ErrorNotification />
+                        </View>
+                      </NavigationContainer>
+                    </BottomSheetModalProvider>
+                  </GestureHandlerRootView>
+                </SnackbarProvider>
+                </Provider>
+              </MPDigitalProvider>
+            </AdsProvider>
+          </TokenProvider>
+        </AuthProvider>
+      </ErrorNotificationProvider>
+    </SafeAreaProvider>
   );
 };
 
@@ -115,6 +146,9 @@ export default App;
 
 const styles = StyleSheet.create({
   gestureHandlerRootView: {
+    flex: 1,
+  },
+  container: {
     flex: 1,
   },
 });
