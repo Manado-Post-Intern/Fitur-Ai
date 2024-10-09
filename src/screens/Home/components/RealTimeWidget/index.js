@@ -1,7 +1,8 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import database from '@react-native-firebase/database';
-import {IcGreenIndicator, IcRedIndicator, IMGCengkeh} from '../../../../assets';
+import {IcGreenIndicator, IcRedIndicator} from '../../../../assets';
+import {IMGCengkeh} from '../../../../assets';
 
 const RealTimeWidget = () => {
   const [currentPrice, setCurrentPrice] = useState(null);
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    marginLeft: '3%',
+    marginLeft: '2%',
   },
   image: {
     flex: 1,
@@ -133,8 +134,8 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: 'contain',
     position: 'absolute',
-    left: '61%',
-    bottom: '-28%',
+    left: '65%',
+    bottom: '-15%',
   },
   dateContainer: {
     marginTop: 8,
