@@ -32,6 +32,8 @@ import {
   useErrorNotification,
 } from './context/ErrorNotificationContext'; // Import context
 import ErrorNotification from './components/atoms/ErrorNotification'; // Import komponen notifikasI
+import { Provider } from 'react-redux'; // Import Redux Provider
+import { store } from './redux/store'; // Import the Redux store
 
 GoogleSignin.configure({
   webClientId:
@@ -116,6 +118,7 @@ const App = () => {
           <TokenProvider>
             <AdsProvider>
               <MPDigitalProvider>
+              <Provider store={store}> 
                 <SnackbarProvider>
                   <GestureHandlerRootView style={styles.gestureHandlerRootView}>
                     <BottomSheetModalProvider>
@@ -129,6 +132,7 @@ const App = () => {
                     </BottomSheetModalProvider>
                   </GestureHandlerRootView>
                 </SnackbarProvider>
+                </Provider>
               </MPDigitalProvider>
             </AdsProvider>
           </TokenProvider>

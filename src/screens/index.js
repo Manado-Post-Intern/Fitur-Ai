@@ -16,7 +16,6 @@ import Subscription from './Subscription';
 import Ads from './Ads';
 import Marketplace from './Marketplace';
 import MoreNews from './MoreNews';
-import LoginWill from './LoginWill';
 
 export * from './Authentication';
 export * from './ChooseCanal';
@@ -45,5 +44,4 @@ export {
   Ads,
   Marketplace,
   MoreNews,
-  LoginWill,
 };

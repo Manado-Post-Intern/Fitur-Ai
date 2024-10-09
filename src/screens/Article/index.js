@@ -149,6 +149,7 @@ const Article = ({route, navigation}) => {
                 <TtsArticleButton
                   article={article?.content}
                   title={article?.title}
+                  id={articleId}
                 />
               </View>
             </View>
