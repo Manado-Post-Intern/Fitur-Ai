@@ -12,7 +12,11 @@ import {useSnackbar} from '../../../context/SnackbarContext';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext';
 import {useDispatch, useSelector} from 'react-redux';
-import {setPlaying, setLoading} from '../../../redux/ttsSlice';
+import {
+  setPlaying,
+  setLoading,
+  resetAllTtsExcept,
+} from '../../../redux/ttsSlice';
 
 const TTSButton = ({id, isActive, onPress, content}) => {
   const [isConnected, setIsConnected] = useState(true);
@@ -47,13 +51,6 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     });
     return () => unsubscribe();
   }, [isPlaying]);
-
-  useEffect(() => {
-    if (!isActive) {
-      dispatch(setPlaying({id, value: false}));
-      dispatch(setLoading({id, value: false}));
-    }
-  }, [isActive]);
 
   useEffect(() => {
     // Checking TTS initialization status
@@ -100,6 +97,17 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       console.error('TTS is not ready');
       return;
     }
+    dispatch(resetAllTtsExcept(id));
+    console.log("reset id");
+
+    if (isPlaying) {
+      // If the current button is already playing, stop the TTS
+      Tts.stop();
+      hideSnackbar();
+      // dispatch(setPlaying({id, value: false})); // Mark this button as not playing
+      // dispatch(setLoading({id, value: false})); // Reset loading state
+      return; // Exit the function
+    }
 
     if (content) {
       const cleanContent = content
@@ -108,27 +116,32 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         .replace(/manadopost\.id/gi, '')
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, ' ');
+
       setId(id);
       setCleanArticle(cleanContent);
-      console.log('ketika content ada maka akan dilakukan pembersihan content');
-      if (!isPlaying) {
-        Tts.setDefaultLanguage('id-ID');
-        Tts.stop();
-        // setIsLoading(true);
-        dispatch(setLoading({id, value: true}));
-        Tts.speak(cleanContent);
-        console.log('tts sedang diputar');
-      } else {
-        Tts.stop();
-        // hideSnackbar();
-        console.log('stop tts button');
+
+      // Set loading state for the new TTS
+      dispatch(setLoading({id, value: true}));
+      console.log("set loading true");
+
+      // Set the new TTS to speak
+      Tts.setDefaultLanguage('id-ID');
+      try {
+        await Tts.stop();
+        Tts.speak(cleanContent); // Speak the new content
+        dispatch(setPlaying({id, value: true}));
+        console.log("try button tts");
+      } catch (error) {
+        console.error('Error during TTS:', error);
       }
-      dispatch(setPlaying({id, value: !isPlaying}));
-      console.log('toggle change');
+      // finally {
+      //   dispatch(setLoading({id, value: true})); // Reset loading after speaking or error
+      //   console.log("finally button tts");
+      // }
+      // dispatch(setPlaying({id, value: !isPlaying}));
     }
     onPress?.();
   };
-
   return (
     <View style={styles.container}>
       <TouchableOpacity
