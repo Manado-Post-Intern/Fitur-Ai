@@ -53,13 +53,6 @@ const TTSButton = ({id, isActive, onPress, content}) => {
   }, [isPlaying]);
 
   useEffect(() => {
-    if (!isActive) {
-      dispatch(setPlaying({id, value: false}));
-      dispatch(setLoading({id, value: false}));
-    }
-  }, [isActive]);
-
-  useEffect(() => {
     // Checking TTS initialization status
     Tts.getInitStatus()
       .then(() => {
@@ -105,7 +98,16 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       return;
     }
     dispatch(resetAllTtsExcept(id));
-    console.log("resetAllId");
+    console.log("reset id");
+
+    if (isPlaying) {
+      // If the current button is already playing, stop the TTS
+      Tts.stop();
+      hideSnackbar();
+      // dispatch(setPlaying({id, value: false})); // Mark this button as not playing
+      // dispatch(setLoading({id, value: false})); // Reset loading state
+      return; // Exit the function
+    }
 
     if (content) {
       const cleanContent = content
@@ -120,25 +122,24 @@ const TTSButton = ({id, isActive, onPress, content}) => {
 
       // Set loading state for the new TTS
       dispatch(setLoading({id, value: true}));
+      console.log("set loading true");
 
       // Set the new TTS to speak
       Tts.setDefaultLanguage('id-ID');
       try {
         await Tts.stop();
         Tts.speak(cleanContent); // Speak the new content
-        dispatch(setPlaying({id, value: true})); // Mark the new button as playing
+        dispatch(setPlaying({id, value: true}));
         console.log("try button tts");
       } catch (error) {
         console.error('Error during TTS:', error);
-      } finally {
-        dispatch(setLoading({id, value: false})); // Reset loading after speaking or error
-        console.log("finally button tts");
       }
-      dispatch(setPlaying({id, value: !isPlaying}));
-    } else {
-      Tts.stop();
+      // finally {
+      //   dispatch(setLoading({id, value: true})); // Reset loading after speaking or error
+      //   console.log("finally button tts");
+      // }
+      // dispatch(setPlaying({id, value: !isPlaying}));
     }
-
     onPress?.();
   };
   return (

@@ -21,7 +21,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setPlaying, setLoading} from '../../../redux/ttsSlice';
 
 const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
-  const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} =
+    useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
   const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
 
@@ -31,13 +32,6 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
 
   const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
 
-  // useEffect(() => {
-  //   if (!isActive) {
-  //     setIsLoadingArticle(false);
-  //     setIsPlayingArticle(false); // Reset status jika tombol ini tidak aktif
-  //   }
-  // }, [isActive]);
-  
   useEffect(() => {
     if (visible) {
       // setIsPlaying(true);
