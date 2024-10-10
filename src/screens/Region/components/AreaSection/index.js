@@ -10,7 +10,13 @@ import {useSnackbar} from '../../../../context/SnackbarContext';
 
 const data = [0, 1, 2];
 
-const AreaSection = ({item, activeTTS, handleTtsPress, handleSendTitle}) => {
+const AreaSection = ({
+  id,
+  item,
+  activeTTS,
+  handleTtsPress,
+  handleSendTitle,
+}) => {
   const regionId = regionList.find(region => region.name === item?.region)?.id;
   const regionLogo = regionList.find(
     region => region.name === item?.region,
@@ -61,6 +67,7 @@ const AreaSection = ({item, activeTTS, handleTtsPress, handleSendTitle}) => {
             isActive={activeTTS === item.id}
             onPress={() => handleTtsPress(item.id)}
             onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
+            id={item.id}
           />
         );
       })}
