@@ -68,7 +68,8 @@ const Region = () => {
 
   const handleSendTitle = (title, id) => {
     if (activeTTS === id) {
-      // hideSnackbar();
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
     } else {
       showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
