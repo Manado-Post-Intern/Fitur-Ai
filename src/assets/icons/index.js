@@ -83,7 +83,10 @@ import IcCloseButton from './ic-closeButton.svg';
 import IcError from './ic-error.svg';
 import IcTtsArticleStop from './ic-TtsArticleStop.svg';
 import IcTtsStop from './ic-TtsStop.svg';
-
+import IcSummarizeSpark from './ic-SummarizeSpark.svg';
+import IcPopUpExit from './ic-PopUpExit.svg';
+import IcPopUpPlay from './ic-PopUpPlay.svg';
+import IcPopUpPause from './ic-PopUpPause.svg';
 export {
   Icrefreshpoll,
   IcGanti,
@@ -170,4 +173,8 @@ export {
   IcError,
   IcTtsArticleStop,
   IcTtsStop,
+  IcSummarizeSpark,
+  IcPopUpExit,
+  IcPopUpPlay,
+  IcPopUpPause,
 };
