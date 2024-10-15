@@ -1,10 +1,17 @@
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {theme} from '../../assets';
 import {Banner1, Banner2, Gap, SnackbarNotification} from '../../components';
 import {
   ActionSection,
   BottomBanner,
+  CardPoling,
   FullBanner,
   Headlines,
   LatestNews,
@@ -12,6 +19,7 @@ import {
   SecondBanner,
   Story,
   TopBanner,
+  RealTimeWidget,
 } from './components';
 import {screenHeightPercentage} from '../../utils';
 import CanalModal from './components/NewsForYou/components/CanalModal';
@@ -23,6 +31,8 @@ import {TokenContext} from '../../context/TokenContext';
 import {checkUserPreferences} from '../../utils/checkUserPreferences';
 import {AuthContext} from '../../context/AuthContext';
 import moment from 'moment';
+import database from '@react-native-firebase/database';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 const data = [0, 1, 2];
 const daerah = ['Manado', 'Minahasa Utara', 'Bitung', 'Tondano'];
@@ -37,11 +47,61 @@ const Home = ({navigation}) => {
   const [latest, setLatest] = useState(null);
   const [story, setStory] = useState(null);
   const {top, bottom, second, full} = useContext(AdsContext);
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const handleShowSnackbar = (show, message) => {
-    setShowSnackbar(show);
-    setSnackbarMessage(message);
+  const [isPollingActive, setIsPollingActive] = useState(false);
+  const [isRealTime, setisRealTime] = useState(false);
+
+  const fetchPollingStatus = async () => {
+    try {
+      const snapshot = await database()
+        .ref('polling/isPollingActive')
+        .once('value');
+      const status = snapshot.val();
+      setIsPollingActive(status === 1);
+    } catch (error) {
+      console.log('Error fetching polling status:', error);
+    }
+  };
+  useEffect(() => {
+    fetchPollingStatus();
+    const onPollingStatusChange = database()
+      .ref('polling/isPollingActive')
+      .on('value', snapshot => {
+        const status = snapshot.val();
+        setIsPollingActive(status === 1);
+      });
+
+    return () =>
+      database()
+        .ref('polling/isPollingActive')
+        .off('value', onPollingStatusChange);
+  }, []);
+
+  const fetchRealtimeHarga = async () => {
+    try {
+      const snapshot = await database()
+        .ref('realTimePrice/isRealTimeActive')
+        .once('value');
+      const status = snapshot.val();
+      setisRealTime(status === 1);
+    } catch (error) {
+      console.log('Error fetching polling status:', error);
+    }
+  };
+  useEffect(() => {
+    fetchRealtimeHarga();
+    const onfetchRealtimeHarga = database()
+      .ref('realTimePrice/isRealTimeActive')
+      .on('value', snapshot => {
+        const status = snapshot.val();
+        setisRealTime(status === 1);
+      });
+    return () =>
+      database().ref('/isRealTimeActive').off('value', onfetchRealtimeHarga);
+  }, []);
+  const {showSnackbar} = useSnackbar();
+
+  const handleSomeAction = () => {
+    showSnackbar('Snackbar message!', 'black');
   };
 
   const getHeadline = async () => {
@@ -193,22 +253,22 @@ const Home = ({navigation}) => {
           {top && <TopBanner item={top} />}
 
           <Gap height={12} />
+          {isPollingActive && <CardPoling />}
+          <Gap height={12} />
+          {isRealTime && <RealTimeWidget />}
 
+          <Gap height={12} />
           <Headlines data={headlines} />
-
           <Gap height={12} />
-
           {second && <SecondBanner item={second} />}
-
           <Gap height={12} />
-
           <NewsForYou
             canalModalRef={canalModalRef}
             item={forYou?.array.sort((a, b) =>
               moment(b.published_date).diff(moment(a.published_date)),
             )}
             preferences={forYou?.preferences}
-            onShowSnackbar={handleShowSnackbar}
+            onShowSnackbar={handleSomeAction}
           />
 
           <Gap height={25} />
@@ -241,11 +301,7 @@ const Home = ({navigation}) => {
 
           <Gap height={screenHeightPercentage('11%')} />
         </ScrollView>
-        <SnackbarNotification
-          visible={showSnackbar}
-          onDismiss={() => setShowSnackbar(false)}
-          message={snackbarMessage}
-        />
+
         <CanalModal
           canalModalRef={canalModalRef}
           preferences={forYou?.preferences}

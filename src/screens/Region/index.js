@@ -1,4 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-shadow */
 import {
+  // eslint-disable-next-line no-unused-vars
   FlatList,
   SafeAreaView,
   ScrollView,
@@ -9,16 +12,20 @@ import React, {useEffect, useState} from 'react';
 import {Banner2, Gap, TopBar} from '../../components';
 import {screenHeightPercentage} from '../../utils';
 import {theme} from '../../assets';
+// eslint-disable-next-line no-unused-vars
 import {AreaSection, Story} from './components';
 import {latestEndPoint, loadSession} from '../../api';
 import {regionList} from '../../data';
 import axios from 'axios';
+import {useSnackbar} from '../../context/SnackbarContext';
 
+// eslint-disable-next-line no-unused-vars
 const story = ['Manado', 'Bitung', 'Tomohon', 'Minahasa', 'Minahasa Utara'];
 
 const Region = () => {
   const [token, setToken] = useState(null);
   const [data, setData] = useState(null);
+
 
   const getRegion = async () => {
     const promises = regionList.map(async item => {
@@ -41,6 +48,34 @@ const Region = () => {
       console.log(error);
     }
   };
+
+  const [activeTTS, setActiveTTS] = useState(null);
+  const {showSnackbar, hideSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
+
+  const handleTtsPress = id => {
+    if (activeTTS !== null && activeTTS !== id) {
+      // setActiveTTS(null);
+      setActiveTTS(id);
+    }
+
+    if (activeTTS === id) {
+      // setActiveTTS(null);
+      setActiveTTS(id);
+    } else {
+      setActiveTTS(id);
+    }
+  };
+
+  const handleSendTitle = (title, id) => {
+    if (activeTTS === id) {
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
+    } else {
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
+    }
+  };
+
 
   useEffect(() => {
     if (token) {
@@ -82,9 +117,16 @@ const Region = () => {
         <Gap height={18} />
 
         {/* <AreaSection /> */}
-        {data?.map((item, index) => {
-          return <AreaSection key={index} item={item} />;
-        })}
+        {data?.map((item, index) => (
+          <AreaSection
+            key={index}
+            item={item}
+            activeTTS={activeTTS}
+            handleTtsPress={handleTtsPress}
+            handleSendTitle={handleSendTitle}
+            // id={item.id}
+          />
+        ))}
 
         <Gap height={screenHeightPercentage('11%')} />
       </ScrollView>

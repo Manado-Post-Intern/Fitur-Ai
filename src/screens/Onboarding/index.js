@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-unused-vars */
 import {
   FlatList,
   Pressable,
@@ -114,6 +116,7 @@ const Onboarding = () => {
           <SocialSignIn type={'google'} />
           <Gap height={75} />
         </View>
+        {/* Invisible Button in Top Right Corner */}
       </View>
     </SafeAreaView>
   );

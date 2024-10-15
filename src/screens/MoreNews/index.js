@@ -1,3 +1,8 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
 import {
   Image,
   RefreshControl,
@@ -10,7 +15,7 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {IMGMPTextPrimary, IcBack, IcMagnifying, theme} from '../../assets';
-import {TextInter} from '../../components';
+import {SnackbarNotification, TextInter} from '../../components';
 import {Card, MediumBanner} from './components';
 import {useNavigation} from '@react-navigation/native';
 import {regionList, sectionList} from '../../data';
@@ -18,6 +23,7 @@ import {latestEndPoint, loadSession, tagArticle} from '../../api';
 import axios from 'axios';
 import {AdsContext} from '../../context/AdsContext';
 import {Snackbar} from 'react-native-paper';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 const SPACING = 10;
 
@@ -30,23 +36,43 @@ const MoreNews = ({route}) => {
   const {medium} = useContext(AdsContext);
   const label = sectionList.find(item => item?.id === sectionId)?.name;
 
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar();
+
   const [activeTTS, setActiveTTS] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
 
-  const handleTTSPress = id => {
-    if (activeTTS !== null && activeTTS !== id) {
-      setActiveTTS(null);
-      setShowPopup(false);
-    }
-
+  const handleTTSPress = (id) => {
     if (activeTTS === id) {
-      setActiveTTS(null);
-      setShowPopup(false);
+
+      setActiveTTS(id);
+      console.log("more news id tracking",id);
+      const selectedItem = moreNews.find(item => item.id === id);
+      if (selectedItem) {
+        showSnackbar(`${selectedItem.title}`, 'black');
+      }
     } else {
       setActiveTTS(id);
-      setShowPopup(true);
+      console.log("more news id tracking",id);
+      const selectedItem = moreNews.find(item => item.id === id);
+      if (selectedItem) {
+        showSnackbar(`${selectedItem.title}`, 'black');
+      }
     }
   };
+  
+
+  const handleSendTitle = (title, id) => {
+    if (activeTTS === id) {
+      // hideSnackbar();
+      // console.log("tts tidak aktif more news");
+      showSnackbar(`${title}`, 'black');
+      console.log("menampilkan judul dari tombol tts more news = ",title);
+    } else {
+      showSnackbar(`${title}`, 'black');
+      console.log("menampilkan judul dari tombol tts more news = ",title);
+    }
+  };
+
+
   const navigation = useNavigation();
 
   const bottomReached = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -129,6 +155,7 @@ const MoreNews = ({route}) => {
         console.log(error);
       });
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -170,23 +197,21 @@ const MoreNews = ({route}) => {
 
         <View>
           {moreNews?.map((item, index) => {
+            // const isDisabled = activeTTS !== null && activeTTS !== item.id; // Disable if another button is active
+            // Tambahkan console log untuk tracking isDisabled
+            // console.log(`Item ID: ${item.id}, isDisabled: ${isDisabled}`);
             return (
               <Card
                 key={index}
                 item={item}
                 isActive={activeTTS === item.id}
                 onPress={() => handleTTSPress(item.id)}
+                onSendTitle={handleSendTitle}
+                id={item.id}
+                // disabled={isDisabled}// Pass disabled state
               />
             );
           })}
-          {showPopup && (
-            <Snackbar
-              visible={showPopup}
-              onDismiss={() => setShowPopup(false)}
-              style={styles.snackbar}>
-              <Text style={styles.textSnacbar}>Mendengarkan...</Text>
-            </Snackbar>
-          )}
         </View>
       </ScrollView>
     </SafeAreaView>

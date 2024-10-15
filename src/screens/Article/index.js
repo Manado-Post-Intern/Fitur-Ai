@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-shadow */
 import {
   Image,
   Linking,
@@ -144,7 +146,13 @@ const Article = ({route, navigation}) => {
             <Gap height={7} />
             <View style={styles.TtsButton}>
               <TimeStamp data={article?.published_date} />
-              <TtsArticleButton />
+              <View style={styles.WrapTts}>
+                <TtsArticleButton
+                  article={article?.content}
+                  title={article?.title}
+                  id={articleId}
+                />
+              </View>
             </View>
             <Gap height={7} />
             {article?.author.map((item, index) => {
@@ -314,5 +322,9 @@ const styles = StyleSheet.create({
   },
   TtsButton: {
     flexDirection: 'row',
+  },
+  WrapTts: {
+    left: 80,
+    top: 10,
   },
 });
