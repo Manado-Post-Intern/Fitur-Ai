@@ -121,11 +121,11 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       // Set loading state for the new TTS
       dispatch(setLoading({id, value: true}));
       console.log("set loading true");
-
-      // Set the new TTS to speak
-      Tts.setDefaultLanguage('id-ID');
+      
       try {
-        await Tts.stop();
+        await // Set the new TTS to speak
+        Tts.setDefaultLanguage('id-ID'); 
+        Tts.stop();
         Tts.speak(cleanContent); // Speak the new content
         dispatch(setPlaying({id, value: true}));
         console.log("try button tts");
