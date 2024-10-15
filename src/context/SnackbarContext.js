@@ -80,8 +80,11 @@ export const SnackbarProvider = ({children}) => {
               </View>
             ),
           }}>
-          <Text style={[styles.snackbarText, {color: textColor}]}>
-            {message}
+          <Text
+            style={styles.snackbarText}
+            numberOfLines={2}
+            ellipsizeMode="tail">
+            {message.length > 30 ? `${message.substring(0, 30)}...` : message}
           </Text>
         </Snackbar>
       </View>
@@ -110,8 +113,11 @@ const styles = StyleSheet.create({
     top: 2,
   },
   snackbarText: {
+    color: 'black',
     fontSize: 10,
-    width: 80,
+    width: 90,
+    height: 30,
+    overflow: 'hidden',
   },
   actionStyle: {
     flexDirection: 'row',
