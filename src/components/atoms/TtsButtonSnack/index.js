@@ -75,6 +75,7 @@ const TtsSnackbarButton = ({id}) => {
         // Stop TTS if already playing
         Tts.stop(); // Stop TTS playback
       } else {
+        Tts.setDefaultLanguage('id-ID'); 
         dispatch(setLoading({id, value: true}));
         Tts.speak(cleanArticle); // Speak the content
       }
