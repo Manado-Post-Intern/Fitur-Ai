@@ -14,10 +14,12 @@ import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
 import {Gap} from '../../../../components';
+import NetInfo from '@react-native-community/netinfo';
 
 const POLL_STORAGE_KEY = '@polling_result';
 
 const CardPoling = () => {
+  const [isProcessing, setIsProcessing] = useState(false);
   const [pollData, setPollData] = useState({
     totalVotes: 0,
     options: [],
@@ -134,31 +136,70 @@ const CardPoling = () => {
   }, []);
 
   const handleVote = async index => {
-    if (!pollData.hasVoted && userId) {
-      const newOptions = [...pollData.options];
-      newOptions[index].votes += 1;
+    const netInfo = await NetInfo.fetch();
 
-      await database()
-        .ref(`polling/candidates/${newOptions[index].text}/votes`)
-        .set(newOptions[index].votes);
-      await database().ref(`polling/users/${userId}`).set({
-        selectedCandidate: newOptions[index].text,
+    if (!netInfo.isConnected) {
+      Alert.alert(
+        'Tidak ada koneksi',
+        'Anda tidak dapat melakukan vote tanpa koneksi internet.',
+      );
+      return;
+    }
+    if (pollData.hasVoted || !userId) {
+      return;
+    }
+
+    const selectedCandidate = pollData.options[index].text;
+    setPollData(prevState => ({
+      ...prevState,
+      hasVoted: true,
+      selectedOption: index,
+    }));
+
+    try {
+      const voteTransaction = database().ref(
+        `polling/candidates/${selectedCandidate}/votes`,
+      );
+      const userVoteRef = database().ref(`polling/users/${userId}`);
+
+      await voteTransaction.transaction(votes => {
+        if (votes === null) {
+          return 1;
+        } else {
+          return votes + 1;
+        }
       });
-      setPollData({
-        ...pollData,
-        options: newOptions,
-        totalVotes: pollData.totalVotes + 1,
-        hasVoted: true,
-        selectedOption: index,
+
+      // Setelah transaksi berhasil, simpan vote user
+      await userVoteRef.set({
+        selectedCandidate: selectedCandidate,
       });
+
+      // Update totalVotes
+      setPollData(prevState => ({
+        ...prevState,
+        totalVotes: prevState.totalVotes + 1,
+      }));
+      await handleRefresh();
+    } catch (error) {
+      console.error('Error during vote transaction:', error);
+      setPollData(prevState => ({
+        ...prevState,
+        hasVoted: false,
+        selectedOption: null,
+      }));
     }
   };
   const handleChangeVote = () => {
+    if (isProcessing) {
+      return;
+    }
+    setIsProcessing(true);
     Alert.alert(
       'Ganti Pilihan',
       'Apakah Anda yakin ingin mengganti pilihan? Ini akan menghapus hasil polling Anda.',
       [
-        {text: 'Batal', style: 'cancel'},
+        {text: 'Batal', onPress: () => setIsProcessing(false), style: 'cancel'},
         {
           text: 'Ya',
           onPress: async () => {
@@ -166,29 +207,39 @@ const CardPoling = () => {
             const prevSelectedOption = pollData.selectedOption;
 
             if (prevSelectedOption !== null) {
-              newOptions[prevSelectedOption].votes -= 1;
+              const previousVotes = newOptions[prevSelectedOption].votes;
 
-              const previousCandidate = newOptions[prevSelectedOption].text;
+              if (previousVotes > 0) {
+                newOptions[prevSelectedOption].votes -= 1;
 
-              await database()
-                .ref(`polling/candidates/${previousCandidate}/votes`)
-                .set(newOptions[prevSelectedOption].votes);
+                const previousCandidate = newOptions[prevSelectedOption].text;
 
-              await database().ref(`polling/users/${userId}`).remove();
+                await database()
+                  .ref(`polling/candidates/${previousCandidate}/votes`)
+                  .set(newOptions[prevSelectedOption].votes);
+
+                await database().ref(`polling/users/${userId}`).remove();
+              }
             }
 
-            setPollData({
-              ...pollData,
-              options: newOptions,
-              hasVoted: false,
-              selectedOption: null,
-              totalVotes: pollData.totalVotes - 1,
-            });
+            setPollData(prevData => {
+              const updatedVotes = prevData.totalVotes - 1; // Mengurangi totalVotes hanya sekali
 
+              return {
+                ...prevData,
+                options: newOptions,
+                hasVoted: false,
+                selectedOption: null,
+                totalVotes: updatedVotes,
+              };
+            });
             await AsyncStorage.removeItem(POLL_STORAGE_KEY);
+
+            setIsProcessing(false);
           },
         },
       ],
+      {cancelable: false},
     );
   };
   const calculatePercentage = votes => {
@@ -218,7 +269,6 @@ const CardPoling = () => {
         }),
       );
 
-      // Memindahkan kandidat "Lainnya" ke bagian terakhir
       options = options.sort((a, b) => {
         if (a.text === 'Lainnya') {
           return 1;
@@ -339,7 +389,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   optionContent: {
-    padding: 15,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -366,7 +416,7 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 14,
     color: '#fff',
-    marginLeft: '60%',
+    marginLeft: '55%',
     flex: 1,
     fontFamily: theme.fonts.inter.semiBold,
   },

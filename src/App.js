@@ -32,8 +32,8 @@ import {
   useErrorNotification,
 } from './context/ErrorNotificationContext'; // Import context
 import ErrorNotification from './components/atoms/ErrorNotification'; // Import komponen notifikasI
-import { Provider } from 'react-redux'; // Import Redux Provider
-import { store } from './redux/store'; // Import the Redux store
+import {Provider} from 'react-redux'; // Import Redux Provider
+import {store} from './redux/store'; // Import the Redux store
 
 GoogleSignin.configure({
   webClientId:
@@ -41,7 +41,7 @@ GoogleSignin.configure({
 });
 
 const App = () => {
-  const latestVersion = '2.1.1'; // akan diganti dengan link dinamis
+  const latestVersion = '2.1.3.4'; // akan diganti dengan link dinamis
   const playStoreUrl =
     'https://play.google.com/store/apps/details?id=com.mp.manadopost&pcampaignid=web_share';
   const appState = useRef(AppState.currentState);
@@ -118,20 +118,21 @@ const App = () => {
           <TokenProvider>
             <AdsProvider>
               <MPDigitalProvider>
-              <Provider store={store}> 
-                <SnackbarProvider>
-                  <GestureHandlerRootView style={styles.gestureHandlerRootView}>
-                    <BottomSheetModalProvider>
-                      <NavigationContainer>
-                        <View style={styles.container}>
-                          <Routes />
-                          <SnackbarNotification />
-                          <ErrorNotification />
-                        </View>
-                      </NavigationContainer>
-                    </BottomSheetModalProvider>
-                  </GestureHandlerRootView>
-                </SnackbarProvider>
+                <Provider store={store}>
+                  <SnackbarProvider>
+                    <GestureHandlerRootView
+                      style={styles.gestureHandlerRootView}>
+                      <BottomSheetModalProvider>
+                        <NavigationContainer>
+                          <View style={styles.container}>
+                            <Routes />
+                            <SnackbarNotification />
+                            <ErrorNotification />
+                          </View>
+                        </NavigationContainer>
+                      </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
+                  </SnackbarProvider>
                 </Provider>
               </MPDigitalProvider>
             </AdsProvider>
