@@ -113,7 +113,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         .toLowerCase()
         .replace(/manadopost\.id/gi, '')
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
-        .replace(/(\r\n|\n|\r)/g, ' ');
+        .replace(/(\r\n|\n|\r)/g, '');
 
       setId(id);
       setCleanArticle(cleanContent);

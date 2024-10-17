@@ -93,7 +93,7 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
       .toLowerCase()
       .replace(/manadopost\.id/gi, '')
       .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
-      .replace(/(\r\n|\n|\r)/g, ' ');
+      .replace(/(\r\n|\n|\r)/g, '');
     setId(id);
     setCleanArticle(cleanArticle);
     console.log('berhasil menerima article content');
