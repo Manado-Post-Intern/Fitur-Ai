@@ -5,6 +5,7 @@ import {
   IcPopUpExit,
   IcPopUpPause,
   IcPopUpPlay,
+  IcSumStop,
 } from '../../../assets';
 
 const SummarizeFloatingButton = () => {
@@ -43,24 +44,28 @@ const SummarizeFloatingButton = () => {
 
             <View style={styles.Description}>
               <Text style={styles.bulletPoint}>
-                • Politeknik Negeri Manado mengadakan Program Penerapan Iptek
+                <Text style={styles.point}>• </Text>
+                Politeknik Negeri Manado mengadakan Program Penerapan Iptek
                 kepada Masyarakat (PIM) di Jemaat GMIM Paulus Kauditan.
               </Text>
               <Text style={styles.bulletPoint}>
-                • Desa Kauditan II, Kecamatan Kauditan, berupa pelatihan
-                teknologi campuran beton untuk meningkatkan keterampilan tukang
-                bangunan pada 29 September lalu.
+                <Text style={styles.point}>• </Text>
+                Desa Kauditan II, Kecamatan Kauditan, berupa pelatihan teknologi
+                campuran beton untuk meningkatkan keterampilan tukang bangunan
+                pada 29 September lalu.
               </Text>
               <Text style={styles.bulletPoint}>
-                • Ketua Tim Pelaksana, Syanne Pangemanan ST MEng, bersama
-                anggota Helen G Mantiri SST MT dan Fery Sondakh ST MT,
-                menyatakan bahwa kegiatan ini bertujuan untuk
+                <Text style={styles.point}>• </Text>
+                Ketua Tim Pelaksana, Syanne Pangemanan ST MEng, bersama anggota
+                Helen G Mantiri SST MT dan Fery Sondakh ST MT, menyatakan bahwa
+                kegiatan ini bertujuan untuk
               </Text>
               <Text style={styles.bulletPoint}>
-                • meningkatkan pengetahuan dan keterampilan tukang bangunan
-                dalam memilih dan menggunakan material campuran beton, serta
-                membantu dalam pembuatan gudang penyimpanan barang milik GMIM
-                Paulus Kauditan.
+                <Text style={styles.point}>• </Text>
+                meningkatkan pengetahuan dan keterampilan tukang bangunan dalam
+                memilih dan menggunakan material campuran beton, serta membantu
+                dalam pembuatan gudang penyimpanan barang milik GMIM Paulus
+                Kauditan.
               </Text>
             </View>
 
@@ -68,11 +73,7 @@ const SummarizeFloatingButton = () => {
             <TouchableOpacity
               onPress={togglePlayPause}
               style={styles.playPauseButton}>
-              {isPlaying ? (
-                <IcPopUpPause size={24} />
-              ) : (
-                <IcPopUpPlay size={24} />
-              )}
+              {isPlaying ? <IcSumStop size={24} /> : <IcPopUpPlay size={24} />}
             </TouchableOpacity>
           </View>
         </View>
@@ -132,13 +133,17 @@ const styles = StyleSheet.create({
   bulletPoint: {
     fontSize: 14,
     marginBottom: 5,
-    color: 'black',
   },
   playPauseButton: {
     alignSelf: 'center',
     borderRadius: 50,
     padding: 15,
     marginTop: 50,
+  },
+  point: {
+    fontWeight: 'bold',
+    color: 'black',
+    size: 30,
   },
 });
 
