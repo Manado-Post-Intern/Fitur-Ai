@@ -1,29 +1,93 @@
 import React, {useState} from 'react';
-import {View, TouchableOpacity, Modal, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Modal,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import {
   IcSummarizeSpark,
   IcPopUpExit,
   IcPopUpPause,
   IcPopUpPlay,
-  IcSumStop,
 } from '../../../assets';
+import axios from 'axios';
+import Tts from 'react-native-tts';
+import Config from 'react-native-config';
 
-const SummarizeFloatingButton = () => {
+const openAI = axios.create({
+  baseURL: 'https://api.openai.com/v1',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${Config.OPENAI_API}`,
+  },
+});
+
+const SummarizeFloatingButton = ({title, article}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [summary, setSummary] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
+    Tts.stop();
+    setIsPlaying(false);
   };
 
   const togglePlayPause = () => {
-    setIsPlaying(!isPlaying);
-    // tambahan logika buat play pause audio
+    Tts.setDefaultLanguage('id-ID');
+    if (isPlaying) {
+      Tts.stop(); // Hentikan TTS jika sedang berjalan
+      setIsPlaying(false);
+      console.log('tts stop');
+    } else {
+      if (summary) {
+        Tts.stop();
+        Tts.speak(summary); // Mulai TTS dengan teks yang sudah diringkas
+        setIsPlaying(true);
+        console.log('tts speak');
+      }
+    }
+  };
+
+  const fetchSummary = async () => {
+    setLoading(true);
+    try {
+      const cleanArticle = article
+        .replace(/<\/?[^>]+(>|$)/g, '')
+        .toLowerCase()
+        .replace(/manadopost\.id/gi, '')
+        .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
+        .replace(/(\r\n|\n|\r)/g, '');
+
+      const prompt = `Dari artikel ini saya mau kamu membuat agar artikel yang Panjang ini di ringkas menjadi 10% sampai 20% agar pembaca dapat melihat inti dari pembahasan artikel ini itu apa: "${cleanArticle}"`;
+
+      const response = await openAI.post('/chat/completions', {
+        model: 'gpt-3.5-turbo',
+        messages: [{role: 'user', content: prompt}],
+        max_tokens: 150,
+      });
+
+      setSummary(response.data.choices[0].message.content); // Set hasil summary
+      console.log(`summary, ${response.data.choices[0].message.content}`);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSummarize = () => {
+    fetchSummary();
+    toggleModal();
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.floatingButton} onPress={toggleModal}>
+      <TouchableOpacity style={styles.floatingButton} onPress={handleSummarize}>
         <IcSummarizeSpark name="Spark" />
       </TouchableOpacity>
 
@@ -38,42 +102,25 @@ const SummarizeFloatingButton = () => {
               <IcPopUpExit name="close" />
             </TouchableOpacity>
 
-            <Text style={styles.titleText}>
-              Beromset 15 Triliun, ManadoPost Disrupsi
-            </Text>
+            <Text style={styles.titleText}>{title}</Text>
 
             <View style={styles.Description}>
-              <Text style={styles.bulletPoint}>
-                <Text style={styles.point}>• </Text>
-                Politeknik Negeri Manado mengadakan Program Penerapan Iptek
-                kepada Masyarakat (PIM) di Jemaat GMIM Paulus Kauditan.
-              </Text>
-              <Text style={styles.bulletPoint}>
-                <Text style={styles.point}>• </Text>
-                Desa Kauditan II, Kecamatan Kauditan, berupa pelatihan teknologi
-                campuran beton untuk meningkatkan keterampilan tukang bangunan
-                pada 29 September lalu.
-              </Text>
-              <Text style={styles.bulletPoint}>
-                <Text style={styles.point}>• </Text>
-                Ketua Tim Pelaksana, Syanne Pangemanan ST MEng, bersama anggota
-                Helen G Mantiri SST MT dan Fery Sondakh ST MT, menyatakan bahwa
-                kegiatan ini bertujuan untuk
-              </Text>
-              <Text style={styles.bulletPoint}>
-                <Text style={styles.point}>• </Text>
-                meningkatkan pengetahuan dan keterampilan tukang bangunan dalam
-                memilih dan menggunakan material campuran beton, serta membantu
-                dalam pembuatan gudang penyimpanan barang milik GMIM Paulus
-                Kauditan.
-              </Text>
+              {loading ? ( // Show loading indicator if loading is true
+                <ActivityIndicator size="large" color="#005AAC" />
+              ) : (
+                <Text style={styles.bulletPoint}>{summary}</Text> // Show summary once loaded
+              )}
             </View>
 
             {/* Tombol Play/Pause */}
             <TouchableOpacity
               onPress={togglePlayPause}
               style={styles.playPauseButton}>
-              {isPlaying ? <IcSumStop size={24} /> : <IcPopUpPlay size={24} />}
+              {isPlaying ? (
+                <IcPopUpPause size={24} />
+              ) : (
+                <IcPopUpPlay size={24} />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -133,17 +180,13 @@ const styles = StyleSheet.create({
   bulletPoint: {
     fontSize: 14,
     marginBottom: 5,
+    color: 'black',
   },
   playPauseButton: {
     alignSelf: 'center',
     borderRadius: 50,
     padding: 15,
     marginTop: 50,
-  },
-  point: {
-    fontWeight: 'bold',
-    color: 'black',
-    size: 30,
   },
 });
 
