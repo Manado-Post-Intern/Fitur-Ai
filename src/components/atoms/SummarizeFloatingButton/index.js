@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,12 +6,13 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
+  ScrollView, // Import ScrollView
 } from 'react-native';
 import {
   IcSummarizeSpark,
   IcPopUpExit,
-  IcPopUpPause,
   IcPopUpPlay,
+  IcSumStop,
 } from '../../../assets';
 import axios from 'axios';
 import Tts from 'react-native-tts';
@@ -37,16 +38,36 @@ const SummarizeFloatingButton = ({title, article}) => {
     setIsPlaying(false);
   };
 
+  useEffect(() => {
+    Tts.addEventListener('tts-start', () => {
+      // setIsPlaying(true);
+      console.log('tts sedang start');
+    });
+    Tts.addEventListener('tts-finish', () => {
+      setIsPlaying(false);
+      console.log('tts telah selesai diputar');
+    });
+    Tts.addEventListener('tts-cancel', () => {
+      setIsPlaying(false);
+      console.log('mengcancel tts button');
+    });
+    return () => {
+      Tts.removeAllListeners('tts-start');
+      Tts.removeAllListeners('tts-finish');
+      Tts.removeAllListeners('tts-cancel');
+    };
+  }, [isPlaying]);
+
   const togglePlayPause = () => {
     Tts.setDefaultLanguage('id-ID');
     if (isPlaying) {
-      Tts.stop(); // Hentikan TTS jika sedang berjalan
+      Tts.stop();
       setIsPlaying(false);
       console.log('tts stop');
     } else {
       if (summary) {
         Tts.stop();
-        Tts.speak(summary); // Mulai TTS dengan teks yang sudah diringkas
+        Tts.speak(summary);
         setIsPlaying(true);
         console.log('tts speak');
       }
@@ -63,15 +84,17 @@ const SummarizeFloatingButton = ({title, article}) => {
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, '');
 
-      const prompt = `Dari artikel ini saya mau kamu membuat agar artikel yang Panjang ini di ringkas menjadi 10% sampai 20% agar pembaca dapat melihat inti dari pembahasan artikel ini itu apa: "${cleanArticle}"`;
+      const prompt = `Dari berita ini buatlah menjadi beberapa point-point penting serta ringkaskan dan berikan bullet point pada setiap point berita jangan memakai - pada setiap isi point berita"${cleanArticle}"`;
 
       const response = await openAI.post('/chat/completions', {
         model: 'gpt-3.5-turbo',
         messages: [{role: 'user', content: prompt}],
-        max_tokens: 150,
+        max_tokens: 500,
       });
 
-      setSummary(response.data.choices[0].message.content); // Set hasil summary
+      const content = response.data.choices[0].message.content;
+      const filtering = content.replace(/-/g, '•');
+      setSummary(filtering); // Set hasil summary
       console.log(`summary, ${response.data.choices[0].message.content}`);
     } catch (error) {
       console.error(error);
@@ -104,23 +127,19 @@ const SummarizeFloatingButton = ({title, article}) => {
 
             <Text style={styles.titleText}>{title}</Text>
 
-            <View style={styles.Description}>
+            <ScrollView style={styles.Description}>
               {loading ? ( // Show loading indicator if loading is true
                 <ActivityIndicator size="large" color="#005AAC" />
               ) : (
                 <Text style={styles.bulletPoint}>{summary}</Text> // Show summary once loaded
               )}
-            </View>
+            </ScrollView>
 
             {/* Tombol Play/Pause */}
             <TouchableOpacity
               onPress={togglePlayPause}
               style={styles.playPauseButton}>
-              {isPlaying ? (
-                <IcPopUpPause size={24} />
-              ) : (
-                <IcPopUpPlay size={24} />
-              )}
+              {isPlaying ? <IcSumStop size={24} /> : <IcPopUpPlay size={24} />}
             </TouchableOpacity>
           </View>
         </View>
@@ -153,6 +172,7 @@ const styles = StyleSheet.create({
   },
   Content: {
     width: '85%',
+    height: '90%', // Set height for scrolling
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 25,
@@ -181,12 +201,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 5,
     color: 'black',
+    lineHeight: 20,
+    letterSpacing: 0.3,
   },
   playPauseButton: {
     alignSelf: 'center',
     borderRadius: 50,
-    padding: 15,
-    marginTop: 50,
   },
 });
 

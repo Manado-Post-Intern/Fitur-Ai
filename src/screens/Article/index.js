@@ -215,7 +215,10 @@ const Article = ({route, navigation}) => {
       </View>
       <View style={styles.actionContainer}>
         <Actions border={false} type="big" item={article} />
-        <SummarizeFloatingButton />
+        <SummarizeFloatingButton
+          article={article?.content}
+          title={article?.title}
+        />
       </View>
     </View>
   );
