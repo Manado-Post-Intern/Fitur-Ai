@@ -56,6 +56,14 @@ const MoreNews = ({route}) => {
       if (selectedItem) {
         showSnackbar(`${selectedItem.title}`, 'black');
       }
+  const {showSnackbar, hideSnackbar} = useSnackbar();
+
+  const [activeTTS, setActiveTTS] = useState(null);
+
+  const handleTTSPress = id => {
+    if (activeTTS !== null && activeTTS !== id) {
+      setActiveTTS(null);
+      hideSnackbar();
     }
   };
   
@@ -69,6 +77,8 @@ const MoreNews = ({route}) => {
     } else {
       showSnackbar(`${title}`, 'black');
       console.log("menampilkan judul dari tombol tts more news = ",title);
+      setActiveTTS(id);
+      showSnackbar('Judul', 'black');
     }
   };
 

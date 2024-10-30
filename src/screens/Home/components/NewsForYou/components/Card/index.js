@@ -141,4 +141,7 @@ const styles = StyleSheet.create({
   WrapTts: {
     right: 25,
   },
+  wrapTts: {
+    right: 14,
+  },
 });

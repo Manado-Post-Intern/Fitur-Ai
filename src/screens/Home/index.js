@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -7,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {theme} from '../../assets';
-import {Banner1, Banner2, Gap, SnackbarNotification} from '../../components';
+import {Banner1, Banner2, Gap} from '../../components';
 import {
   ActionSection,
   BottomBanner,
@@ -33,6 +34,7 @@ import {AuthContext} from '../../context/AuthContext';
 import moment from 'moment';
 import database from '@react-native-firebase/database';
 import {useSnackbar} from '../../context/SnackbarContext';
+import AiChatButton from '../../components/atoms/AiChatButton';
 
 const data = [0, 1, 2];
 const daerah = ['Manado', 'Minahasa Utara', 'Bitung', 'Tondano'];
@@ -237,6 +239,7 @@ const Home = ({navigation}) => {
         });
     }
   }, [mpUser, token]);
+  const {width} = Dimensions.get('window');
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -301,7 +304,9 @@ const Home = ({navigation}) => {
 
           <Gap height={screenHeightPercentage('11%')} />
         </ScrollView>
-
+        <View style={styles.wrapAiChatBtn}>
+          <AiChatButton navigation={navigation} />
+        </View>
         <CanalModal
           canalModalRef={canalModalRef}
           preferences={forYou?.preferences}
@@ -326,5 +331,14 @@ const styles = StyleSheet.create({
 
   bodyContainer: {
     top: -20,
+  },
+  wrapAiChatBtn: {
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

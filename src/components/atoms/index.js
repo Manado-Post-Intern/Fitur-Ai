@@ -8,7 +8,7 @@ import BackButton from './BackButton';
 import ChevroletBackButton from './ChevroletBackButton';
 import Switch from './Switch';
 import CheckBox from './CheckbBox';
-import SnackbarNotification from './SnackbarNotification';
+
 export {
   GlowCircle,
   TextInter,
@@ -20,5 +20,4 @@ export {
   ChevroletBackButton,
   Switch,
   CheckBox,
-  SnackbarNotification,
 };

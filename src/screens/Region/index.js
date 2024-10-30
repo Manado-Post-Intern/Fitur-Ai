@@ -2,6 +2,7 @@
 /* eslint-disable no-shadow */
 import {
   // eslint-disable-next-line no-unused-vars
+  Dimensions,
   FlatList,
   SafeAreaView,
   ScrollView,
@@ -18,11 +19,13 @@ import {latestEndPoint, loadSession} from '../../api';
 import {regionList} from '../../data';
 import axios from 'axios';
 import {useSnackbar} from '../../context/SnackbarContext';
+import FloatingActionButton from '../../components/atoms/AiChatButton';
+import AiChatButton from '../../components/atoms/AiChatButton';
 
 // eslint-disable-next-line no-unused-vars
 const story = ['Manado', 'Bitung', 'Tomohon', 'Minahasa', 'Minahasa Utara'];
 
-const Region = () => {
+const Region = ({navigation}) => {
   const [token, setToken] = useState(null);
   const [data, setData] = useState(null);
 
@@ -94,6 +97,7 @@ const Region = () => {
         console.log(error);
       });
   }, []);
+  const {width} = Dimensions.get('window');
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.topBarContainer}>
@@ -130,6 +134,9 @@ const Region = () => {
 
         <Gap height={screenHeightPercentage('11%')} />
       </ScrollView>
+      <View style={styles.wrapAiChatBtn}>
+        <AiChatButton navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -152,5 +159,14 @@ const styles = StyleSheet.create({
   },
   storyList: {
     paddingLeft: 17,
+  },
+  wrapAiChatBtn: {
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

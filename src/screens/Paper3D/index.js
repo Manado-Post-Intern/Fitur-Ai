@@ -15,6 +15,8 @@ import {CardListDigital, CardListNewspaper, More} from './components';
 import {screenHeightPercentage} from '../../utils';
 import {MPDigitalContext} from '../../context/MPDigitalContext';
 import {AuthContext} from '../../context/AuthContext';
+import FloatingActionButton from '../../components/atoms/AiChatButton';
+import AiChatButton from '../../components/atoms/AiChatButton';
 
 const Paper3D = ({navigation}) => {
   const {loading, setLoading, fetchData} = useContext(MPDigitalContext);
@@ -122,6 +124,9 @@ const Paper3D = ({navigation}) => {
           </View>
         ) : null}
       </View>
+      <View style={styles.wrapAiChatBtn}>
+        <AiChatButton navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -160,5 +165,14 @@ const styles = StyleSheet.create({
     color: theme.colors.MPGrey2,
     fontWeight: '700',
     marginLeft: 16,
+  },
+  wrapAiChatBtn: {
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });
