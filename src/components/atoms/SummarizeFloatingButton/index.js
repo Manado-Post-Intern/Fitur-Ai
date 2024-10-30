@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -84,10 +84,10 @@ const SummarizeFloatingButton = ({title, article}) => {
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, '');
 
-      const prompt = `Dari berita ini buatlah menjadi beberapa point-point penting serta ringkaskan dan berikan bullet point pada setiap point berita jangan memakai - pada setiap isi point berita"${cleanArticle}"`;
+      const prompt = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya, batasan bulletnya hanya 3 sampai 5 tergantun panjang beritanya saja, dan nanti panjang bulletin beritanya jadikan hanya 15 kata saja."${cleanArticle}"`;
 
       const response = await openAI.post('/chat/completions', {
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [{role: 'user', content: prompt}],
         max_tokens: 500,
       });
@@ -172,8 +172,8 @@ const styles = StyleSheet.create({
   },
   Content: {
     width: '85%',
-    height: '90%', // Set height for scrolling
-    padding: 20,
+    height: '75%',
+    padding: '5%',
     backgroundColor: 'white',
     borderRadius: 25,
     alignItems: 'flex-start',
@@ -181,25 +181,29 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
+    // position: 'absolute',
+    marginLeft: '86%',
+    width: 75,
+    height: 50,
   },
   titleText: {
+    position: 'absolute',
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 10,
-    paddingTop: 30,
+    marginBottom: '10%',
+    marginTop: '10%',
     color: '#000000',
-    paddingLeft: 10,
+    paddingLeft: '10%',
   },
   Description: {
-    marginBottom: 20,
-    paddingLeft: 20,
+    top: 20,
+    marginVertical: '20%',
+    marginRight: '5%',
+    marginLeft: '5%',
   },
   bulletPoint: {
     fontSize: 14,
-    marginBottom: 5,
+    marginBottom: 2,
     color: 'black',
     lineHeight: 20,
     letterSpacing: 0.3,
@@ -207,6 +211,7 @@ const styles = StyleSheet.create({
   playPauseButton: {
     alignSelf: 'center',
     borderRadius: 50,
+    marginTop: -50,
   },
 });
 
