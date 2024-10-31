@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import React, {useContext} from 'react';
-import {Banner1, Gap, TextInter, TopBar} from '../../components';
+import {AiChatButton, Banner1, Gap, TextInter, TopBar} from '../../components';
 import {IcBack, theme} from '../../assets';
 import {CardListDigital, CardListNewspaper, More} from './components';
 import {screenHeightPercentage} from '../../utils';
@@ -167,6 +167,12 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   wrapAiChatBtn: {
-    bottom: '22.6%',
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

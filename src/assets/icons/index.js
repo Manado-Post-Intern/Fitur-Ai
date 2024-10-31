@@ -68,18 +68,34 @@ import IcBigCheckmark from './ic-big-checkmark.svg';
 import IcFilter from './ic-filter.svg';
 import IcPinpoint from './ic-pinpoint.svg';
 import IcWhatsappExtraSmall from './ic-whatsapp-extra-small.svg';
+import IcGanti from './ic-ganti.svg';
+import Icrefreshpoll from './ic-refresh-poll.svg';
+import IcGreenIndicator from './ic-up-indicator.svg';
+import IcRedIndicator from './ic-down-indicator.svg';
 import IcTtsPlay from './ic-TtsPlay.svg';
 import IcTtsPause from './ic-TtsPause.svg';
 import IcTtsArticlePlay from './ic-TtsArticlePlay.svg';
 import IcTtsArticlePause from './ic-TtsArticlePause.svg';
 import IcPlusButton from './ic-plusButton.svg';
-import IcCloseButton from './ic-xButton.svg';
+import IcXButton from './ic-xButton.svg';
 import IcSumButton from './ic-sumButton.svg';
+import IcCloseButton from './ic-closeButton.svg';
+import IcError from './ic-error.svg';
+import IcTtsArticleStop from './ic-TtsArticleStop.svg';
+import IcTtsStop from './ic-TtsStop.svg';
+import IcSummarizeSpark from './ic-SummarizeSpark.svg';
+import IcPopUpExit from './ic-PopUpExit.svg';
+import IcPopUpPlay from './ic-PopUpPlay.svg';
+import IcPopUpPause from './ic-PopUpPause.svg';
+import IcSumStop from './ic-SumStop.svg';
+import IcAiChat from './ic-AiChat.svg';
 import IcAiChatButton from './ic-AiChatButton.svg';
 import IcAiChat from './ic-AiChat.svg';
 import IcBackButton from './ic-backButton.svg';
 
 export {
+  Icrefreshpoll,
+  IcGanti,
   IcClosedEye,
   IcOpenedEye,
   IcFacebook,
@@ -150,6 +166,8 @@ export {
   IcFilter,
   IcPinpoint,
   IcWhatsappExtraSmall,
+  IcGreenIndicator,
+  IcRedIndicator,
   IcTtsPlay,
   IcTtsPause,
   IcTtsArticlePause,
@@ -157,6 +175,16 @@ export {
   IcPlusButton,
   IcCloseButton,
   IcSumButton,
+  IcXButton,
+  IcError,
+  IcTtsArticleStop,
+  IcTtsStop,
+  IcSummarizeSpark,
+  IcPopUpExit,
+  IcPopUpPlay,
+  IcPopUpPause,
+  IcSumStop,
+  IcAiChat,
   IcAiChatButton,
   IcAiChat,
   IcBackButton,

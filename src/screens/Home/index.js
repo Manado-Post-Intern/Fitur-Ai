@@ -1,10 +1,23 @@
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {theme} from '../../assets';
-import {Banner1, Banner2, Gap} from '../../components';
+import {
+  AiChatButton,
+  Banner1,
+  Banner2,
+  Gap,
+  SnackbarNotification,
+} from '../../components';
 import {
   ActionSection,
   BottomBanner,
+  CardPoling,
   FullBanner,
   Headlines,
   LatestNews,
@@ -12,6 +25,7 @@ import {
   SecondBanner,
   Story,
   TopBanner,
+  RealTimeWidget,
 } from './components';
 import {screenHeightPercentage} from '../../utils';
 import CanalModal from './components/NewsForYou/components/CanalModal';
@@ -23,6 +37,7 @@ import {TokenContext} from '../../context/TokenContext';
 import {checkUserPreferences} from '../../utils/checkUserPreferences';
 import {AuthContext} from '../../context/AuthContext';
 import moment from 'moment';
+import database from '@react-native-firebase/database';
 import {useSnackbar} from '../../context/SnackbarContext';
 import AiChatButton from '../../components/atoms/AiChatButton';
 
@@ -39,6 +54,57 @@ const Home = ({navigation}) => {
   const [latest, setLatest] = useState(null);
   const [story, setStory] = useState(null);
   const {top, bottom, second, full} = useContext(AdsContext);
+  const [isPollingActive, setIsPollingActive] = useState(false);
+  const [isRealTime, setisRealTime] = useState(false);
+
+  const fetchPollingStatus = async () => {
+    try {
+      const snapshot = await database()
+        .ref('polling/isPollingActive')
+        .once('value');
+      const status = snapshot.val();
+      setIsPollingActive(status === 1);
+    } catch (error) {
+      console.log('Error fetching polling status:', error);
+    }
+  };
+  useEffect(() => {
+    fetchPollingStatus();
+    const onPollingStatusChange = database()
+      .ref('polling/isPollingActive')
+      .on('value', snapshot => {
+        const status = snapshot.val();
+        setIsPollingActive(status === 1);
+      });
+
+    return () =>
+      database()
+        .ref('polling/isPollingActive')
+        .off('value', onPollingStatusChange);
+  }, []);
+
+  const fetchRealtimeHarga = async () => {
+    try {
+      const snapshot = await database()
+        .ref('realTimePrice/isRealTimeActive')
+        .once('value');
+      const status = snapshot.val();
+      setisRealTime(status === 1);
+    } catch (error) {
+      console.log('Error fetching polling status:', error);
+    }
+  };
+  useEffect(() => {
+    fetchRealtimeHarga();
+    const onfetchRealtimeHarga = database()
+      .ref('realTimePrice/isRealTimeActive')
+      .on('value', snapshot => {
+        const status = snapshot.val();
+        setisRealTime(status === 1);
+      });
+    return () =>
+      database().ref('/isRealTimeActive').off('value', onfetchRealtimeHarga);
+  }, []);
   const {showSnackbar} = useSnackbar();
 
   const handleSomeAction = () => {
@@ -194,15 +260,15 @@ const Home = ({navigation}) => {
           {top && <TopBanner item={top} />}
 
           <Gap height={12} />
+          {isPollingActive && <CardPoling />}
+          <Gap height={12} />
+          {isRealTime && <RealTimeWidget />}
 
+          <Gap height={12} />
           <Headlines data={headlines} />
-
           <Gap height={12} />
-
           {second && <SecondBanner item={second} />}
-
           <Gap height={12} />
-
           <NewsForYou
             canalModalRef={canalModalRef}
             item={forYou?.array.sort((a, b) =>
@@ -271,6 +337,12 @@ const styles = StyleSheet.create({
     top: -20,
   },
   wrapAiChatBtn: {
-    bottom: '18%',
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

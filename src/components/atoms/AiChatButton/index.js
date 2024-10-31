@@ -21,24 +21,24 @@ export default AiChatButton;
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    // top: '83%',
     right: 10,
     transform: [{translateY: -30}],
-    width: 60,
-    height: 60,
+    width: 53,
+    height: 45,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF', // Pastikan ada background putih agar shadow terlihat jelas
     ...Platform.select({
-      //   ios: {
-      //     shadowColor: '#000', // Single shadow color for iOS
-      //     shadowOffset: {width: 5, height: 5}, // Offset for iOS shadow
-      //     shadowOpacity: 0.3, // Opacity for iOS shadow
-      //     shadowRadius: 10, // Radius for iOS shadow
-      //   },
+      ios: {
+        shadowColor: '#1463AB', // Warna shadow (sama dengan warna stroke)
+        shadowOffset: {width: 0, height: 0}, // Shadow agar menyebar rata
+        shadowOpacity: 1, // Opacity penuh agar terlihat jelas
+        shadowRadius: 6, // Ukuran shadow untuk memberi efek stroke
+      },
       android: {
-        elevation: 5, // Elevation for Android shadow
-        shadowColor: '#1463AB',
+        elevation: 10, // Menambah ketinggian shadow di Android
+        shadowColor: '#1463AB', // Menyamakan warna shadow di Android
       },
     }),
   },

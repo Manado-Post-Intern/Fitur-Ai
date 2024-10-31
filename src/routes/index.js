@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, {useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -134,7 +135,6 @@ const Routes = () => {
   return !user ? (
     <Stack.Navigator
       initialRouteName="Splash"
-      // initialRouteName="Splash" // TODO: Change this to Home
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Onboarding" component={Onboarding} />

@@ -1,3 +1,8 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
 import {
   Image,
   RefreshControl,
@@ -31,24 +36,40 @@ const MoreNews = ({route}) => {
   const {medium} = useContext(AdsContext);
   const label = sectionList.find(item => item?.id === sectionId)?.name;
 
-  const {showSnackbar, hideSnackbar} = useSnackbar();
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar();
 
   const [activeTTS, setActiveTTS] = useState(null);
 
   const handleTTSPress = id => {
-    if (activeTTS !== null && activeTTS !== id) {
-      setActiveTTS(null);
-      hideSnackbar();
-    }
-
     if (activeTTS === id) {
-      setActiveTTS(null);
-      hideSnackbar();
+      setActiveTTS(id);
+      console.log('more news id tracking', id);
+      const selectedItem = moreNews.find(item => item.id === id);
+      if (selectedItem) {
+        showSnackbar(`${selectedItem.title}`, 'black');
+      }
     } else {
       setActiveTTS(id);
-      showSnackbar('Judul', 'black');
+      console.log('more news id tracking', id);
+      const selectedItem = moreNews.find(item => item.id === id);
+      if (selectedItem) {
+        showSnackbar(`${selectedItem.title}`, 'black');
+      }
     }
   };
+
+  const handleSendTitle = (title, id) => {
+    if (activeTTS === id) {
+      // hideSnackbar();
+      // console.log("tts tidak aktif more news");
+      showSnackbar(`${title}`, 'black');
+      console.log('menampilkan judul dari tombol tts more news = ', title);
+    } else {
+      showSnackbar(`${title}`, 'black');
+      console.log('menampilkan judul dari tombol tts more news = ', title);
+    }
+  };
+
   const navigation = useNavigation();
 
   const bottomReached = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -131,6 +152,7 @@ const MoreNews = ({route}) => {
         console.log(error);
       });
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -172,12 +194,18 @@ const MoreNews = ({route}) => {
 
         <View>
           {moreNews?.map((item, index) => {
+            // const isDisabled = activeTTS !== null && activeTTS !== item.id; // Disable if another button is active
+            // Tambahkan console log untuk tracking isDisabled
+            // console.log(`Item ID: ${item.id}, isDisabled: ${isDisabled}`);
             return (
               <Card
                 key={index}
                 item={item}
                 isActive={activeTTS === item.id}
                 onPress={() => handleTTSPress(item.id)}
+                onSendTitle={handleSendTitle}
+                id={item.id}
+                // disabled={isDisabled}// Pass disabled state
               />
             );
           })}

@@ -7,13 +7,12 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {theme} from '../../assets';
-import {Banner1, Gap} from '../../components';
+import {AiChatButton, Banner1, Gap} from '../../components';
 import {TrendingSection} from './components';
 import {screenHeightPercentage} from '../../utils';
 import {loadSession, popular} from '../../api';
 import axios from 'axios';
-import FloatingActionButton from '../../components/atoms/AiChatButton';
-import AiChatButton from '../../components/atoms/AiChatButton';
+import {View} from 'react-native';
 
 const Trending = ({navigation}) => {
   const [token, setToken] = useState(null);
@@ -82,6 +81,12 @@ const styles = StyleSheet.create({
     top: -20,
   },
   wrapAiChatBtn: {
-    bottom: '18%',
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

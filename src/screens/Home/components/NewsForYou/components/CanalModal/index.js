@@ -46,20 +46,24 @@ const CanalModal = ({canalModalRef, preferences}) => {
   };
 
   const handleSave = async () => {
-    const preferanceRef = database().ref(`/users/${mpUser.uid}/preferences/`);
-    try {
-      const region = findMatchingData(choosed, regionList);
-      const channel = findMatchingData(choosed, canal);
+    if (mpUser) {
+      const preferanceRef = database().ref(`/users/${mpUser.uid}/preferences/`);
+      try {
+        const region = findMatchingData(choosed, regionList);
+        const channel = findMatchingData(choosed, canal);
 
-      const payload = {
-        region,
-        channel,
-      };
+        const payload = {
+          region,
+          channel,
+        };
 
-      await preferanceRef.update(payload);
-      canalModalRef?.current?.dismiss();
-    } catch (error) {
-      console.log(error);
+        await preferanceRef.update(payload);
+        canalModalRef?.current?.dismiss();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log('mpUser is null or undefined');
     }
   };
 

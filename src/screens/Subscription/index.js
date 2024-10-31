@@ -43,15 +43,63 @@ const productBaner = [
   IMGSubscription6Month,
   IMGSubscription1Year,
 ];
+const formatBillingCycle = billingCycle => {
+  const period = billingCycle.replace('P', '');
 
-const Subscription = () => {
+  const value = period.slice(0, -1);
+  const unit = period.slice(-1);
+
+  switch (unit) {
+    case 'M':
+      return `${value} Month`;
+    case 'Y':
+      return `${value} Year`;
+    default:
+      return billingCycle;
+  }
+};
+const Subscription = ({price}) => {
   const [products, setProducts] = useState([]);
   const [winner, setWinner] = useState(null);
   const {mpUser} = useContext(AuthContext);
   const subscribed = true;
   const shortTimeLeft = true;
+  const [currencySymbol, setCurrencySymbol] = useState('');
 
-  let word;
+  useEffect(() => {
+    const fetchCurrencySymbol = async () => {
+      try {
+        // Fetch country data based on IP
+        const response = await fetch('http://ip-api.com/json/');
+        const data = await response.json();
+
+        console.log('IP-API Response:', data);
+        const countryCode = data.countryCode;
+
+        if (!countryCode) {
+          throw new Error('Country code not found');
+        }
+        const countryResponse = await fetch(
+          `https://restcountries.com/v3.1/alpha/${countryCode}`,
+        );
+        const countryData = await countryResponse.json();
+
+        console.log('Country Data:', countryData);
+
+        if (!countryData || !countryData[0] || !countryData[0].currencies) {
+          throw new Error('Currency data not available');
+        }
+
+        const currencyCode = Object.keys(countryData[0].currencies)[0];
+        const currencySymbol = countryData[0].currencies[currencyCode].symbol;
+        setCurrencySymbol(currencySymbol);
+      } catch (error) {
+        console.error('Error fetching currency symbol:', error);
+        setCurrencySymbol('N/A');
+      }
+    };
+    fetchCurrencySymbol();
+  }, []);
 
   switch (mpUser.subscription?.productId) {
     case 'paket_1_bulanan':
@@ -98,11 +146,15 @@ const Subscription = () => {
       })
       .then(() => {
         getSubscriptions({skus: items})
+          .then(res => {
+            if (res && Array.isArray(res)) {
+              setProducts(res);
+            } else {
+              console.log('No products found or invalid response format');
+            }
+          })
           .catch(error => {
             console.log('error finding items ', error);
-          })
-          .then(res => {
-            setProducts(res);
           });
 
         purchaseUpdateSubscription = purchaseUpdatedListener(async purchase => {
@@ -165,7 +217,9 @@ const Subscription = () => {
     const lotteryWinnerRef = database().ref('/lottery/winner/');
     lotteryWinnerRef.on('value', snapshot => {
       const data = snapshot.val();
-      if (!data) return;
+      if (!data) {
+        return;
+      }
       setWinner(data);
     });
 
@@ -234,7 +288,12 @@ const Subscription = () => {
             Manado Post Digital Premium
           </TextInter>
         </TextInter>
-
+        <Gap height={8} />
+        <TextInter style={styles.text1}>
+          {
+            'Berlangganan bersifat opsional dan menyediakan akses ke fitur-fitur premium seperti e-Quran, lotere bulanan, dan promo khusus. Anda masih dapat mengakses konten gratis tanpa berlangganan.'
+          }
+        </TextInter>
         <Gap height={8} />
 
         <View style={styles.benefitWrapper}>
@@ -266,31 +325,53 @@ const Subscription = () => {
             </TextInter>
           </View>
         </View>
-
+        <TextInter style={styles.benefit}>
+          Langganan dapat dibatalkan kapan saja melalui Google Play.
+        </TextInter>
+        <Gap height={8} />
         <View>
-          {products.map((item, index) => {
-            if (
-              mpUser?.subscription?.productId === item.productId &&
-              mpUser?.subscription?.isExpired === false
-            )
-              return null;
-            return (
-              <Pressable
-                key={index}
-                style={styles.subscriptionBannerContainer}
-                onPress={() => {
-                  handleSubscribe(
-                    item.productId,
-                    item.subscriptionOfferDetails[0].offerToken,
-                  );
-                }}>
-                <Image
-                  style={styles.subscriptionBanner}
-                  source={productBaner[index]}
-                />
-              </Pressable>
-            );
-          })}
+          {products?.length > 0 &&
+            products.map((item, index) => {
+              if (
+                mpUser?.subscription?.productId === item.productId &&
+                mpUser?.subscription?.isExpired === false
+              ) {
+                return null;
+              }
+
+              if (
+                !item.subscriptionOfferDetails ||
+                item.subscriptionOfferDetails.length === 0
+              ) {
+                return null;
+              }
+
+              const offerDetails = item.subscriptionOfferDetails[0];
+              const price =
+                offerDetails.pricingPhases.pricingPhaseList[0]
+                  .priceAmountMicros / 1_000_000;
+              const billingCycle =
+                offerDetails.pricingPhases.pricingPhaseList[0].billingPeriod;
+
+              return (
+                <Pressable
+                  key={index}
+                  style={styles.subscriptionBannerContainer}
+                  onPress={() => {
+                    handleSubscribe(item.productId, offerDetails.offerToken);
+                  }}>
+                  <View style={styles.cardContainer}>
+                    <TextInter style={styles.priceTag}>{`${formatBillingCycle(
+                      billingCycle,
+                    )}`}</TextInter>
+                    <TextInter
+                      style={
+                        styles.priceTag1
+                      }>{`Price: ${currencySymbol} ${price} `}</TextInter>
+                  </View>
+                </Pressable>
+              );
+            })}
 
           {/* <Pressable
             style={styles.subscriptionBannerContainer}
@@ -475,14 +556,38 @@ const styles = StyleSheet.create({
   },
 
   subscriptionBannerContainer: {
-    height: 100,
+    // height: 100,
+    // marginBottom: 16,
+    marginVertical: 10,
   },
   subscriptionBanner: {
     width: '100%',
-    maxHeight: 100,
-    resizeMode: 'contain',
+    maxHeight: 150,
+    resizeMode: 'cover',
   },
-
+  cardContainer: {
+    backgroundColor: '#024D91',
+    borderRadius: 8,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2.5,
+    elevation: 5,
+  },
+  priceTag: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: theme.colors.white,
+  },
+  priceTag1: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: theme.colors.white,
+  },
   stopSubscribeButton: {
     flex: 1,
     width: '100%',

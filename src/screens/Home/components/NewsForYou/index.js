@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
@@ -11,6 +14,7 @@ import {Card} from './components';
 import Tts from 'react-native-tts';
 import axios from 'axios';
 import {readArticle} from '../../../../api';
+import {useSnackbar} from '../../../../context/SnackbarContext';
 
 const NewsForYou = ({
   data,
@@ -22,6 +26,7 @@ const NewsForYou = ({
   const [activeTTS, setActiveTTS] = useState(null);
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
   const getArticle = async () => {
     if (!item?.id) {
       console.log('Item ID is undefined or null');
@@ -59,25 +64,37 @@ const NewsForYou = ({
   }, [token]);
 
   const handleTTSPress = id => {
-    let message = '';
+    // let message = '';
 
     if (activeTTS !== null && activeTTS !== id) {
-      setActiveTTS(null);
-      message = 'Pemutaran dijeda';
-      onShowSnackbar(true, message);
+      setActiveTTS(id);
+      // message = 'Pemutaran dijeda';
+      // onShowSnackbar(true, message);
     }
 
     if (activeTTS === id) {
-      setActiveTTS(null);
-      message = 'Pemutaran dijeda';
-      onShowSnackbar(true, message);
-      Tts.stop();
+      setActiveTTS(id);
+      // message = 'Pemutaran dijeda';
+      // onShowSnackbar(true, message);
+      // Tts.stop();
     } else {
       setActiveTTS(id);
-      message = 'Mendengarkan...';
-      onShowSnackbar(true, message);
-      console.log(article?.content);
+      // message = 'Mendengarkan...';
+      // onShowSnackbar(true, message);
+      // console.log(article?.content);
       // Tts.speak('kedepan harus tetap sama');
+    }
+  };
+
+  const handleSendTitle = (title, id) => {
+    // setSelectedTitle(title); // Update title yang dipilih
+    // titleRef.current = title; // Update nilai di useRef
+    if (activeTTS === id) {
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
+    } else {
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
+      console.log(title);
     }
   };
 
@@ -108,14 +125,19 @@ const NewsForYou = ({
         </View>
       </View>
       <Gap height={4} />
-      {item?.slice(0, 5).map((item, i) => (
-        <Card
-          key={i}
-          item={item}
-          isActive={activeTTS === item.id}
-          onPress={() => handleTTSPress(item.id)}
-        />
-      ))}
+      {item?.slice(0, 5).map((item, i) => {
+        const isDisabled = activeTTS !== null && activeTTS !== item.id;
+        return (
+          <Card
+            key={i}
+            item={item}
+            isActive={activeTTS === item.id}
+            onPress={() => handleTTSPress(item.id)}
+            onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
+            id={item.id}
+          />
+        );
+      })}
       <More forYou item={item} />
     </View>
   );
