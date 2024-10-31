@@ -9,6 +9,7 @@ import ChevroletBackButton from './ChevroletBackButton';
 import Switch from './Switch';
 import CheckBox from './CheckbBox';
 import SnackbarNotification from './SnackbarNotification';
+import SummarizeFloatingButton from './SummarizeFloatingButton';
 export {
   GlowCircle,
   TextInter,
@@ -21,4 +22,5 @@ export {
   Switch,
   CheckBox,
   SnackbarNotification,
+  SummarizeFloatingButton,
 };

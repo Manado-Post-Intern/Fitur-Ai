@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -17,6 +17,8 @@ import {
 import axios from 'axios';
 import Tts from 'react-native-tts';
 import Config from 'react-native-config';
+import {AuthContext} from '../../../context/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 
 const openAI = axios.create({
   baseURL: 'https://api.openai.com/v1',
@@ -31,6 +33,8 @@ const SummarizeFloatingButton = ({title, article}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(false);
+  const {mpUser} = useContext(AuthContext);
+  const navigation = useNavigation();
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -104,15 +108,43 @@ const SummarizeFloatingButton = ({title, article}) => {
   };
 
   const handleSummarize = () => {
-    fetchSummary();
-    toggleModal();
+    if (mpUser?.subscription?.isExpired) {
+      // If the user is not subscribed, show a prompt to subscribe
+      setModalVisible(false); // Close the summary modal if open
+      setShowSubscriptionModal(true);
+    } else {
+      fetchSummary();
+      setModalVisible(true);
+    }
   };
+
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.floatingButton} onPress={handleSummarize}>
         <IcSummarizeSpark name="Spark" />
       </TouchableOpacity>
+
+      <Modal
+        transparent={true}
+        visible={showSubscriptionModal}
+        animationType="fade"
+        onRequestClose={() => setShowSubscriptionModal(false)}>
+        <View style={styles.subscriptionOverlay}>
+          <View style={styles.subscriptionContent}>
+            <Text style={{color: '#005AAC', textAlign: 'center'}}>
+              Anda perlu berlangganan MP Digital Premium untuk membaca MP
+              Digital dan MP Koran
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Subscription')}
+              style={styles.subscribeButton}>
+              <Text style={{color: 'white'}}>Berlangganan Sekarang</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         transparent={true}
@@ -125,7 +157,14 @@ const SummarizeFloatingButton = ({title, article}) => {
               <IcPopUpExit name="close" />
             </TouchableOpacity>
 
-            <Text style={styles.titleText}>{title}</Text>
+            <View style={styles.titleContainer}>
+              <Text
+                style={styles.titleText}
+                numberOfLines={10}
+                ellipsizeMode="tail">
+                {title}
+              </Text>
+            </View>
 
             <ScrollView style={styles.Description}>
               {loading ? ( // Show loading indicator if loading is true
@@ -181,22 +220,27 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   closeButton: {
-    // position: 'absolute',
-    marginLeft: '86%',
+    position: 'absolute',
+    marginLeft: '92%',
+    marginTop: '5%',
     width: 75,
     height: 50,
   },
+  titleContainer: {
+    alignSelf: 'stretch',
+    paddingRight: 40, // Padding to prevent overlap with close button
+  },
   titleText: {
-    position: 'absolute',
-    fontSize: 22,
+    // position: 'absolute',
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: '10%',
     marginTop: '10%',
     color: '#000000',
     paddingLeft: '10%',
+    marginBottom: '-20%',
   },
   Description: {
-    top: 20,
+    top: 1,
     marginVertical: '20%',
     marginRight: '5%',
     marginLeft: '5%',
@@ -212,6 +256,25 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 50,
     marginTop: -50,
+  },
+  subscriptionOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+  },
+  subscriptionContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '80%',
+  },
+  subscribeButton: {
+    backgroundColor: '#005AAC',
+    padding: 10,
+    marginTop: 15,
+    borderRadius: 5,
   },
 });
 
