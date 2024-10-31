@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import React, {useContext} from 'react';
-import {Banner1, Gap, TextInter, TopBar} from '../../components';
+import {AiChatButton, Banner1, Gap, TextInter, TopBar} from '../../components';
 import {IcBack, theme} from '../../assets';
 import {CardListDigital, CardListNewspaper, More} from './components';
 import {screenHeightPercentage} from '../../utils';
@@ -122,6 +122,9 @@ const Paper3D = ({navigation}) => {
           </View>
         ) : null}
       </View>
+      <View style={styles.wrapAiChatBtn}>
+        <AiChatButton navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -160,5 +163,14 @@ const styles = StyleSheet.create({
     color: theme.colors.MPGrey2,
     fontWeight: '700',
     marginLeft: 16,
+  },
+  wrapAiChatBtn: {
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });
