@@ -28,6 +28,7 @@ export default TopBarAi;
 
 const styles = StyleSheet.create({
   container: {
+    // position: 'absolute',
     width: '100%',
     backgroundColor: theme.colors.white,
     paddingVertical: 10,

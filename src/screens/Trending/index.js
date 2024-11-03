@@ -12,7 +12,6 @@ import {TrendingSection} from './components';
 import {screenHeightPercentage} from '../../utils';
 import {loadSession, popular} from '../../api';
 import axios from 'axios';
-import {View} from 'react-native';
 
 const Trending = ({navigation}) => {
   const [token, setToken] = useState(null);

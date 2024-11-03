@@ -39,7 +39,6 @@ import {AuthContext} from '../../context/AuthContext';
 import moment from 'moment';
 import database from '@react-native-firebase/database';
 import {useSnackbar} from '../../context/SnackbarContext';
-import AiChatButton from '../../components/atoms/AiChatButton';
 
 const data = [0, 1, 2];
 const daerah = ['Manado', 'Minahasa Utara', 'Bitung', 'Tondano'];

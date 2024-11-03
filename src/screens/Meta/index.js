@@ -10,7 +10,6 @@ import MediumBanner from '../MoreNews/components/MediumBanner';
 import {AdsContext} from '../../context/AdsContext';
 import BottomBanner from '../Home/components/BottomBanner';
 import FloatingActionButton from '../../components/atoms/AiChatButton';
-import AiChatButton from '../../components/atoms/AiChatButton';
 
 const data = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 

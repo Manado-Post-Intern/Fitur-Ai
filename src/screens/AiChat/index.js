@@ -1,195 +1,176 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
   View,
-  TouchableOpacity,
   TextInput,
-  Keyboard,
-  Platform,
+  Text,
+  Button,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+  SafeAreaView,
 } from 'react-native';
-// import {TopBarAi} from './component'; // Assuming you have a TopBarAi component
-import {theme} from '../../assets'; // Assuming you have a theme file
+import {generateText} from '../../api/index';
+import LinearGradient from 'react-native-linear-gradient';
+import {TopBarAi} from './component';
 
-const AiChat = () => {
-  const [message, setMessage] = useState(''); // State to hold the input message
-  const [messages, setMessages] = useState([]); // State to hold sent messages
-  const [keyboardVisible, setKeyboardVisible] = useState(false); // State to track keyboard visibility
-
-  // Effect to handle keyboard events
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  const handleSendMessage = () => {
-    if (message.trim() !== '') {
-      const newMessages = [...messages, {text: message, isUser: true}]; // Add user's message to state
-
-      // Simulate AI response
-      const aiResponse = 'Ini adalah respon otomatis dari AI'; // Ganti dengan logika atau API response sebenarnya
-      newMessages.push({text: aiResponse, isUser: false});
-
-      setMessages(newMessages); // Update state with both user message and AI response
-      setMessage(''); // Clear the input after sending
-    }
-  };
+const ChatAI = () => {
+  const [prompt, setPrompt] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const scrollViewRef = useRef();
 
-  const scrollToBottom = () => {
-    scrollViewRef.current?.scrollToEnd({animated: true});
+  const handleGenerateText = async () => {
+    if (!prompt.trim()) {
+      return;
+    }
+
+    const userMessage = {role: 'user', content: prompt};
+    setMessages(prevMessages => [...prevMessages, userMessage]);
+    setPrompt('');
+
+    setLoading(true);
+    try {
+      const {text, sources} = await generateText(prompt);
+      const botMessage = {role: 'bot', content: text, sources: sources};
+      setMessages(prevMessages => [...prevMessages, botMessage]);
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage = {
+        role: 'bot',
+        content: 'Error generating response. Please try again.',
+      };
+      setMessages(prevMessages => [...prevMessages, errorMessage]);
+    }
+    setLoading(false);
+
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({animated: true});
+    }, 100);
   };
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd({animated: true});
+  }, [messages]);
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      {/* Top Bar */}
-      {/* <TopBarAi /> */}
+    <SafeAreaView style={styles.container}>
+      <TopBarAi />
+      <ScrollView style={styles.chatContainer}>
+        {messages.map((message, index) => (
+          <View
+            key={index}
+            style={[
+              styles.messageBubble,
+              message.role === 'user'
+                ? styles.userBubbleContainer
+                : styles.botBubbleContainer,
+            ]}>
+            {message.role === 'user' ? (
+              <LinearGradient
+                colors={['#4479E1', '#2C4FB9']}
+                style={styles.userBubble}>
+                <Text style={styles.userText}>{message.content}</Text>
+              </LinearGradient>
+            ) : (
+              <View style={styles.botBubble}>
+                <Text style={styles.botText}>{message.content}</Text>
+                {message.sources && (
+                  <View style={styles.sourceContainer}>
+                    <Text style={styles.sourceLabel}>Baca Juga:</Text>
+                    {message.sources.map((source, idx) => (
+                      <Text key={idx} style={styles.sourceLink}>
+                        {source.title} - {source.url}
+                      </Text>
+                    ))}
+                  </View>
+                )}
+              </View>
+            )}
+          </View>
+        ))}
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      </ScrollView>
 
-      {/* Chat Area */}
-      <View style={styles.container}>
-        <ScrollView
-          ref={scrollViewRef}
-          contentContainerStyle={styles.scrollViewContent}
-          onContentSizeChange={scrollToBottom}>
-          {/* Render previous messages */}
-          {messages.map((msg, index) => (
-            <View
-              key={index}
-              style={
-                msg.isUser ? styles.userMessageBubble : styles.messageBubble
-              }>
-              <Text
-                style={
-                  msg.isUser ? styles.userMessageText : styles.messageText
-                }>
-                {msg.text}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        {/* Chat Input Area */}
-        <View
-          style={[
-            styles.inputContainer,
-            keyboardVisible && {marginBottom: Platform.OS === 'ios' ? 20 : 10}, // Adjust margin when keyboard is visible
-          ]}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Type here..."
-            placeholderTextColor={theme.colors.grey1}
-            value={message}
-            onChangeText={setMessage}
-          />
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={handleSendMessage}>
-            <Text style={styles.sendButtonText}>➤</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Tulis pesan di sini..."
+          value={prompt}
+          onChangeText={setPrompt}
+        />
+        <Button title="Kirim" onPress={handleGenerateText} />
       </View>
     </SafeAreaView>
   );
 };
 
-export default AiChat;
-
 const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: theme.colors.white,
-  },
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white2,
+    backgroundColor: '#e7f0f5',
   },
-  scrollViewContent: {
-    paddingHorizontal: 20,
-    paddingTop: 170,
-    paddingBottom: 10, // Ensure space for input area
-    flexGrow: 1, // Allows scroll if content is too long
-    justifyContent: 'flex-end', // Aligns messages at the bottom
+  chatContainer: {
+    flex: 1,
+    padding: 20,
   },
   messageBubble: {
-    backgroundColor: theme.colors.white,
-    padding: 15,
-    borderRadius: 10,
-    marginVertical: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 3,
+    marginBottom: 20,
+    maxWidth: '80%',
   },
-  messageText: {
-    fontSize: 16,
-    color: theme.colors.black,
-  },
-  userMessageBubble: {
-    backgroundColor: theme.colors.skyBlue,
-    padding: 15,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 3,
-    marginVertical: 10,
+  userBubbleContainer: {
     alignSelf: 'flex-end',
   },
-  userMessageText: {
+  botBubbleContainer: {
+    alignSelf: 'flex-start',
+  },
+  userBubble: {
+    padding: 10,
+    borderRadius: 10,
+    elevation: 8,
+  },
+  botBubble: {
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    borderRadius: 10,
+    elevation: 8,
+  },
+  userText: {
+    color: '#FFFFFF',
     fontSize: 16,
-    color: theme.colors.white,
+  },
+  botText: {
+    color: '#000000',
+    fontSize: 16,
   },
   inputContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: theme.colors.white,
-    borderTopWidth: 1,
-    borderColor: theme.colors.white,
+    padding: 14,
+    borderTopWidth: 2,
+    borderColor: '#ccc',
+    backgroundColor: '#F6F6F6',
   },
-  textInput: {
+  input: {
     flex: 1,
-    fontSize: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderColor: theme.colors.grey1,
-    backgroundColor: theme.colors.white,
-    borderRadius: 20,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 5,
+    borderRadius: 5,
     marginRight: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 3,
+    backgroundColor: '#fff',
   },
-  sendButton: {
-    backgroundColor: theme.colors.primaryBlue,
-    borderRadius: 20,
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+  sourceContainer: {
+    marginTop: 5,
   },
-  sendButtonText: {
-    color: theme.colors.skyBlue,
-    fontSize: 20,
+  sourceLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#000000',
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
+  sourceLink: {
+    fontSize: 12,
+    color: '#1E90FF',
+    textDecorationLine: 'underline',
   },
 });
+export default ChatAI;
