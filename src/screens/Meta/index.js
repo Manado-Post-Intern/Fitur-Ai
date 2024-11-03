@@ -1,6 +1,6 @@
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import {Gap, NotFound, TextInter, TopBar} from '../../components';
+import {AiChatButton, Gap, NotFound, TextInter, TopBar} from '../../components';
 import {IcBack, IMGCallUsBanner, theme} from '../../assets';
 import {BannerSection, Card, Categories, TrendingSection} from './components';
 import {screenHeightPercentage} from '../../utils';
@@ -9,10 +9,11 @@ import axios from 'axios';
 import MediumBanner from '../MoreNews/components/MediumBanner';
 import {AdsContext} from '../../context/AdsContext';
 import BottomBanner from '../Home/components/BottomBanner';
+import FloatingActionButton from '../../components/atoms/AiChatButton';
 
 const data = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-const Meta = () => {
+const Meta = ({navigation}) => {
   const [detail, setDetail] = useState(false);
   const [metaData, setMetaData] = useState(null);
   const [category, setCategory] = useState(null);
@@ -83,6 +84,9 @@ const Meta = () => {
 
         <Gap height={screenHeightPercentage('20%')} />
       </ScrollView>
+      <View style={styles.wrapAiChatBtn}>
+        <AiChatButton navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -118,5 +122,14 @@ const styles = StyleSheet.create({
     width: 401,
     height: 120,
     resizeMode: 'cover',
+  },
+  wrapAiChatBtn: {
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 112, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

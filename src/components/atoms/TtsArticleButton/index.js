@@ -35,11 +35,11 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   useEffect(() => {
     if (visible) {
       // setIsPlaying(true);
-      console.log('berubah menjadi icon stop');
+      // console.log('berubah menjadi icon stop');
     } else {
       // setIsPlayingArticle(false);
       dispatch(setPlaying({id, value: false}));
-      console.log('kembali menjadi icon play');
+      //console.log('kembali menjadi icon play');
     }
   }, [visible]);
 
@@ -93,7 +93,7 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
       .toLowerCase()
       .replace(/manadopost\.id/gi, '')
       .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
-      .replace(/(\r\n|\n|\r)/g, ' ');
+      .replace(/(\r\n|\n|\r)/g, '');
     setId(id);
     setCleanArticle(cleanArticle);
     console.log('berhasil menerima article content');

@@ -116,7 +116,6 @@ const Onboarding = () => {
           <SocialSignIn type={'google'} />
           <Gap height={75} />
         </View>
-        {/* Invisible Button in Top Right Corner */}
       </View>
     </SafeAreaView>
   );

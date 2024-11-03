@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Banner2, Gap, TopBar} from '../../components';
+import {AiChatButton, Banner2, Gap, TopBar} from '../../components';
 import {screenHeightPercentage} from '../../utils';
 import {theme} from '../../assets';
 // eslint-disable-next-line no-unused-vars
@@ -22,10 +22,9 @@ import {useSnackbar} from '../../context/SnackbarContext';
 // eslint-disable-next-line no-unused-vars
 const story = ['Manado', 'Bitung', 'Tomohon', 'Minahasa', 'Minahasa Utara'];
 
-const Region = () => {
+const Region = ({navigation}) => {
   const [token, setToken] = useState(null);
   const [data, setData] = useState(null);
-
 
   const getRegion = async () => {
     const promises = regionList.map(async item => {
@@ -75,7 +74,6 @@ const Region = () => {
       console.log(title);
     }
   };
-
 
   useEffect(() => {
     if (token) {
@@ -130,6 +128,9 @@ const Region = () => {
 
         <Gap height={screenHeightPercentage('11%')} />
       </ScrollView>
+      <View style={styles.wrapAiChatBtn}>
+        <AiChatButton navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -152,5 +153,14 @@ const styles = StyleSheet.create({
   },
   storyList: {
     paddingLeft: 17,
+  },
+  wrapAiChatBtn: {
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

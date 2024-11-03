@@ -28,6 +28,7 @@ import axios from 'axios';
 import RenderHtml from 'react-native-render-html';
 import {TokenContext} from '../../context/TokenContext';
 import TtsArticleButton from '../../components/atoms/TtsArticleButton';
+import SummarizeFloatingButton from '../../components/atoms/SummarizeFloatingButton';
 
 LogBox.ignoreLogs([
   'You should always pass contentWidth',
@@ -214,6 +215,10 @@ const Article = ({route, navigation}) => {
       </View>
       <View style={styles.actionContainer}>
         <Actions border={false} type="big" item={article} />
+        <SummarizeFloatingButton
+          article={article?.content}
+          title={article?.title}
+        />
       </View>
     </View>
   );
