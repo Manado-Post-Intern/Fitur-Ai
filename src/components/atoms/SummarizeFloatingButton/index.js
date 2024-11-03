@@ -19,6 +19,8 @@ import Tts from 'react-native-tts';
 import Config from 'react-native-config';
 import {AuthContext} from '../../../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
+import {useErrorNotification} from '../../../context/ErrorNotificationContext';
 
 const openAI = axios.create({
   baseURL: 'https://api.openai.com/v1',
@@ -35,6 +37,8 @@ const SummarizeFloatingButton = ({title, article}) => {
   const [loading, setLoading] = useState(false);
   const {mpUser} = useContext(AuthContext);
   const navigation = useNavigation();
+  const [isConnected, setIsConnected] = useState(true);
+  const {showError} = useErrorNotification();
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -62,8 +66,26 @@ const SummarizeFloatingButton = ({title, article}) => {
     };
   }, [isPlaying]);
 
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+      if (!state.isConnected && isPlaying) {
+        Tts.stop();
+
+        showError('Connection lost. TTS playback stopped.');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [isPlaying]);
+
   const togglePlayPause = () => {
     Tts.setDefaultLanguage('id-ID');
+    if (!isConnected) {
+      setModalVisible(false);
+      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
+      return;
+    }
     if (isPlaying) {
       Tts.stop();
       setIsPlaying(false);
@@ -79,6 +101,12 @@ const SummarizeFloatingButton = ({title, article}) => {
   };
 
   const fetchSummary = async () => {
+    if (!isConnected) {
+      showError(
+        'Koneksi internet tidak tersedia. Mohon periksa jaringan Anda dan coba kembali.',
+      );
+      return;
+    }
     setLoading(true);
     try {
       const cleanArticle = article
@@ -102,12 +130,17 @@ const SummarizeFloatingButton = ({title, article}) => {
       console.log(`summary, ${response.data.choices[0].message.content}`);
     } catch (error) {
       console.error(error);
+      showError('Failed to fetch summary. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSummarize = () => {
+    if (!isConnected) {
+      showError('Koneksi terputus. Periksa jaringan Anda untuk melanjutkan.');
+      return;
+    }
     if (mpUser?.subscription?.isExpired) {
       // If the user is not subscribed, show a prompt to subscribe
       setModalVisible(false); // Close the summary modal if open
@@ -115,6 +148,7 @@ const SummarizeFloatingButton = ({title, article}) => {
     } else {
       fetchSummary();
       setModalVisible(true);
+      toggleModal();
     }
   };
 
@@ -133,7 +167,7 @@ const SummarizeFloatingButton = ({title, article}) => {
         onRequestClose={() => setShowSubscriptionModal(false)}>
         <View style={styles.subscriptionOverlay}>
           <View style={styles.subscriptionContent}>
-            <Text style={{color: '#005AAC', textAlign: 'center'}}>
+            <Text style={{color: 'black', textAlign: 'center'}}>
               Anda perlu berlangganan MP Digital Premium untuk membaca MP
               Digital dan MP Koran
             </Text>
@@ -192,6 +226,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 90,
     right: 30,
+    zIndex: 1,
   },
   floatingButton: {
     backgroundColor: '#005AAC',
