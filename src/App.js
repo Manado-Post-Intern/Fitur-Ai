@@ -123,6 +123,7 @@ const App = () => {
                     <GestureHandlerRootView
                       style={styles.gestureHandlerRootView}>
                       <BottomSheetModalProvider>
+                        <ErrorNotification />
                         <NavigationContainer>
                           <View style={styles.container}>
                             <Routes />
