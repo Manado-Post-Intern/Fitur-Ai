@@ -126,7 +126,7 @@ const SummarizeFloatingButton = ({title, article}) => {
 
       const content = response.data.choices[0].message.content;
       const filtering = content.replace(/-/g, '•');
-      setSummary(filtering); // Set hasil summary
+      setSummary(filtering);
       console.log(`summary, ${response.data.choices[0].message.content}`);
     } catch (error) {
       console.error(error);
@@ -142,8 +142,7 @@ const SummarizeFloatingButton = ({title, article}) => {
       return;
     }
     if (mpUser?.subscription?.isExpired) {
-      // If the user is not subscribed, show a prompt to subscribe
-      setModalVisible(false); // Close the summary modal if open
+      setModalVisible(false);
       setShowSubscriptionModal(true);
     } else {
       fetchSummary();
