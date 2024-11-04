@@ -41,7 +41,7 @@ GoogleSignin.configure({
 });
 
 const App = () => {
-  const latestVersion = '2.1.3.4'; // akan diganti dengan link dinamis
+  const latestVersion = '2.1.4'; // akan diganti dengan link dinamis
   const playStoreUrl =
     'https://play.google.com/store/apps/details?id=com.mp.manadopost&pcampaignid=web_share';
   const appState = useRef(AppState.currentState);

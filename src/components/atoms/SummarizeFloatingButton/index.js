@@ -167,8 +167,8 @@ const SummarizeFloatingButton = ({title, article}) => {
         <View style={styles.subscriptionOverlay}>
           <View style={styles.subscriptionContent}>
             <Text style={{color: 'black', textAlign: 'center'}}>
-              Anda perlu berlangganan MP Digital Premium untuk membaca MP
-              Digital dan MP Koran
+              Anda perlu berlangganan MP Digital Premium untuk menggunakan fitur
+              ini
             </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('Subscription')}

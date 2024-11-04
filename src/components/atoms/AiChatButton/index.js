@@ -41,7 +41,7 @@ const AiChatButton = () => {
           <View style={styles.subscriptionContent}>
             <Text style={{color: 'black', textAlign: 'center'}}>
               Anda perlu berlangganan MP Digital Premium untuk menggunakan fitur
-              AI Chat
+              ini
             </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('Subscription')}
