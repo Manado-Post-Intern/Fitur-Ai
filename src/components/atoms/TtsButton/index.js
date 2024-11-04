@@ -30,12 +30,12 @@ const TTSButton = ({id, isActive, onPress, content}) => {
   useEffect(() => {
     if (visible) {
       // setIsPlaying(true);
-      console.log('berubah menjadi icon stop');
+      //console.log('berubah menjadi icon stop');
     } else {
       // setIsPlayingButton(false);
       dispatch(setPlaying({id, value: false}));
       // dispatch(setPlaying(!isPlaying));
-      console.log('kembali menjadi icon play');
+      //console.log('kembali menjadi icon play');
     }
   }, [visible]);
 
@@ -55,7 +55,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     Tts.getInitStatus()
       .then(() => {
         setTtsReady(true); // TTS is ready
-        console.log('TTS is initialized');
+        // console.log('TTS is initialized');
       })
       .catch(error => {
         console.error('TTS initialization failed:', error);
@@ -92,11 +92,11 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     }
 
     if (!ttsReady) {
-      console.error('TTS is not ready');
+      //console.error('TTS is not ready');
       return;
     }
     dispatch(resetAllTtsExcept(id));
-    console.log("reset id");
+    console.log('reset id');
 
     if (isPlaying) {
       // If the current button is already playing, stop the TTS
@@ -120,15 +120,15 @@ const TTSButton = ({id, isActive, onPress, content}) => {
 
       // Set loading state for the new TTS
       dispatch(setLoading({id, value: true}));
-      console.log("set loading true");
-      
+      console.log('set loading true');
+
       try {
         await // Set the new TTS to speak
-        Tts.setDefaultLanguage('id-ID'); 
+        Tts.setDefaultLanguage('id-ID');
         Tts.stop();
         Tts.speak(cleanContent); // Speak the new content
         dispatch(setPlaying({id, value: true}));
-        console.log("try button tts");
+        console.log('try button tts');
       } catch (error) {
         console.error('Error during TTS:', error);
       }

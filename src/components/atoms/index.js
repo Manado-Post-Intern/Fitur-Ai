@@ -10,6 +10,7 @@ import Switch from './Switch';
 import CheckBox from './CheckbBox';
 import SnackbarNotification from './SnackbarNotification';
 import SummarizeFloatingButton from './SummarizeFloatingButton';
+import AiChatButton from './AiChatButton';
 export {
   GlowCircle,
   TextInter,
@@ -23,4 +24,5 @@ export {
   CheckBox,
   SnackbarNotification,
   SummarizeFloatingButton,
+  AiChatButton,
 };

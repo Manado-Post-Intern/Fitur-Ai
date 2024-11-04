@@ -29,7 +29,7 @@ const NewsForYou = ({
   const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
   const getArticle = async () => {
     if (!item?.id) {
-      console.log('Item ID is undefined or null');
+      // console.log('Item ID is undefined or null');
       return;
     }
     try {

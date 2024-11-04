@@ -88,6 +88,10 @@ import IcPopUpExit from './ic-PopUpExit.svg';
 import IcPopUpPlay from './ic-PopUpPlay.svg';
 import IcPopUpPause from './ic-PopUpPause.svg';
 import IcSumStop from './ic-SumStop.svg';
+import IcAiChat from './ic-AiChat.svg';
+import IcAiChatButton from './ic-AiChatButton.svg';
+import IcBackButton from './ic-backButton.svg';
+
 export {
   Icrefreshpoll,
   IcGanti,
@@ -179,4 +183,7 @@ export {
   IcPopUpPlay,
   IcPopUpPause,
   IcSumStop,
+  IcAiChat,
+  IcAiChatButton,
+  IcBackButton,
 };
