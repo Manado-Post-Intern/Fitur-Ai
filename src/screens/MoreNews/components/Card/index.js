@@ -30,7 +30,7 @@ const Card = ({id, item, isActive, onPress, onSendTitle}) => {
 
   const getArticle = async () => {
     if (!item?.id) {
-      console.log('Item ID is undefined or null');
+      //console.log('Item ID is undefined or null');
       return;
     }
     try {
@@ -42,7 +42,7 @@ const Card = ({id, item, isActive, onPress, onSendTitle}) => {
         params: {id: item?.id},
       });
       setArticle(response.data.data.detail);
-      console.log('Article Content:', response.data.data.detail.content);
+      //console.log('Article Content:', response.data.data.detail.content);
     } catch (error) {
       if (error.response) {
         console.log('Error data:', error.response.data);
@@ -165,6 +165,9 @@ const styles = StyleSheet.create({
     color: theme.colors.grey1,
   },
   TtsButton: {
+    right: '50%',
+  },
+  wrapperButton: {
     flexDirection: 'row',
     justifyContent: 'space-between', // Tambahkan ini jika perlu
     alignItems: 'center',

@@ -32,9 +32,9 @@ const CardPoling = () => {
   const fetchImageURL = async imageName => {
     try {
       const path = `images/polling/${imageName}`;
-      console.log(`Fetching image from path: ${path}`);
+      //console.log(`Fetching image from path: ${path}`);
       const url = await storage().ref(path).getDownloadURL();
-      console.log(`Successfully fetched image URL for: ${imageName}`);
+      //console.log(`Successfully fetched image URL for: ${imageName}`);
       return url;
     } catch (error) {
       console.error(`Error fetching image URL for ${imageName}:`, error);

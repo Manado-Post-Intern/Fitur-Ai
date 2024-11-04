@@ -1,6 +1,6 @@
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
-
+import axios from 'axios';
 // =================================== LOAD SESSION ===================================
 export const loadSession = async () => {
   try {
@@ -12,6 +12,42 @@ export const loadSession = async () => {
   } catch (error) {
     console.log(error);
     return null;
+  }
+};
+// =================================== GPT ===================================
+const openAI = axios.create({
+  baseURL: 'https://api.openai.com/v1',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${Config.OPENAI_API}`,
+  },
+});
+
+export const generateText = async prompt => {
+  try {
+    const response = await openAI.post('/chat/completions', {
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'user',
+          content: `balas setiap pesan dengan bahasa indonesia, user yang memerikan prompt seterusnya ini adalah seseorang yang sedang membuka aplikasi berita bernama manado post ${prompt}`,
+        },
+      ],
+      max_tokens: 150,
+    });
+
+    const sources = [
+      {title: 'OpenAI Documentation', url: 'https://beta.openai.com/docs/'},
+      {title: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/ChatGPT'},
+    ];
+
+    return {
+      text: response.data.choices[0].message.content,
+      sources: sources,
+    };
+  } catch (error) {
+    console.error('Error generating text:', error);
+    throw error;
   }
 };
 

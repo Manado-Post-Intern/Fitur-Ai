@@ -36,6 +36,7 @@ import {
   MoreNews,
   WriteNews,
   ChannelTagSelection,
+  AiChat,
 } from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {screenHeightPercentage} from '../utils';
@@ -120,6 +121,7 @@ const PrivateRoutes = () => {
         name="ChannelTagSelection"
         component={ChannelTagSelection}
       />
+      <Stack.Screen name="AiChat" component={AiChat} />
     </Stack.Navigator>
   );
 };
