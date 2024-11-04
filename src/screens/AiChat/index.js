@@ -8,19 +8,30 @@ import {
   ActivityIndicator,
   StyleSheet,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {generateText} from '../../api/index';
 import LinearGradient from 'react-native-linear-gradient';
 import {TopBarAi} from './component';
+import NetInfo from '@react-native-community/netinfo';
+import {useErrorNotification} from '../../context/ErrorNotificationContext';
 
 const ChatAI = () => {
   const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const scrollViewRef = useRef();
+  const {showError} = useErrorNotification();
 
   const handleGenerateText = async () => {
     if (!prompt.trim()) {
+      return;
+    }
+
+    const netInfo = await NetInfo.fetch();
+    if (!netInfo.isConnected) {
+      showError('Tidak ada koneksi internet. Silakan periksa jaringan Anda.');
       return;
     }
 
@@ -35,6 +46,7 @@ const ChatAI = () => {
       setMessages(prevMessages => [...prevMessages, botMessage]);
     } catch (error) {
       console.error('Error:', error);
+      showError('Terjadi kesalahan saat membuat respon. Silakan coba lagi.');
       const errorMessage = {
         role: 'bot',
         content: 'Error generating response. Please try again.',
@@ -54,51 +66,61 @@ const ChatAI = () => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBarAi />
-      <ScrollView style={styles.chatContainer}>
-        {messages.map((message, index) => (
-          <View
-            key={index}
-            style={[
-              styles.messageBubble,
-              message.role === 'user'
-                ? styles.userBubbleContainer
-                : styles.botBubbleContainer,
-            ]}>
-            {message.role === 'user' ? (
-              <LinearGradient
-                colors={['#4479E1', '#2C4FB9']}
-                style={styles.userBubble}>
-                <Text style={styles.userText}>{message.content}</Text>
-              </LinearGradient>
-            ) : (
-              <View style={styles.botBubble}>
-                <Text style={styles.botText}>{message.content}</Text>
-                {message.sources && (
-                  <View style={styles.sourceContainer}>
-                    <Text style={styles.sourceLabel}>Baca Juga:</Text>
-                    {message.sources.map((source, idx) => (
-                      <Text key={idx} style={styles.sourceLink}>
-                        {source.title} - {source.url}
-                      </Text>
-                    ))}
-                  </View>
-                )}
-              </View>
-            )}
-          </View>
-        ))}
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      </ScrollView>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
+        <ScrollView
+          style={styles.chatContainer}
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current?.scrollToEnd({animated: true})
+          }>
+          {messages.map((message, index) => (
+            <View
+              key={index}
+              style={[
+                styles.messageBubble,
+                message.role === 'user'
+                  ? styles.userBubbleContainer
+                  : styles.botBubbleContainer,
+              ]}>
+              {message.role === 'user' ? (
+                <LinearGradient
+                  colors={['#4479E1', '#2C4FB9']}
+                  style={styles.userBubble}>
+                  <Text style={styles.userText}>{message.content}</Text>
+                </LinearGradient>
+              ) : (
+                <View style={styles.botBubble}>
+                  <Text style={styles.botText}>{message.content}</Text>
+                  {message.sources && (
+                    <View style={styles.sourceContainer}>
+                      <Text style={styles.sourceLabel}>Baca Juga:</Text>
+                      {message.sources.map((source, idx) => (
+                        <Text key={idx} style={styles.sourceLink}>
+                          {source.title} - {source.url}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              )}
+            </View>
+          ))}
+          {loading && <ActivityIndicator size="large" color="#0000ff" />}
+        </ScrollView>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Tulis pesan di sini..."
-          value={prompt}
-          onChangeText={setPrompt}
-        />
-        <Button title="Kirim" onPress={handleGenerateText} />
-      </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Tulis pesan di sini..."
+            value={prompt}
+            onChangeText={setPrompt}
+          />
+          <Button title="Kirim" onPress={handleGenerateText} />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

@@ -13,7 +13,9 @@ const ErrorNotification = () => {
 
   return (
     <View style={styles.container}>
-      <IcError />
+      <View style={styles.wrapIcon}>
+        <IcError />
+      </View>
       <View style={styles.wrapErrorMessage}>
         <Text style={styles.title}>Error</Text>
         <Text style={styles.message}>{errorMessage}</Text>
@@ -35,15 +37,19 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 1000,
   },
+  wrapIcon: {
+    left: 5,
+  },
   title: {
     color: 'white',
     fontWeight: 'bold',
   },
   message: {
     color: 'white',
+    marginRight: 20,
   },
   wrapErrorMessage: {
-    paddingLeft: 10,
+    left: 20,
   },
 });
 
