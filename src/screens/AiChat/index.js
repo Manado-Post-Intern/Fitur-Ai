@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  useColorScheme,
 } from 'react-native';
 import {generateText} from '../../api/index';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,6 +25,8 @@ const ChatAI = () => {
   const [loading, setLoading] = useState(false);
   const scrollViewRef = useRef();
   const {showError} = useErrorNotification();
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
   const handleGenerateText = async () => {
     if (!prompt.trim()) {
@@ -88,11 +91,16 @@ const ChatAI = () => {
               <LinearGradient
                 colors={['#4479E1', '#2C4FB9']}
                 style={styles.userBubble}>
-                <Text style={styles.userText}>{message.content}</Text>
+                <Text
+                  style={[styles.userText, isDarkMode && styles.darkTextUser]}>
+                  {message.content}
+                </Text>
               </LinearGradient>
             ) : (
               <View style={styles.botBubble}>
-                <Text style={styles.botText}>{message.content}</Text>
+                <Text style={[styles.botText, isDarkMode && styles.darkText]}>
+                  {message.content}
+                </Text>
               </View>
             )}
           </View>
@@ -101,12 +109,20 @@ const ChatAI = () => {
       </KeyboardAwareScrollView>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            isDarkMode ? styles.inputDark : styles.inputLight,
+          ]}
           placeholder="Tulis pesan di sini..."
+          placeholderTextColor={isDarkMode ? '#A9A9A9' : '#555555'}
           value={prompt}
           onChangeText={setPrompt}
         />
-        <Button title="Kirim" onPress={handleGenerateText} />
+        <Button
+          title="Kirim"
+          onPress={handleGenerateText}
+          disabled={!prompt.trim()}
+        />
       </View>
     </SafeAreaView>
   );
@@ -118,11 +134,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#e7f0f5',
   },
   chatContainer: {
-    flex: 1,
     padding: 20,
+    height: '10%',
   },
   messageBubble: {
-    marginBottom: 20,
+    marginBottom: 25,
     maxWidth: '80%',
   },
   userBubbleContainer: {
@@ -167,6 +183,16 @@ const styles = StyleSheet.create({
     marginRight: 10,
     backgroundColor: '#fff',
   },
+  inputLight: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#ccc',
+    color: '#000000', // Ensure the text is visible in light mode
+  },
+  inputDark: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#ccc',
+    color: '#000000', // Text color for dark mode
+  },
   sourceContainer: {
     marginTop: 5,
   },
@@ -182,5 +208,9 @@ const styles = StyleSheet.create({
     color: '#1E90FF',
     textDecorationLine: 'underline',
   },
+  darkText: {
+    color: 'black',
+  },
+  darkTextUser: 'white',
 });
 export default ChatAI;
