@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {TopBarAi} from './component';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../context/ErrorNotificationContext';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const ChatAI = () => {
   const [prompt, setPrompt] = useState('');
@@ -66,61 +67,47 @@ const ChatAI = () => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBarAi />
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
-        <ScrollView
-          style={styles.chatContainer}
-          ref={scrollViewRef}
-          onContentSizeChange={() =>
-            scrollViewRef.current?.scrollToEnd({animated: true})
-          }>
-          {messages.map((message, index) => (
-            <View
-              key={index}
-              style={[
-                styles.messageBubble,
-                message.role === 'user'
-                  ? styles.userBubbleContainer
-                  : styles.botBubbleContainer,
-              ]}>
-              {message.role === 'user' ? (
-                <LinearGradient
-                  colors={['#4479E1', '#2C4FB9']}
-                  style={styles.userBubble}>
-                  <Text style={styles.userText}>{message.content}</Text>
-                </LinearGradient>
-              ) : (
-                <View style={styles.botBubble}>
-                  <Text style={styles.botText}>{message.content}</Text>
-                  {message.sources && (
-                    <View style={styles.sourceContainer}>
-                      <Text style={styles.sourceLabel}>Baca Juga:</Text>
-                      {message.sources.map((source, idx) => (
-                        <Text key={idx} style={styles.sourceLink}>
-                          {source.title} - {source.url}
-                        </Text>
-                      ))}
-                    </View>
-                  )}
-                </View>
-              )}
-            </View>
-          ))}
-          {loading && <ActivityIndicator size="large" color="#0000ff" />}
-        </ScrollView>
-
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Tulis pesan di sini..."
-            value={prompt}
-            onChangeText={setPrompt}
-          />
-          <Button title="Kirim" onPress={handleGenerateText} />
-        </View>
-      </KeyboardAvoidingView>
+      <KeyboardAwareScrollView
+        style={styles.chatContainer}
+        ref={scrollViewRef}
+        onContentSizeChange={() =>
+          scrollViewRef.current?.scrollToEnd({animated: true})
+        }
+        keyboardShouldPersistTaps="handled"
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 20}>
+        {messages.map((message, index) => (
+          <View
+            key={index}
+            style={[
+              styles.messageBubble,
+              message.role === 'user'
+                ? styles.userBubbleContainer
+                : styles.botBubbleContainer,
+            ]}>
+            {message.role === 'user' ? (
+              <LinearGradient
+                colors={['#4479E1', '#2C4FB9']}
+                style={styles.userBubble}>
+                <Text style={styles.userText}>{message.content}</Text>
+              </LinearGradient>
+            ) : (
+              <View style={styles.botBubble}>
+                <Text style={styles.botText}>{message.content}</Text>
+              </View>
+            )}
+          </View>
+        ))}
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      </KeyboardAwareScrollView>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Tulis pesan di sini..."
+          value={prompt}
+          onChangeText={setPrompt}
+        />
+        <Button title="Kirim" onPress={handleGenerateText} />
+      </View>
     </SafeAreaView>
   );
 };
@@ -169,6 +156,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderColor: '#ccc',
     backgroundColor: '#F6F6F6',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
   },
   input: {
     flex: 1,

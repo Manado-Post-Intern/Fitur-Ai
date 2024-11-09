@@ -21,9 +21,10 @@ import {AuthContext} from '../../../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext';
+import { openai_api_url } from '../../../api';
 
 const openAI = axios.create({
-  baseURL: 'https://api.openai.com/v1',
+  baseURL: `${openai_api_url}`,
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${Config.OPENAI_API}`,
