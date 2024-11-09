@@ -9,6 +9,7 @@ import ChevroletBackButton from './ChevroletBackButton';
 import Switch from './Switch';
 import CheckBox from './CheckbBox';
 import SnackbarNotification from './SnackbarNotification';
+import SummarizeFloatingButton from './SummarizeFloatingButton';
 import AiChatButton from './AiChatButton';
 export {
   GlowCircle,
@@ -22,5 +23,6 @@ export {
   Switch,
   CheckBox,
   SnackbarNotification,
+  SummarizeFloatingButton,
   AiChatButton,
 };

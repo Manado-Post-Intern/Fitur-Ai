@@ -8,19 +8,31 @@ import {
   ActivityIndicator,
   StyleSheet,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {generateText} from '../../api/index';
 import LinearGradient from 'react-native-linear-gradient';
 import {TopBarAi} from './component';
+import NetInfo from '@react-native-community/netinfo';
+import {useErrorNotification} from '../../context/ErrorNotificationContext';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const ChatAI = () => {
   const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const scrollViewRef = useRef();
+  const {showError} = useErrorNotification();
 
   const handleGenerateText = async () => {
     if (!prompt.trim()) {
+      return;
+    }
+
+    const netInfo = await NetInfo.fetch();
+    if (!netInfo.isConnected) {
+      showError('Tidak ada koneksi internet. Silakan periksa jaringan Anda.');
       return;
     }
 
@@ -35,6 +47,7 @@ const ChatAI = () => {
       setMessages(prevMessages => [...prevMessages, botMessage]);
     } catch (error) {
       console.error('Error:', error);
+      showError('Terjadi kesalahan saat membuat respon. Silakan coba lagi.');
       const errorMessage = {
         role: 'bot',
         content: 'Error generating response. Please try again.',
@@ -54,7 +67,14 @@ const ChatAI = () => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBarAi />
-      <ScrollView style={styles.chatContainer}>
+      <KeyboardAwareScrollView
+        style={styles.chatContainer}
+        ref={scrollViewRef}
+        onContentSizeChange={() =>
+          scrollViewRef.current?.scrollToEnd({animated: true})
+        }
+        keyboardShouldPersistTaps="handled"
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 20}>
         {messages.map((message, index) => (
           <View
             key={index}
@@ -73,23 +93,12 @@ const ChatAI = () => {
             ) : (
               <View style={styles.botBubble}>
                 <Text style={styles.botText}>{message.content}</Text>
-                {message.sources && (
-                  <View style={styles.sourceContainer}>
-                    <Text style={styles.sourceLabel}>Baca Juga:</Text>
-                    {message.sources.map((source, idx) => (
-                      <Text key={idx} style={styles.sourceLink}>
-                        {source.title} - {source.url}
-                      </Text>
-                    ))}
-                  </View>
-                )}
               </View>
             )}
           </View>
         ))}
         {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      </ScrollView>
-
+      </KeyboardAwareScrollView>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -147,6 +156,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderColor: '#ccc',
     backgroundColor: '#F6F6F6',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
   },
   input: {
     flex: 1,
