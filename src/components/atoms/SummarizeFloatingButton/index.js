@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -18,12 +18,13 @@ import axios from 'axios';
 import Tts from 'react-native-tts';
 import Config from 'react-native-config';
 import { AuthContext } from '../../../context/AuthContext';
+import { openai_api_url } from '../../../api';
 
 const openAI = axios.create({
-  baseURL: 'https://api.openai.com/v1',
+  baseURL: `${openai_api_url}`,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${Config.OPENAI_API}`, 
+    Authorization: `Bearer ${Config.OPENAI_API}`,
   },
 });
 
@@ -70,6 +71,7 @@ const SummarizeFloatingButton = ({title, article, navigation}) => {
     } else {
       if (summary) {
         Tts.stop();
+        Tts.setDefaultLanguage('id-ID');
         Tts.speak(summary);
         setIsPlaying(true);
         console.log('tts speak');

@@ -21,6 +21,7 @@ const GRANT_TYPE = Config.GRANT_TYPE;
 const API_KEY = Config.API_KEY;
 const SECRET_KEY = Config.SECRET_KEY;
 const API_URL = Config.API_URL;
+const OPENAI_API = Config.OPENAI_API; 
 
 export const auth = `${API_URL}oauth/token/`;
 export const authData = {
@@ -66,3 +67,5 @@ export const tagArticle = `${API_URL}article/tag/`;
 // =================================== SEARCH ===================================
 
 export const search = `${API_URL}article/search/`;
+
+
