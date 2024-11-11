@@ -28,6 +28,25 @@ const ChatAI = () => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
+  const [displayedText, setDisplayedText] = useState('');
+  const welcomeMessage =
+    'Hai Selamat Datang, Silahkan Bertanya akan Saya Jawab:)';
+  const typingSpeed = 50; // Adjust typing speed in milliseconds
+
+  useEffect(() => {
+    let index = 0;
+    const typingInterval = setInterval(() => {
+      if (index < welcomeMessage.length) {
+        setDisplayedText(prev => prev + welcomeMessage[index]);
+        index++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, typingSpeed);
+
+    return () => clearInterval(typingInterval); // Clear interval on unmount
+  }, []);
+
   const handleGenerateText = async () => {
     if (!prompt.trim()) {
       return;
@@ -70,43 +89,57 @@ const ChatAI = () => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBarAi />
-      <KeyboardAwareScrollView
-        style={styles.chatContainer}
-        ref={scrollViewRef}
-        onContentSizeChange={() =>
-          scrollViewRef.current?.scrollToEnd({animated: true})
-        }
-        keyboardShouldPersistTaps="handled"
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 20}>
-        {messages.map((message, index) => (
-          <View
-            key={index}
-            style={[
-              styles.messageBubble,
-              message.role === 'user'
-                ? styles.userBubbleContainer
-                : styles.botBubbleContainer,
-            ]}>
-            {message.role === 'user' ? (
-              <LinearGradient
-                colors={['#4479E1', '#2C4FB9']}
-                style={styles.userBubble}>
-                <Text
-                  style={[styles.userText, isDarkMode && styles.darkTextUser]}>
-                  {message.content}
-                </Text>
-              </LinearGradient>
-            ) : (
-              <View style={styles.botBubble}>
-                <Text style={[styles.botText, isDarkMode && styles.darkText]}>
-                  {message.content}
-                </Text>
-              </View>
-            )}
+      <View style={styles.contentContainer}>
+        {messages.length === 0 ? (
+          <View style={styles.welcomeContainer}>
+            <Text style={[styles.welcomeText, isDarkMode && styles.darkText]}>
+              {displayedText}
+            </Text>
           </View>
-        ))}
-        {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      </KeyboardAwareScrollView>
+        ) : (
+          <KeyboardAwareScrollView
+            style={styles.chatContainer}
+            ref={scrollViewRef}
+            onContentSizeChange={() =>
+              scrollViewRef.current?.scrollToEnd({animated: true})
+            }
+            keyboardShouldPersistTaps="handled"
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 20}>
+            {messages.map((message, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.messageBubble,
+                  message.role === 'user'
+                    ? styles.userBubbleContainer
+                    : styles.botBubbleContainer,
+                ]}>
+                {message.role === 'user' ? (
+                  <LinearGradient
+                    colors={['#4479E1', '#2C4FB9']}
+                    style={styles.userBubble}>
+                    <Text
+                      style={[
+                        styles.userText,
+                        isDarkMode && styles.darkTextUser,
+                      ]}>
+                      {message.content}
+                    </Text>
+                  </LinearGradient>
+                ) : (
+                  <View style={styles.botBubble}>
+                    <Text
+                      style={[styles.botText, isDarkMode && styles.darkText]}>
+                      {message.content}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            ))}
+            {loading && <ActivityIndicator size="large" color="#0000ff" />}
+          </KeyboardAwareScrollView>
+        )}
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           style={[
@@ -132,6 +165,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e7f0f5',
+  },
+  contentContainer: {
+    flex: 1,
   },
   chatContainer: {
     padding: 20,
@@ -212,5 +248,16 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   darkTextUser: 'white',
+  welcomeContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: '1%',
+  },
+  welcomeText: {
+    fontSize: 24,
+    color: '#555',
+    marginHorizontal: '7%',
+  },
 });
 export default ChatAI;
