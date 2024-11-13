@@ -30,10 +30,11 @@ export const generateText = async prompt => {
       messages: [
         {
           role: 'user',
-          content: `balas setiap pesan dengan bahasa indonesia, user yang memerikan prompt seterusnya ini adalah seseorang yang sedang membuka aplikasi berita bernama manado post ${prompt}`,
+          content: `balas setiap pesan dengan bahasa indonesia, Berikan jawaban singkat, ringkas, dan padat, tidak lebih dari 2-3 kalimat. Gunakan bahasa Indonesia untuk balasan. Pertanyaannya: ${prompt}`,
         },
       ],
       max_tokens: 150,
+      temperature: 0.7,
     });
 
     const sources = [

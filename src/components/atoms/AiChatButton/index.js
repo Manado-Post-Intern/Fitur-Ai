@@ -60,8 +60,8 @@ export default AiChatButton;
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    right: '5%',
-    transform: [{translateY: -70}],
+    right: '-35%',
+    transform: [{translateY: -60}],
     width: 53,
     height: 45,
     borderRadius: 30,
