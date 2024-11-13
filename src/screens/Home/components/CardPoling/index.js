@@ -32,9 +32,9 @@ const CardPoling = () => {
   const fetchImageURL = async imageName => {
     try {
       const path = `images/polling/${imageName}`;
-      //console.log(`Fetching image from path: ${path}`);
+      console.log(`Fetching image from path: ${path}`);
       const url = await storage().ref(path).getDownloadURL();
-      //console.log(`Successfully fetched image URL for: ${imageName}`);
+      console.log(`Successfully fetched image URL for: ${imageName}`);
       return url;
     } catch (error) {
       console.error(`Error fetching image URL for ${imageName}:`, error);
@@ -51,12 +51,18 @@ const CardPoling = () => {
           .once('value');
         const title = pollingTitleSnapshot.val();
 
+        const usersSnapshot = await database()
+          .ref('polling/users')
+          .once('value');
+        const totalUsers = usersSnapshot.numChildren();
+
         setPollData(prevState => ({
           ...prevState,
           title: title,
+          totalUsers: totalUsers,
         }));
       } catch (error) {
-        console.error('Error loading polling title:', error);
+        console.error('Error loading polling title or total users:', error);
       }
     };
 
@@ -161,6 +167,7 @@ const CardPoling = () => {
         `polling/candidates/${selectedCandidate}/votes`,
       );
       const userVoteRef = database().ref(`polling/users/${userId}`);
+      const totalUsersRef = database().ref('polling/users');
 
       await voteTransaction.transaction(votes => {
         if (votes === null) {
@@ -170,16 +177,21 @@ const CardPoling = () => {
         }
       });
 
-      // Setelah transaksi berhasil, simpan vote user
+      // Tambahkan data pemilih baru
       await userVoteRef.set({
         selectedCandidate: selectedCandidate,
       });
 
-      // Update totalVotes
-      setPollData(prevState => ({
-        ...prevState,
-        totalVotes: prevState.totalVotes + 1,
-      }));
+      // Perbarui jumlah total pemilih dengan menambahkan user baru
+      await totalUsersRef.once('value', snapshot => {
+        const totalUsers = snapshot.numChildren();
+        setPollData(prevState => ({
+          ...prevState,
+          totalUsers: totalUsers, // Perbarui total users di state lokal
+          totalVotes: prevState.totalVotes + 1, // Update total votes
+        }));
+      });
+
       await handleRefresh();
     } catch (error) {
       console.error('Error during vote transaction:', error);
@@ -252,9 +264,11 @@ const CardPoling = () => {
 
   const handleRefresh = async () => {
     try {
+      // Mengambil data kandidat dari Firebase Realtime Database
       const snapshot = await database().ref('polling/candidates').once('value');
       const candidates = snapshot.val();
 
+      // Memproses data kandidat dan mengambil URL gambar dari Firebase Storage
       let options = await Promise.all(
         Object.keys(candidates).map(async candidate => {
           const imageName =
@@ -269,6 +283,7 @@ const CardPoling = () => {
         }),
       );
 
+      // Mengurutkan kandidat sehingga "Lainnya" selalu berada di bagian akhir
       options = options.sort((a, b) => {
         if (a.text === 'Lainnya') {
           return 1;
@@ -279,15 +294,22 @@ const CardPoling = () => {
         return 0;
       });
 
+      // Menghitung total votes
       const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
 
+      // Mengambil total pemilih (jumlah pengguna yang telah melakukan vote) dari Firebase
+      const usersSnapshot = await database().ref('polling/users').once('value');
+      const totalUsers = usersSnapshot.numChildren();
+
+      // Memperbarui state dengan data kandidat dan total pemilih terbaru
       setPollData(prevState => ({
         ...prevState,
         options,
         totalVotes,
+        totalUsers,
       }));
     } catch (error) {
-      console.error('Error refreshing candidates:', error);
+      console.error('Error refreshing candidates or total users:', error);
     }
   };
 
@@ -345,6 +367,14 @@ const CardPoling = () => {
             onPress={handleRefresh}>
             <Icrefreshpoll />
           </TouchableOpacity>
+        </View>
+      )}
+
+      {pollData.hasVoted && (
+        <View style={styles.totalVotesContainer}>
+          <Text style={styles.totalVotesText}>
+            Total Pemilih: {pollData.totalUsers}
+          </Text>
         </View>
       )}
 
@@ -453,6 +483,16 @@ const styles = StyleSheet.create({
     color: '#344ab9',
     fontWeight: '500',
     fontSize: 16,
+    fontFamily: theme.fonts.inter.semiBold,
+  },
+  totalVotesContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  totalVotesText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
     fontFamily: theme.fonts.inter.semiBold,
   },
 });

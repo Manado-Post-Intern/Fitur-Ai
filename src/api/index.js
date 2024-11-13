@@ -23,8 +23,16 @@ const openAI = axios.create({
   },
 });
 
+let chatCounter = 0;
+
 export const generateText = async prompt => {
   try {
+    if (chatCounter >= 10) {
+      return {
+        text: 'Percakapan anda telah mencapai batas. Silahkan memulai ulang sesi chatnya',
+        sources: [],
+      };
+    }
     const response = await openAI.post('/chat/completions', {
       model: 'gpt-4o-mini',
       messages: [
@@ -36,20 +44,21 @@ export const generateText = async prompt => {
       max_tokens: 150,
       temperature: 0.7,
     });
-
-    const sources = [
-      {title: 'OpenAI Documentation', url: 'https://beta.openai.com/docs/'},
-      {title: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/ChatGPT'},
-    ];
+    chatCounter += 1;
 
     return {
       text: response.data.choices[0].message.content,
-      sources: sources,
     };
   } catch (error) {
     console.error('Error generating text:', error);
-    throw error;
+    return {
+      text: 'Maaf, ada masalah dalam menghasilkan jawaban.',
+      sources: [],
+    };
   }
+};
+export const resetChatCounter = () => {
+  chatCounter = 0;
 };
 
 // =================================== AUTH ===================================
