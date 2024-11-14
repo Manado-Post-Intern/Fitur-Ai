@@ -27,7 +27,7 @@ let chatCounter = 0;
 
 export const generateText = async prompt => {
   try {
-    if (chatCounter >= 10) {
+    if (chatCounter >= 20) {
       return {
         text: 'Percakapan anda telah mencapai batas. Silahkan memulai ulang sesi chatnya',
         sources: [],

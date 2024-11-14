@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -17,14 +17,10 @@ import {
 import axios from 'axios';
 import Tts from 'react-native-tts';
 import Config from 'react-native-config';
-import {AuthContext} from '../../../context/AuthContext';
-import {useNavigation} from '@react-navigation/native';
-import NetInfo from '@react-native-community/netinfo';
-import {useErrorNotification} from '../../../context/ErrorNotificationContext';
-import { openai_api_url } from '../../../api';
+import Gap from '../Gap';
 
 const openAI = axios.create({
-  baseURL: `${openai_api_url}`,
+  baseURL: 'https://api.openai.com/v1',
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${Config.OPENAI_API}`,
@@ -36,10 +32,6 @@ const SummarizeFloatingButton = ({title, article}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(false);
-  const {mpUser} = useContext(AuthContext);
-  const navigation = useNavigation();
-  const [isConnected, setIsConnected] = useState(true);
-  const {showError} = useErrorNotification();
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -67,26 +59,8 @@ const SummarizeFloatingButton = ({title, article}) => {
     };
   }, [isPlaying]);
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setIsConnected(state.isConnected);
-      if (!state.isConnected && isPlaying) {
-        Tts.stop();
-
-        showError('Connection lost. TTS playback stopped.');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [isPlaying]);
-
   const togglePlayPause = () => {
     Tts.setDefaultLanguage('id-ID');
-    if (!isConnected) {
-      setModalVisible(false);
-      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
-      return;
-    }
     if (isPlaying) {
       Tts.stop();
       setIsPlaying(false);
@@ -102,12 +76,6 @@ const SummarizeFloatingButton = ({title, article}) => {
   };
 
   const fetchSummary = async () => {
-    if (!isConnected) {
-      showError(
-        'Koneksi internet tidak tersedia. Mohon periksa jaringan Anda dan coba kembali.',
-      );
-      return;
-    }
     setLoading(true);
     try {
       const cleanArticle = article
@@ -117,12 +85,13 @@ const SummarizeFloatingButton = ({title, article}) => {
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, '');
 
-      const prompt = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya, batasan bulletnya hanya 3 sampai 5 tergantun panjang beritanya saja, dan nanti panjang bulletin beritanya jadikan hanya 15 kata saja."${cleanArticle}"`;
+      const prompt = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya. batasan bulletnya buat jadi 3 sampai 5 saja, dan nanti panjang kata dari tiap bulletin beritanya jadikan hanya 15 kata saja"${cleanArticle}"`;
 
       const response = await openAI.post('/chat/completions', {
         model: 'gpt-4o-mini',
         messages: [{role: 'user', content: prompt}],
         max_tokens: 500,
+        temperature: 0.7,
       });
 
       const content = response.data.choices[0].message.content;
@@ -131,54 +100,21 @@ const SummarizeFloatingButton = ({title, article}) => {
       console.log(`summary, ${response.data.choices[0].message.content}`);
     } catch (error) {
       console.error(error);
-      showError('Failed to fetch summary. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSummarize = () => {
-    if (!isConnected) {
-      showError('Koneksi terputus. Periksa jaringan Anda untuk melanjutkan.');
-      return;
-    }
-    if (mpUser?.subscription?.isExpired) {
-      setModalVisible(false);
-      setShowSubscriptionModal(true);
-    } else {
-      fetchSummary();
-      setModalVisible(true);
-      toggleModal();
-    }
+    fetchSummary();
+    toggleModal();
   };
-
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.floatingButton} onPress={handleSummarize}>
         <IcSummarizeSpark name="Spark" />
       </TouchableOpacity>
-
-      <Modal
-        transparent={true}
-        visible={showSubscriptionModal}
-        animationType="fade"
-        onRequestClose={() => setShowSubscriptionModal(false)}>
-        <View style={styles.subscriptionOverlay}>
-          <View style={styles.subscriptionContent}>
-            <Text style={{color: 'black', textAlign: 'center'}}>
-              Anda perlu berlangganan MP Digital Premium untuk menggunakan fitur
-              ini
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Subscription')}
-              style={styles.subscribeButton}>
-              <Text style={{color: 'white'}}>Berlangganan Sekarang</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
 
       <Modal
         transparent={true}
@@ -191,20 +127,13 @@ const SummarizeFloatingButton = ({title, article}) => {
               <IcPopUpExit name="close" />
             </TouchableOpacity>
 
-            <View style={styles.titleContainer}>
-              <Text
-                style={styles.titleText}
-                numberOfLines={10}
-                ellipsizeMode="tail">
-                {title}
-              </Text>
-            </View>
-
+            <Text style={styles.titleText}>{title}</Text>
+            <Gap height={36} />
             <ScrollView style={styles.Description}>
-              {loading ? ( // Show loading indicator if loading is true
+              {loading ? (
                 <ActivityIndicator size="large" color="#005AAC" />
               ) : (
-                <Text style={styles.bulletPoint}>{summary}</Text> // Show summary once loaded
+                <Text style={styles.bulletPoint}>{summary}</Text>
               )}
             </ScrollView>
 
@@ -226,7 +155,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 90,
     right: 30,
-    zIndex: 1,
   },
   floatingButton: {
     backgroundColor: '#005AAC',
@@ -255,28 +183,23 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   closeButton: {
-    position: 'absolute',
-    marginLeft: '92%',
-    marginTop: '5%',
+    // position: 'absolute',
+    marginLeft: '86%',
     width: 75,
     height: 50,
   },
-  titleContainer: {
-    alignSelf: 'stretch',
-    paddingRight: 40, // Padding to prevent overlap with close button
-  },
   titleText: {
-    // position: 'absolute',
-    fontSize: 18,
+    position: 'absolute',
+    fontSize: 22,
     fontWeight: 'bold',
+    marginBottom: '15%',
     marginTop: '10%',
     color: '#000000',
-    paddingLeft: '10%',
-    marginBottom: '-20%',
+    paddingLeft: '12%',
+    paddingRight: '5%',
   },
   Description: {
-    top: 1,
-    marginVertical: '20%',
+    paddingTop: '30%',
     marginRight: '5%',
     marginLeft: '5%',
   },
@@ -291,25 +214,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 50,
     marginTop: -50,
-  },
-  subscriptionOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
-  },
-  subscriptionContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-    width: '80%',
-  },
-  subscribeButton: {
-    backgroundColor: '#005AAC',
-    padding: 10,
-    marginTop: 15,
-    borderRadius: 5,
   },
 });
 
