@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {
   View,
   TextInput,
@@ -106,7 +106,7 @@ const ChatAI = () => {
         scaleAnim.setValue(1); // Set value ke 1 tanpa animasi
       }
     }, [isLastMessage]);
-    
+
     return (
       <Animated.View
         style={{
@@ -119,6 +119,9 @@ const ChatAI = () => {
     );
   });
   
+  const handleSendMessage = useCallback(() => {
+    handleGenerateText();
+  }, [prompt]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -149,30 +152,30 @@ const ChatAI = () => {
                     : styles.botBubbleContainer,
                 ]}>
                 <AnimatedBubble
-    key={`bubble-${index}`}
-    role={message.role}
-    index={index}
-    isLastMessage={index === messages.length - 1}>
-                {message.role === 'user' ? (
-                  <LinearGradient
-                    colors={['#4479E1', '#2C4FB9']}
-                    style={styles.userBubble}>
-                    <Text
-                      style={[
-                        styles.userText,
-                        isDarkMode && styles.darkTextUser,
-                      ]}>
-                      {message.content}
-                    </Text>
-                  </LinearGradient>
-                ) : (
-                  <View style={styles.botBubble}>
-                    <Text
-                      style={[styles.botText, isDarkMode && styles.darkText]}>
-                      {message.content}
-                    </Text>
-                  </View>
-                )}
+                  key={`bubble-${index}`}
+                  role={message.role}
+                  index={index}
+                  isLastMessage={index === messages.length - 1}>
+                  {message.role === 'user' ? (
+                    <LinearGradient
+                      colors={['#4479E1', '#2C4FB9']}
+                      style={styles.userBubble}>
+                      <Text
+                        style={[
+                          styles.userText,
+                          isDarkMode && styles.darkTextUser,
+                        ]}>
+                        {message.content}
+                      </Text>
+                    </LinearGradient>
+                  ) : (
+                    <View style={styles.botBubble}>
+                      <Text
+                        style={[styles.botText, isDarkMode && styles.darkText]}>
+                        {message.content}
+                      </Text>
+                    </View>
+                  )}
                 </AnimatedBubble>
               </View>
             ))}
@@ -189,11 +192,12 @@ const ChatAI = () => {
           placeholder="Tulis pesan di sini..."
           placeholderTextColor={isDarkMode ? '#A9A9A9' : '#555555'}
           value={prompt}
-          onChangeText={setPrompt}
+          onChangeText={text => setPrompt(text)}
+    onSubmitEditing={handleSendMessage}
         />
         <Button
           title="Kirim"
-          onPress={handleGenerateText}
+          onPress={handleSendMessage}
           disabled={!prompt.trim()}
         />
       </View>
