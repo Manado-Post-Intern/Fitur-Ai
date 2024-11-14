@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
-  ScrollView, // Import ScrollView
+  ScrollView,
 } from 'react-native';
 import {
   IcSummarizeSpark,
@@ -21,15 +21,7 @@ import {AuthContext} from '../../../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext';
-import { openai_api_url } from '../../../api';
-
-const openAI = axios.create({
-  baseURL: `${openai_api_url}`,
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${Config.OPENAI_API}`,
-  },
-});
+import { summarizetext } from '../../../api';
 
 const SummarizeFloatingButton = ({title, article}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -49,7 +41,6 @@ const SummarizeFloatingButton = ({title, article}) => {
 
   useEffect(() => {
     Tts.addEventListener('tts-start', () => {
-      // setIsPlaying(true);
       console.log('tts sedang start');
     });
     Tts.addEventListener('tts-finish', () => {
@@ -117,18 +108,10 @@ const SummarizeFloatingButton = ({title, article}) => {
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, '');
 
-      const prompt = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya, batasan bulletnya hanya 3 sampai 5 tergantun panjang beritanya saja, dan nanti panjang bulletin beritanya jadikan hanya 15 kata saja."${cleanArticle}"`;
-
-      const response = await openAI.post('/chat/completions', {
-        model: 'gpt-4o-mini',
-        messages: [{role: 'user', content: prompt}],
-        max_tokens: 500,
-      });
-
-      const content = response.data.choices[0].message.content;
+      const content = await summarizetext(cleanArticle);
       const filtering = content.replace(/-/g, '•');
       setSummary(filtering);
-      console.log(`summary, ${response.data.choices[0].message.content}`);
+      console.log(`summary, ${filtering}`);
     } catch (error) {
       console.error(error);
       showError('Failed to fetch summary. Please try again.');
@@ -201,14 +184,12 @@ const SummarizeFloatingButton = ({title, article}) => {
             </View>
 
             <ScrollView style={styles.Description}>
-              {loading ? ( // Show loading indicator if loading is true
+              {loading ? (
                 <ActivityIndicator size="large" color="#005AAC" />
               ) : (
-                <Text style={styles.bulletPoint}>{summary}</Text> // Show summary once loaded
+                <Text style={styles.bulletPoint}>{summary}</Text>
               )}
             </ScrollView>
-
-            {/* Tombol Play/Pause */}
             <TouchableOpacity
               onPress={togglePlayPause}
               style={styles.playPauseButton}>
@@ -263,10 +244,9 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignSelf: 'stretch',
-    paddingRight: 40, // Padding to prevent overlap with close button
+    paddingRight: 40,
   },
   titleText: {
-    // position: 'absolute',
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: '10%',
@@ -296,7 +276,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   subscriptionContent: {
     backgroundColor: 'white',
