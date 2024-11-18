@@ -90,35 +90,36 @@ const ChatAI = () => {
   }, [messages]);
 
   // Bubble Chat dengan Animasi
-  const AnimatedBubble = React.memo(({ children , role, index, isLastMessage}) => {
-    // Jika role adalah 'user', bubble akan muncul dengan animasi
-    const scaleAnim = useRef(new Animated.Value(0)).current;
-  
-    useEffect(() => {
-      if (isLastMessage) {
-        // Hanya animasi jika ini adalah pesan terakhir
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          friction: 5,
-          useNativeDriver: true,
-        }).start();
-      } else {
-        scaleAnim.setValue(1); // Set value ke 1 tanpa animasi
-      }
-    }, [isLastMessage]);
-    
-    return (
-      <Animated.View
-        style={{
-          transform: [{ scale: scaleAnim }],
-          marginBottom: 25,
-          maxWidth: '80%',
-        }}>
-        {children}
-      </Animated.View>
-    );
-  });
-  
+  const AnimatedBubble = React.memo(
+    ({children, role, index, isLastMessage}) => {
+      // Jika role adalah 'user', bubble akan muncul dengan animasi
+      const scaleAnim = useRef(new Animated.Value(0)).current;
+
+      useEffect(() => {
+        if (isLastMessage) {
+          // Hanya animasi jika ini adalah pesan terakhir
+          Animated.spring(scaleAnim, {
+            toValue: 1,
+            friction: 5,
+            useNativeDriver: true,
+          }).start();
+        } else {
+          scaleAnim.setValue(1); // Set value ke 1 tanpa animasi
+        }
+      }, [isLastMessage]);
+
+      return (
+        <Animated.View
+          style={{
+            transform: [{scale: scaleAnim}],
+            marginBottom: 25,
+            maxWidth: '80%',
+          }}>
+          {children}
+        </Animated.View>
+      );
+    },
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -149,30 +150,30 @@ const ChatAI = () => {
                     : styles.botBubbleContainer,
                 ]}>
                 <AnimatedBubble
-    key={`bubble-${index}`}
-    role={message.role}
-    index={index}
-    isLastMessage={index === messages.length - 1}>
-                {message.role === 'user' ? (
-                  <LinearGradient
-                    colors={['#4479E1', '#2C4FB9']}
-                    style={styles.userBubble}>
-                    <Text
-                      style={[
-                        styles.userText,
-                        isDarkMode && styles.darkTextUser,
-                      ]}>
-                      {message.content}
-                    </Text>
-                  </LinearGradient>
-                ) : (
-                  <View style={styles.botBubble}>
-                    <Text
-                      style={[styles.botText, isDarkMode && styles.darkText]}>
-                      {message.content}
-                    </Text>
-                  </View>
-                )}
+                  key={`bubble-${index}`}
+                  role={message.role}
+                  index={index}
+                  isLastMessage={index === messages.length - 1}>
+                  {message.role === 'user' ? (
+                    <LinearGradient
+                      colors={['#4479E1', '#2C4FB9']}
+                      style={styles.userBubble}>
+                      <Text
+                        style={[
+                          styles.userText,
+                          isDarkMode && styles.darkTextUser,
+                        ]}>
+                        {message.content}
+                      </Text>
+                    </LinearGradient>
+                  ) : (
+                    <View style={styles.botBubble}>
+                      <Text
+                        style={[styles.botText, isDarkMode && styles.darkText]}>
+                        {message.content}
+                      </Text>
+                    </View>
+                  )}
                 </AnimatedBubble>
               </View>
             ))}
