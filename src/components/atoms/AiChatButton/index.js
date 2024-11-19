@@ -17,11 +17,11 @@ const AiChatButton = () => {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   const handlePress = () => {
-    if (mpUser?.subscription?.isExpired) {
-      setShowSubscriptionModal(true);
-    } else {
-      navigation.navigate('AiChat');
-    }
+    // if (mpUser?.subscription?.isExpired) {
+    //   setShowSubscriptionModal(true);
+    // } else {
+    navigation.navigate('AiChat');
+    // }
   };
 
   return (

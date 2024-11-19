@@ -1,5 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/no-unstable-nested-components */
 import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
@@ -89,38 +87,6 @@ const ChatAI = () => {
     scrollViewRef.current?.scrollToEnd({animated: true});
   }, [messages]);
 
-  // Bubble Chat dengan Animasi
-  const AnimatedBubble = React.memo(
-    ({children, role, index, isLastMessage}) => {
-      // Jika role adalah 'user', bubble akan muncul dengan animasi
-      const scaleAnim = useRef(new Animated.Value(0)).current;
-
-      useEffect(() => {
-        if (isLastMessage) {
-          // Hanya animasi jika ini adalah pesan terakhir
-          Animated.spring(scaleAnim, {
-            toValue: 1,
-            friction: 5,
-            useNativeDriver: true,
-          }).start();
-        } else {
-          scaleAnim.setValue(1); // Set value ke 1 tanpa animasi
-        }
-      }, [isLastMessage]);
-
-      return (
-        <Animated.View
-          style={{
-            transform: [{scale: scaleAnim}],
-            marginBottom: 25,
-            maxWidth: '80%',
-          }}>
-          {children}
-        </Animated.View>
-      );
-    },
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <TopBarAi />
@@ -149,32 +115,26 @@ const ChatAI = () => {
                     ? styles.userBubbleContainer
                     : styles.botBubbleContainer,
                 ]}>
-                <AnimatedBubble
-                  key={`bubble-${index}`}
-                  role={message.role}
-                  index={index}
-                  isLastMessage={index === messages.length - 1}>
-                  {message.role === 'user' ? (
-                    <LinearGradient
-                      colors={['#4479E1', '#2C4FB9']}
-                      style={styles.userBubble}>
-                      <Text
-                        style={[
-                          styles.userText,
-                          isDarkMode && styles.darkTextUser,
-                        ]}>
-                        {message.content}
-                      </Text>
-                    </LinearGradient>
-                  ) : (
-                    <View style={styles.botBubble}>
-                      <Text
-                        style={[styles.botText, isDarkMode && styles.darkText]}>
-                        {message.content}
-                      </Text>
-                    </View>
-                  )}
-                </AnimatedBubble>
+                {message.role === 'user' ? (
+                  <LinearGradient
+                    colors={['#4479E1', '#2C4FB9']}
+                    style={styles.userBubble}>
+                    <Text
+                      style={[
+                        styles.userText,
+                        isDarkMode && styles.darkTextUser,
+                      ]}>
+                      {message.content}
+                    </Text>
+                  </LinearGradient>
+                ) : (
+                  <View style={styles.botBubble}>
+                    <Text
+                      style={[styles.botText, isDarkMode && styles.darkText]}>
+                      {message.content}
+                    </Text>
+                  </View>
+                )}
               </View>
             ))}
             {loading && <ActivityIndicator size="large" color="#0000ff" />}

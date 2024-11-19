@@ -124,14 +124,14 @@ const SummarizeFloatingButton = ({title, article}) => {
       showError('Koneksi terputus. Periksa jaringan Anda untuk melanjutkan.');
       return;
     }
-    if (mpUser?.subscription?.isExpired) {
-      setModalVisible(false);
-      setShowSubscriptionModal(true);
-    } else {
-      fetchSummary();
-      setModalVisible(true);
-      toggleModal();
-    }
+    // if (mpUser?.subscription?.isExpired) {
+    //   setModalVisible(false);
+    //   setShowSubscriptionModal(true);
+    // } else {
+    fetchSummary();
+    setModalVisible(true);
+    toggleModal();
+    // }
   };
 
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     position: 'relative',
     elevation: 8,
+    justifyContent: 'space-between',
   },
   closeButton: {
     position: 'absolute',
@@ -246,6 +247,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignSelf: 'stretch',
     paddingRight: 40, // Padding to prevent overlap with close button
+    marginBottom: 2,
   },
   titleText: {
     // position: 'absolute',
@@ -257,6 +259,7 @@ const styles = StyleSheet.create({
     marginBottom: '-20%',
   },
   Description: {
+    flex: 1,
     top: 1,
     marginVertical: '20%',
     marginRight: '5%',
@@ -272,7 +275,7 @@ const styles = StyleSheet.create({
   playPauseButton: {
     alignSelf: 'center',
     borderRadius: 50,
-    marginTop: -50,
+    marginTop: -40,
   },
   subscriptionOverlay: {
     flex: 1,
