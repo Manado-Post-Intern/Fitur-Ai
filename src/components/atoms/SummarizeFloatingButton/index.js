@@ -124,14 +124,14 @@ const SummarizeFloatingButton = ({title, article}) => {
       showError('Koneksi terputus. Periksa jaringan Anda untuk melanjutkan.');
       return;
     }
-    // if (mpUser?.subscription?.isExpired) {
-    //   setModalVisible(false);
-    //   setShowSubscriptionModal(true);
-    // } else {
-    fetchSummary();
-    setModalVisible(true);
-    toggleModal();
-    // }
+    if (mpUser?.subscription?.isExpired) {
+      setModalVisible(false);
+      setShowSubscriptionModal(true);
+    } else {
+      fetchSummary();
+      setModalVisible(true);
+      toggleModal();
+    }
   };
 
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
