@@ -52,6 +52,16 @@ export const generateText = async prompt => {
   }
 };
 
+export const summarizetext = async cleanArticle => {
+  const prompts = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya, batasan bulletnya hanya 3 sampai 5 tergantun panjang beritanya saja, dan nanti panjang bulletin beritanya jadikan hanya 15 kata saja."${cleanArticle}"`;
+  const response = await openAI.post('/chat/completions', {
+    model: 'gpt-4o-mini',
+    messages: [{role: 'user', content: prompts}],
+    max_tokens: 500,
+  });
+  return response.data.choices[0].message.content;
+};
+
 // =================================== AUTH ===================================
 
 const GRANT_TYPE = Config.GRANT_TYPE;

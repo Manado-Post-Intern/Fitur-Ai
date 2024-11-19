@@ -14,22 +14,12 @@ import {
   IcPopUpPlay,
   IcSumStop,
 } from '../../../assets';
-import axios from 'axios';
 import Tts from 'react-native-tts';
-import Config from 'react-native-config';
 import {AuthContext} from '../../../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext';
-import {openai_api_url} from '../../../api';
-
-const openAI = axios.create({
-  baseURL: `${openai_api_url}`,
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${Config.OPENAI_API}`,
-  },
-});
+import {summarizetext} from '../../../api';
 
 const SummarizeFloatingButton = ({title, article}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -117,18 +107,10 @@ const SummarizeFloatingButton = ({title, article}) => {
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, '');
 
-      const prompt = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya, batasan bulletnya hanya 3 sampai 5 tergantun panjang beritanya saja, dan nanti panjang bulletin beritanya jadikan hanya 15 kata saja."${cleanArticle}"`;
-
-      const response = await openAI.post('/chat/completions', {
-        model: 'gpt-4o-mini',
-        messages: [{role: 'user', content: prompt}],
-        max_tokens: 500,
-      });
-
-      const content = response.data.choices[0].message.content;
+      const content = await summarizetext(cleanArticle);
       const filtering = content.replace(/-/g, '•');
       setSummary(filtering);
-      console.log(`summary, ${response.data.choices[0].message.content}`);
+      console.log(`summary, ${filtering}`);
     } catch (error) {
       console.error(error);
       showError('Failed to fetch summary. Please try again.');
