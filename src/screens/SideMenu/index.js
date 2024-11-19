@@ -16,12 +16,16 @@ import {useNavigation} from '@react-navigation/native';
 import {SocialSignIn} from '../Authentication/components';
 import auth from '@react-native-firebase/auth';
 import {AuthContext} from '../../context/AuthContext';
+import {useSnackbar} from '../../context/SnackbarContext';
 
 const SideMenu = () => {
   const navigation = useNavigation();
   const {mpUser} = useContext(AuthContext);
-
-  const handleLogout = () => auth().signOut();
+  const {hideSnackbar} = useSnackbar();
+  const handleLogout = () => {
+    hideSnackbar();
+    auth().signOut();
+  };
   return (
     <View style={styles.container}>
       {mpUser ? (
