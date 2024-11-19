@@ -21,7 +21,7 @@ import {AuthContext} from '../../../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext';
-import { openai_api_url } from '../../../api';
+import {openai_api_url} from '../../../api';
 
 const openAI = axios.create({
   baseURL: `${openai_api_url}`,
