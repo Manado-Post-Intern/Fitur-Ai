@@ -63,7 +63,7 @@ const SummarizeFloatingButton = ({title, article}) => {
       if (!state.isConnected && isPlaying) {
         Tts.stop();
 
-        showError('Connection lost. TTS playback stopped.');
+        showError('Koneksi internet terputus, fitur TTS dihentikan.');
       }
     });
 
@@ -93,9 +93,7 @@ const SummarizeFloatingButton = ({title, article}) => {
 
   const fetchSummary = async () => {
     if (!isConnected) {
-      showError(
-        'Koneksi internet tidak tersedia. Mohon periksa jaringan Anda dan coba kembali.',
-      );
+      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
       return;
     }
     setLoading(true);
@@ -113,7 +111,7 @@ const SummarizeFloatingButton = ({title, article}) => {
       console.log(`summary, ${filtering}`);
     } catch (error) {
       console.error(error);
-      showError('Failed to fetch summary. Please try again.');
+      showError('Koneksi internet terputus, Fitur Ringkasan dihentikan.');
     } finally {
       setLoading(false);
     }
@@ -121,7 +119,7 @@ const SummarizeFloatingButton = ({title, article}) => {
 
   const handleSummarize = () => {
     if (!isConnected) {
-      showError('Koneksi terputus. Periksa jaringan Anda untuk melanjutkan.');
+      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
       return;
     }
     if (mpUser?.subscription?.isExpired) {

@@ -55,7 +55,7 @@ const ChatAI = () => {
 
     const netInfo = await NetInfo.fetch();
     if (!netInfo.isConnected) {
-      showError('Tidak ada koneksi internet. Silakan periksa jaringan Anda.');
+      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
       return;
     }
 
