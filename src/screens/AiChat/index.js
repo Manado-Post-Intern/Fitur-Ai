@@ -12,6 +12,7 @@ import {
   Platform,
   useColorScheme,
   Animated,
+  Touchable,
 } from 'react-native';
 import {generateText} from '../../api/index';
 import LinearGradient from 'react-native-linear-gradient';
@@ -19,6 +20,8 @@ import {TopBarAi} from './component';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../context/ErrorNotificationContext';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { IcAiChatSend } from '../../assets';
 
 const ChatAI = () => {
   const [prompt, setPrompt] = useState('');
@@ -148,15 +151,21 @@ const ChatAI = () => {
             isDarkMode ? styles.inputDark : styles.inputLight,
           ]}
           placeholder="Tulis pesan di sini..."
-          placeholderTextColor={isDarkMode ? '#A9A9A9' : '#555555'}
+          placeholderTextColor={isDarkMode ? 'rgba(169, 169, 169, 0.6)' : 'rgba(85, 85, 85, 0.6)'}
           value={prompt}
           onChangeText={setPrompt}
         />
-        <Button
+        {/* <Button
           title="Kirim"
           onPress={handleGenerateText}
           disabled={!prompt.trim()}
-        />
+        /> */}
+        <TouchableOpacity 
+          onPress={handleGenerateText}
+          disabled={!prompt.trim()}
+          >
+            <IcAiChatSend name="send" style={styles.send} />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -213,12 +222,16 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    borderColor: '#ccc',
-    borderWidth: 1,
     padding: 5,
-    borderRadius: 5,
+    borderRadius: 12,
     marginRight: 10,
     backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 6,
+    paddingLeft: 15,
   },
   inputLight: {
     backgroundColor: '#FFFFFF',
@@ -260,5 +273,8 @@ const styles = StyleSheet.create({
     color: '#555',
     marginHorizontal: '7%',
   },
+  send: {
+    marginTop: 3,
+  }
 });
 export default ChatAI;

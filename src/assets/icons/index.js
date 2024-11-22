@@ -91,6 +91,7 @@ import IcSumStop from './ic-SumStop.svg';
 import IcAiChat from './ic-AiChat.svg';
 import IcAiChatButton from './ic-AiChatButton.svg';
 import IcBackButton from './ic-backButton.svg';
+import IcAiChatSend from './ic-AiChatSend.svg';
 
 export {
   Icrefreshpoll,
@@ -186,4 +187,5 @@ export {
   IcAiChat,
   IcAiChatButton,
   IcBackButton,
+  IcAiChatSend,
 };
