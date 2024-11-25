@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
-  ScrollView, // Import ScrollView
+  ScrollView,
 } from 'react-native';
 import {
   IcSummarizeSpark,
@@ -17,15 +17,11 @@ import {
 import axios from 'axios';
 import Tts from 'react-native-tts';
 import Config from 'react-native-config';
-import Gap from '../Gap';
-
-const openAI = axios.create({
-  baseURL: 'https://api.openai.com/v1',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${Config.OPENAI_API}`,
-  },
-});
+import {AuthContext} from '../../../context/AuthContext';
+import {useNavigation} from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
+import {useErrorNotification} from '../../../context/ErrorNotificationContext';
+import { summarizetext } from '../../../api';
 
 const SummarizeFloatingButton = ({title, article}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -41,7 +37,6 @@ const SummarizeFloatingButton = ({title, article}) => {
 
   useEffect(() => {
     Tts.addEventListener('tts-start', () => {
-      // setIsPlaying(true);
       console.log('tts sedang start');
     });
     Tts.addEventListener('tts-finish', () => {
@@ -85,19 +80,10 @@ const SummarizeFloatingButton = ({title, article}) => {
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, '');
 
-      const prompt = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya. batasan bulletnya buat jadi 3 sampai 5 saja, dan nanti panjang kata dari tiap bulletin beritanya jadikan hanya 15 kata saja"${cleanArticle}"`;
-
-      const response = await openAI.post('/chat/completions', {
-        model: 'gpt-4o-mini',
-        messages: [{role: 'user', content: prompt}],
-        max_tokens: 500,
-        temperature: 0.7,
-      });
-
-      const content = response.data.choices[0].message.content;
+      const content = await summarizetext(cleanArticle);
       const filtering = content.replace(/-/g, '•');
       setSummary(filtering);
-      console.log(`summary, ${response.data.choices[0].message.content}`);
+      console.log(`summary, ${filtering}`);
     } catch (error) {
       console.error(error);
     } finally {
@@ -136,8 +122,6 @@ const SummarizeFloatingButton = ({title, article}) => {
                 <Text style={styles.bulletPoint}>{summary}</Text>
               )}
             </ScrollView>
-
-            {/* Tombol Play/Pause */}
             <TouchableOpacity
               onPress={togglePlayPause}
               style={styles.playPauseButton}>
@@ -188,9 +172,12 @@ const styles = StyleSheet.create({
     width: 75,
     height: 50,
   },
+  titleContainer: {
+    alignSelf: 'stretch',
+    paddingRight: 40,
+  },
   titleText: {
-    position: 'absolute',
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: '15%',
     marginTop: '10%',
@@ -214,6 +201,25 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 50,
     marginTop: -50,
+  },
+  subscriptionOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  subscriptionContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '80%',
+  },
+  subscribeButton: {
+    backgroundColor: '#005AAC',
+    padding: 10,
+    marginTop: 15,
+    borderRadius: 5,
   },
 });
 

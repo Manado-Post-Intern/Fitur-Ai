@@ -1,5 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, {useState, useRef, useEffect, memo} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {
   View,
   TextInput,
@@ -100,34 +99,39 @@ const ChatAI = () => {
     scrollViewRef.current?.scrollToEnd({animated: true});
   }, [messages]);
 
-  const AnimatedBubble = React.memo(
-    ({children, role, index, isLastMessage}) => {
-      const scaleAnim = useRef(new Animated.Value(0)).current;
+  // Bubble Chat dengan Animasi
+  const AnimatedBubble = React.memo(({ children , role, index, isLastMessage}) => {
+    // Jika role adalah 'user', bubble akan muncul dengan animasi
+    const scaleAnim = useRef(new Animated.Value(0)).current;
+  
+    useEffect(() => {
+      if (isLastMessage) {
+        // Hanya animasi jika ini adalah pesan terakhir
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          friction: 5,
+          useNativeDriver: true,
+        }).start();
+      } else {
+        scaleAnim.setValue(1); // Set value ke 1 tanpa animasi
+      }
+    }, [isLastMessage]);
 
-      useEffect(() => {
-        if (isLastMessage) {
-          Animated.spring(scaleAnim, {
-            toValue: 1,
-            friction: 5,
-            useNativeDriver: true,
-          }).start();
-        } else {
-          scaleAnim.setValue(1);
-        }
-      }, [isLastMessage]);
-
-      return (
-        <Animated.View
-          style={{
-            transform: [{scale: scaleAnim}],
-            marginBottom: 25,
-            maxWidth: '80%',
-          }}>
-          {children}
-        </Animated.View>
-      );
-    },
-  );
+    return (
+      <Animated.View
+        style={{
+          transform: [{ scale: scaleAnim }],
+          marginBottom: 25,
+          maxWidth: '80%',
+        }}>
+        {children}
+      </Animated.View>
+    );
+  });
+  
+  const handleSendMessage = useCallback(() => {
+    handleGenerateText();
+  }, [prompt]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -196,11 +200,12 @@ const ChatAI = () => {
           placeholder="Tulis pesan di sini..."
           placeholderTextColor={isDarkMode ? '#A9A9A9' : '#555555'}
           value={prompt}
-          onChangeText={setPrompt}
+          onChangeText={text => setPrompt(text)}
+    onSubmitEditing={handleSendMessage}
         />
         <Button
           title="Kirim"
-          onPress={handleGenerateText}
+          onPress={handleSendMessage}
           disabled={!prompt.trim()}
         />
       </View>
