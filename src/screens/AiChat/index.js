@@ -20,9 +20,9 @@ import {TopBarAi} from './component';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../context/ErrorNotificationContext';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { IcAiChatSend } from '../../assets';
-
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {IcAiChatSend} from '../../assets';
+import {memo} from 'react';
 const WelcomeScreen = memo(() => {
   const [displayedText, setDisplayedText] = useState('');
   const welcomeMessage = 'Haloo Selamat Datang, Silahkan Bertanya 😊';
@@ -161,7 +161,9 @@ const ChatAI = () => {
             isDarkMode ? styles.inputDark : styles.inputLight,
           ]}
           placeholder="Tulis pesan di sini..."
-          placeholderTextColor={isDarkMode ? 'rgba(169, 169, 169, 0.6)' : 'rgba(85, 85, 85, 0.6)'}
+          placeholderTextColor={
+            isDarkMode ? 'rgba(169, 169, 169, 0.6)' : 'rgba(85, 85, 85, 0.6)'
+          }
           value={prompt}
           onChangeText={setPrompt}
         />
@@ -170,11 +172,10 @@ const ChatAI = () => {
           onPress={handleGenerateText}
           disabled={!prompt.trim()}
         /> */}
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={handleGenerateText}
-          disabled={!prompt.trim()}
-          >
-            <IcAiChatSend name="send" style={styles.send} />
+          disabled={!prompt.trim()}>
+          <IcAiChatSend name="send" style={styles.send} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.06,
     shadowRadius: 12,
     elevation: 6,
@@ -287,6 +288,6 @@ const styles = StyleSheet.create({
   },
   send: {
     marginTop: 3,
-  }
+  },
 });
 export default ChatAI;
