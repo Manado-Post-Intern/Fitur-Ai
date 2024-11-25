@@ -14,18 +14,12 @@ import {
   IcPopUpPlay,
   IcSumStop,
 } from '../../../assets';
-import axios from 'axios';
 import Tts from 'react-native-tts';
-import Config from 'react-native-config';
-import Gap from '../Gap';
-
-const openAI = axios.create({
-  baseURL: 'https://api.openai.com/v1',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${Config.OPENAI_API}`,
-  },
-});
+import {AuthContext} from '../../../context/AuthContext';
+import {useNavigation} from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
+import {useErrorNotification} from '../../../context/ErrorNotificationContext';
+import {summarizetext} from '../../../api';
 
 const SummarizeFloatingButton = ({title, article}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -59,6 +53,19 @@ const SummarizeFloatingButton = ({title, article}) => {
     };
   }, [isPlaying]);
 
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+      if (!state.isConnected && isPlaying) {
+        Tts.stop();
+
+        showError('Koneksi internet terputus, fitur TTS dihentikan.');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [isPlaying]);
+
   const togglePlayPause = () => {
     Tts.setDefaultLanguage('id-ID');
     if (isPlaying) {
@@ -76,6 +83,10 @@ const SummarizeFloatingButton = ({title, article}) => {
   };
 
   const fetchSummary = async () => {
+    if (!isConnected) {
+      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
+      return;
+    }
     setLoading(true);
     try {
       const cleanArticle = article
@@ -85,29 +96,31 @@ const SummarizeFloatingButton = ({title, article}) => {
         .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
         .replace(/(\r\n|\n|\r)/g, '');
 
-      const prompt = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya. batasan bulletnya buat jadi 3 sampai 5 saja, dan nanti panjang kata dari tiap bulletin beritanya jadikan hanya 15 kata saja"${cleanArticle}"`;
-
-      const response = await openAI.post('/chat/completions', {
-        model: 'gpt-4o-mini',
-        messages: [{role: 'user', content: prompt}],
-        max_tokens: 500,
-        temperature: 0.7,
-      });
-
-      const content = response.data.choices[0].message.content;
+      const content = await summarizetext(cleanArticle);
       const filtering = content.replace(/-/g, '•');
       setSummary(filtering);
-      console.log(`summary, ${response.data.choices[0].message.content}`);
+      console.log(`summary, ${filtering}`);
     } catch (error) {
       console.error(error);
+      showError('Koneksi internet terputus, Fitur Ringkasan dihentikan.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSummarize = () => {
-    fetchSummary();
-    toggleModal();
+    if (!isConnected) {
+      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
+      return;
+    }
+    if (mpUser?.subscription?.isExpired) {
+      setModalVisible(false);
+      setShowSubscriptionModal(true);
+    } else {
+      fetchSummary();
+      setModalVisible(true);
+      toggleModal();
+    }
   };
 
   return (
@@ -181,12 +194,18 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     position: 'relative',
     elevation: 8,
+    justifyContent: 'space-between',
   },
   closeButton: {
     // position: 'absolute',
     marginLeft: '86%',
     width: 75,
     height: 50,
+  },
+  titleContainer: {
+    alignSelf: 'stretch',
+    paddingRight: 40, // Padding to prevent overlap with close button
+    marginBottom: 2,
   },
   titleText: {
     position: 'absolute',
@@ -199,7 +218,9 @@ const styles = StyleSheet.create({
     paddingRight: '5%',
   },
   Description: {
-    paddingTop: '30%',
+    flex: 1,
+    top: 1,
+    marginVertical: '20%',
     marginRight: '5%',
     marginLeft: '5%',
   },
@@ -213,7 +234,7 @@ const styles = StyleSheet.create({
   playPauseButton: {
     alignSelf: 'center',
     borderRadius: 50,
-    marginTop: -50,
+    marginTop: -40,
   },
 });
 
