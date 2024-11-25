@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -26,10 +26,6 @@ const SummarizeFloatingButton = ({title, article}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(false);
-  const {mpUser} = useContext(AuthContext);
-  const navigation = useNavigation();
-  const [isConnected, setIsConnected] = useState(true);
-  const {showError} = useErrorNotification();
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -72,11 +68,6 @@ const SummarizeFloatingButton = ({title, article}) => {
 
   const togglePlayPause = () => {
     Tts.setDefaultLanguage('id-ID');
-    if (!isConnected) {
-      setModalVisible(false);
-      showError('Oops! Sepertinya kamu tidak terhubung ke internet.');
-      return;
-    }
     if (isPlaying) {
       Tts.stop();
       setIsPlaying(false);
@@ -132,33 +123,11 @@ const SummarizeFloatingButton = ({title, article}) => {
     }
   };
 
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.floatingButton} onPress={handleSummarize}>
         <IcSummarizeSpark name="Spark" />
       </TouchableOpacity>
-
-      <Modal
-        transparent={true}
-        visible={showSubscriptionModal}
-        animationType="fade"
-        onRequestClose={() => setShowSubscriptionModal(false)}>
-        <View style={styles.subscriptionOverlay}>
-          <View style={styles.subscriptionContent}>
-            <Text style={{color: 'black', textAlign: 'center'}}>
-              Anda perlu berlangganan MP Digital Premium untuk menggunakan fitur
-              ini
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Subscription')}
-              style={styles.subscribeButton}>
-              <Text style={{color: 'white'}}>Berlangganan Sekarang</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
 
       <Modal
         transparent={true}
@@ -171,20 +140,13 @@ const SummarizeFloatingButton = ({title, article}) => {
               <IcPopUpExit name="close" />
             </TouchableOpacity>
 
-            <View style={styles.titleContainer}>
-              <Text
-                style={styles.titleText}
-                numberOfLines={10}
-                ellipsizeMode="tail">
-                {title}
-              </Text>
-            </View>
-
+            <Text style={styles.titleText}>{title}</Text>
+            <Gap height={36} />
             <ScrollView style={styles.Description}>
-              {loading ? ( // Show loading indicator if loading is true
+              {loading ? (
                 <ActivityIndicator size="large" color="#005AAC" />
               ) : (
-                <Text style={styles.bulletPoint}>{summary}</Text> // Show summary once loaded
+                <Text style={styles.bulletPoint}>{summary}</Text>
               )}
             </ScrollView>
 
@@ -206,7 +168,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 90,
     right: 30,
-    zIndex: 1,
   },
   floatingButton: {
     backgroundColor: '#005AAC',
@@ -236,9 +197,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   closeButton: {
-    position: 'absolute',
-    marginLeft: '92%',
-    marginTop: '5%',
+    // position: 'absolute',
+    marginLeft: '86%',
     width: 75,
     height: 50,
   },
@@ -248,13 +208,14 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   titleText: {
-    // position: 'absolute',
-    fontSize: 18,
+    position: 'absolute',
+    fontSize: 22,
     fontWeight: 'bold',
+    marginBottom: '15%',
     marginTop: '10%',
     color: '#000000',
-    paddingLeft: '10%',
-    marginBottom: '-20%',
+    paddingLeft: '12%',
+    paddingRight: '5%',
   },
   Description: {
     flex: 1,
@@ -274,25 +235,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 50,
     marginTop: -40,
-  },
-  subscriptionOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
-  },
-  subscriptionContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-    width: '80%',
-  },
-  subscribeButton: {
-    backgroundColor: '#005AAC',
-    padding: 10,
-    marginTop: 15,
-    borderRadius: 5,
   },
 });
 

@@ -23,6 +23,35 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { IcAiChatSend } from '../../assets';
 
+const WelcomeScreen = memo(() => {
+  const [displayedText, setDisplayedText] = useState('');
+  const welcomeMessage = 'Haloo Selamat Datang, Silahkan Bertanya 😊';
+  const typingSpeed = 40;
+
+  useEffect(() => {
+    let mounted = true;
+    let index = 0;
+
+    const typingInterval = setInterval(() => {
+      if (mounted && index < welcomeMessage.length) {
+        setDisplayedText(prev => prev + welcomeMessage[index]);
+        index++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, typingSpeed);
+
+    return () => {
+      mounted = false;
+      clearInterval(typingInterval);
+    };
+  }, []);
+  if (!displayedText) {
+    return null;
+  }
+
+  return <Text style={styles.welcomeText}>{displayedText}</Text>;
+});
 const ChatAI = () => {
   const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState([]);
@@ -31,25 +60,7 @@ const ChatAI = () => {
   const {showError} = useErrorNotification();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-
-  const [displayedText, setDisplayedText] = useState('');
-  const welcomeMessage =
-    'Hai Selamat Datang, Silahkan Bertanya akan Saya Jawab:)';
-  const typingSpeed = 50; // Adjust typing speed in milliseconds
-
-  useEffect(() => {
-    let index = 0;
-    const typingInterval = setInterval(() => {
-      if (index < welcomeMessage.length) {
-        setDisplayedText(prev => prev + welcomeMessage[index]);
-        index++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, typingSpeed);
-
-    return () => clearInterval(typingInterval); // Clear interval on unmount
-  }, []);
+  const showWelcome = messages.length === 0;
 
   const handleGenerateText = async () => {
     if (!prompt.trim()) {
@@ -86,6 +97,7 @@ const ChatAI = () => {
       scrollViewRef.current?.scrollToEnd({animated: true});
     }, 100);
   };
+
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({animated: true});
   }, [messages]);
@@ -94,11 +106,9 @@ const ChatAI = () => {
     <SafeAreaView style={styles.container}>
       <TopBarAi />
       <View style={styles.contentContainer}>
-        {messages.length === 0 ? (
+        {showWelcome ? (
           <View style={styles.welcomeContainer}>
-            <Text style={[styles.welcomeText, isDarkMode && styles.darkText]}>
-              {displayedText}
-            </Text>
+            <WelcomeScreen />
           </View>
         ) : (
           <KeyboardAwareScrollView
@@ -266,12 +276,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: '1%',
+    paddingHorizontal: '10%',
   },
   welcomeText: {
-    fontSize: 24,
-    color: '#555',
-    marginHorizontal: '7%',
+    fontSize: 34,
+    color: '#6496C2',
+    marginHorizontal: '5%',
+    textAlign: 'center',
+    fontWeight: '500',
   },
   send: {
     marginTop: 3,
