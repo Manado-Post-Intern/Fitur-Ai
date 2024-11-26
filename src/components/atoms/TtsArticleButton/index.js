@@ -1,11 +1,13 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   View,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import {
   IcTtsArticlePlay,
@@ -19,18 +21,21 @@ import {useErrorNotification} from '../../../context/ErrorNotificationContext'; 
 import NetInfo from '@react-native-community/netinfo';
 import {useDispatch, useSelector} from 'react-redux';
 import {setPlaying, setLoading} from '../../../redux/ttsSlice';
+import {AuthContext} from '../../../context/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 
 const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} =
     useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
   const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
+  const {mpUser} = useContext(AuthContext);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const navigation = useNavigation();
 
   const dispatch = useDispatch();
   const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false); // Get playing state for the specific button
   const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false); // Get loading state for the specific button
-
-  const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
 
   useEffect(() => {
     if (!visible) {
@@ -109,14 +114,44 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     // Toggle status pemutaran
     dispatch(setPlaying({id, value: !isPlaying}));
   };
+
+  const handleTtsButton = () => {
+    if (mpUser?.subscription?.isExpired) {
+      setShowSubscriptionModal(true);
+    } else {
+      handlePress();
+    }
+  };
+
   return (
     <TouchableOpacity
       style={[
         styles.button,
         isPlaying ? styles.pauseButton : styles.playButton,
       ]}
-      onPress={handlePress}
+      onPress={handleTtsButton}
       disabled={isLoading}>
+
+    <Modal
+        transparent={true}
+        visible={showSubscriptionModal}
+        animationType="fade"
+        onRequestClose={() => setShowSubscriptionModal(false)}>
+        <View style={styles.subscriptionOverlay}>
+          <View style={styles.subscriptionContent}>
+            <Text style={{color: 'black', textAlign: 'center'}}>
+              Anda perlu berlangganan MP Digital Premium untuk menggunakan fitur
+              ini
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Subscription')}
+              style={styles.subscribeButton}>
+              <Text style={{color: 'white'}}>Berlangganan Sekarang</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.content}>
         {isLoading ? (
           <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses

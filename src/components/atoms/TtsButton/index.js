@@ -1,10 +1,13 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   View,
+  Modal,
+  Text,
 } from 'react-native';
 import {IcTtsPlay, IcTtsStop} from '../../../assets';
 import Tts from 'react-native-tts';
@@ -17,6 +20,8 @@ import {
   setLoading,
   resetAllTtsExcept,
 } from '../../../redux/ttsSlice';
+import {AuthContext} from '../../../context/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 
 const TTSButton = ({id, isActive, onPress, content}) => {
   const [isConnected, setIsConnected] = useState(true);
@@ -26,6 +31,9 @@ const TTSButton = ({id, isActive, onPress, content}) => {
   const [ttsReady, setTtsReady] = useState(false); // State to check if TTS is initialized
   const {hideSnackbar, setCleanArticle, visible, setId} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification();
+  const {mpUser} = useContext(AuthContext);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (visible) {
@@ -140,10 +148,40 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     }
     onPress?.();
   };
+
+  const handleTtsButton = () => {
+    if (mpUser?.subscription?.isExpired) {
+      setShowSubscriptionModal(true);
+    } else {
+      handlePress();
+    }
+  };
+
   return (
     <View style={styles.container}>
+
+      <Modal
+        transparent={true}
+        visible={showSubscriptionModal}
+        animationType="fade"
+        onRequestClose={() => setShowSubscriptionModal(false)}>
+        <View style={styles.subscriptionOverlay}>
+          <View style={styles.subscriptionContent}>
+            <Text style={{color: 'black', textAlign: 'center'}}>
+              Anda perlu berlangganan MP Digital Premium untuk menggunakan fitur
+              ini
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Subscription')}
+              style={styles.subscribeButton}>
+              <Text style={{color: 'white'}}>Berlangganan Sekarang</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <TouchableOpacity
-        onPress={handlePress}
+        onPress={handleTtsButton}
         style={styles.button}
         disabled={isLoading}>
         {isLoading ? (
