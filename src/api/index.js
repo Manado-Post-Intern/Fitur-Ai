@@ -23,32 +23,52 @@ const openAI = axios.create({
   },
 });
 
+let chatCounter = 0;
+
 export const generateText = async prompt => {
   try {
+    if (chatCounter >= 20) {
+      return {
+        text: 'Percakapan anda telah mencapai batas. Silahkan memulai ulang sesi chatnya',
+        sources: [],
+      };
+    }
     const response = await openAI.post('/chat/completions', {
       model: 'gpt-4o-mini',
       messages: [
         {
           role: 'user',
-          content: `balas setiap pesan dengan bahasa indonesia, user yang memerikan prompt seterusnya ini adalah seseorang yang sedang membuka aplikasi berita bernama manado post ${prompt}`,
+          content: `balas setiap pesan dengan bahasa indonesia, Berikan jawaban singkat, ringkas, dan padat, tidak lebih dari 2-3 kalimat. Gunakan bahasa Indonesia untuk balasan. Pertanyaannya: ${prompt}`,
         },
       ],
       max_tokens: 150,
+      temperature: 0.7,
     });
-
-    const sources = [
-      {title: 'OpenAI Documentation', url: 'https://beta.openai.com/docs/'},
-      {title: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/ChatGPT'},
-    ];
+    chatCounter += 1;
 
     return {
       text: response.data.choices[0].message.content,
-      sources: sources,
     };
   } catch (error) {
     console.error('Error generating text:', error);
-    throw error;
+    return {
+      text: 'Maaf, ada masalah dalam menghasilkan jawaban.',
+      sources: [],
+    };
   }
+};
+export const resetChatCounter = () => {
+  chatCounter = 0;
+};
+
+export const summarizetext = async cleanArticle => {
+  const prompts = `dari berita ini saya mau kamu hanya bahas point penting dari beritanya saja, buat jadi bullet yang menjelaskan beritanya tanpa harus kamu bold point pentingnya, batasan bulletnya hanya 3 sampai 5 tergantun panjang beritanya saja, dan nanti panjang bulletin beritanya jadikan hanya 15 kata saja."${cleanArticle}"`;
+  const response = await openAI.post('/chat/completions', {
+    model: 'gpt-4o-mini',
+    messages: [{role: 'user', content: prompts}],
+    max_tokens: 500,
+  });
+  return response.data.choices[0].message.content;
 };
 
 // =================================== AUTH ===================================

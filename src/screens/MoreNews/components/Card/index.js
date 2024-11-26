@@ -165,9 +165,6 @@ const styles = StyleSheet.create({
     color: theme.colors.grey1,
   },
   TtsButton: {
-    right: '50%',
-  },
-  wrapperButton: {
     flexDirection: 'row',
     justifyContent: 'space-between', // Tambahkan ini jika perlu
     alignItems: 'center',

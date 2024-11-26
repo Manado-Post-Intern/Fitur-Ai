@@ -33,13 +33,8 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
 
   useEffect(() => {
-    if (visible) {
-      // setIsPlaying(true);
-      // console.log('berubah menjadi icon stop');
-    } else {
-      // setIsPlayingArticle(false);
-      dispatch(setPlaying({id, value: false}));
-      //console.log('kembali menjadi icon play');
+    if (!visible) {
+      dispatch(setPlaying({id, value: false})); // Pastikan tombol kembali ke "play" saat Snackbar disembunyikan
     }
   }, [visible]);
 
