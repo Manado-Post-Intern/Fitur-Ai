@@ -151,6 +151,8 @@ const TTSButton = ({id, isActive, onPress, content}) => {
 
   const handleTtsButton = () => {
     if (mpUser?.subscription?.isExpired) {
+      hideSnackbar();
+      Tts.stop();
       setShowSubscriptionModal(true);
     } else {
       handlePress();
@@ -200,6 +202,25 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 5,
+  },
+  subscriptionOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+  },
+  subscriptionContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '80%',
+  },
+  subscribeButton: {
+    backgroundColor: '#005AAC',
+    padding: 10,
+    marginTop: 15,
     borderRadius: 5,
   },
 });
