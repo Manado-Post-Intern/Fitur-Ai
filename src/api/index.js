@@ -71,6 +71,15 @@ export const summarizetext = async cleanArticle => {
   return response.data.choices[0].message.content;
 };
 
+export const textToSpeech = async article => {
+  const response = await openAI.post('/audio/speech', {
+    model: 'tts-1',
+    voice: 'onyx',
+    input: 'The quick brown fox jumped over the lazy dog.',
+  });
+  return response.data.audio;
+};
+
 // =================================== AUTH ===================================
 
 const GRANT_TYPE = Config.GRANT_TYPE;
