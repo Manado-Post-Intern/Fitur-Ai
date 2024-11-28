@@ -75,7 +75,7 @@ export const textToSpeech = async article => {
   const response = await openAI.post('/audio/speech', {
     model: 'tts-1',
     voice: 'onyx',
-    input: 'The quick brown fox jumped over the lazy dog.',
+    input: `${article}`,
   });
   return response.data.audio;
 };

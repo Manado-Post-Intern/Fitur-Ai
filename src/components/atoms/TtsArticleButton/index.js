@@ -9,13 +9,7 @@ import {
   ActivityIndicator,
   Modal,
 } from 'react-native';
-import {
-  IcTtsArticlePlay,
-  IcTtsArticlePause,
-  IcTtsArticlePauseNew,
-  IcTtsArticleStop,
-} from '../../../assets';
-import Tts from 'react-native-tts';
+import {IcTtsArticlePlay, IcTtsArticleStop} from '../../../assets';
 import {useSnackbar} from '../../../context/SnackbarContext';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext'; // Import context
 import NetInfo from '@react-native-community/netinfo';
@@ -23,6 +17,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setPlaying, setLoading} from '../../../redux/ttsSlice';
 import {AuthContext} from '../../../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
+import {textToSpeech} from '../../../api';
 
 const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} =
@@ -48,36 +43,10 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
       if (!state.isConnected && isPlaying) {
-        Tts.stop(); // Stop TTS jika koneksi terputus
         showError('Koneksi internet terputus, fitur TTS dihentikan.'); // Tampilkan pesan error
       }
     });
     return () => unsubscribe();
-  }, [isPlaying]);
-
-  useEffect(() => {
-    // Event listener ketika TTS mulai berbicara
-    Tts.addEventListener('tts-start', () => {
-      dispatch(setLoading({id, value: false}));
-      dispatch(setPlaying({id, value: true}));
-      console.log('tts telah diputar article');
-    });
-
-    Tts.addEventListener('tts-finish', () => {
-      dispatch(setPlaying({id, value: false}));
-      console.log('tts telah selesai diputar article');
-    }); // Suara selesai, atur tombol ke "Dengar"
-    Tts.addEventListener('tts-cancel', () => {
-      dispatch(setPlaying({id, value: false}));
-      dispatch(setLoading({id, value: false}));
-      console.log('memcancel tts article');
-    }); // Jika dibatalkan, tombol kembali ke "Dengar"
-
-    return () => {
-      Tts.removeAllListeners('tts-start');
-      Tts.removeAllListeners('tts-finish');
-      Tts.removeAllListeners('tts-cancel');
-    };
   }, [isPlaying]);
 
   const handlePress = async () => {
@@ -99,15 +68,12 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     console.log('berhasil menerima article content');
 
     if (!isPlaying) {
-      showSnackbar(title, '#024D91');
-      Tts.setDefaultLanguage('id-ID');
-      // setIsLoadingArticle(true);
+      // showSnackbar(title, '#024D91');
       dispatch(setLoading({id, value: true}));
-      Tts.speak(cleanArticle);
-      console.log('playing tts');
+      const tts = await textToSpeech(cleanArticle);
+      console.log('playing tts', tts);
     } else {
-      Tts.stop();
-      hideSnackbar();
+      // hideSnackbar();
       console.log('stop tts');
     }
 
@@ -117,8 +83,7 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
 
   const handleTtsButton = () => {
     if (mpUser?.subscription?.isExpired) {
-      hideSnackbar();
-      Tts.stop();
+      // hideSnackbar();
       setShowSubscriptionModal(true);
     } else {
       handlePress();
