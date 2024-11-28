@@ -50,35 +50,43 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   }, [isPlaying]);
 
   const handlePress = async () => {
-    // Cek apakah ada koneksi internet
     if (!isConnected) {
-      showError('Oops, tidak bisa memutar suara artikel.'); // Tampilkan notifikasi error
+      showError('Oops, tidak bisa memutar suara artikel.');
       return;
     }
-
-    // Bersihkan HTML tags dari artikel
+  
     const cleanArticle = article
       .replace(/<\/?[^>]+(>|$)/g, '')
       .toLowerCase()
       .replace(/manadopost\.id/gi, '')
       .replace(/[^a-zA-Z0-9.,!? /\\]/g, '')
       .replace(/(\r\n|\n|\r)/g, '');
+  
     setId(id);
     setCleanArticle(cleanArticle);
-    console.log('berhasil menerima article content');
-
-    if (!isPlaying) {
-      // showSnackbar(title, '#024D91');
-      dispatch(setLoading({id, value: true}));
-      const tts = await textToSpeech(cleanArticle);
-      console.log('playing tts', tts);
-    } else {
-      // hideSnackbar();
-      console.log('stop tts');
+    console.log('Berhasil menerima artikel:', cleanArticle);
+  
+    try {
+      if (!isPlaying) {
+        dispatch(setLoading({id, value: true}));
+        const tts = await textToSpeech(cleanArticle);
+        console.log('Playing TTS:', tts);
+  
+        // Jika `tts` adalah URL atau base64, log dan tes pemutaran
+        if (tts) {
+          console.log('Audio data received successfully.');
+          // Tambahkan logika pemutaran audio di sini
+        } else {
+          console.error('No audio data received.');
+        }
+      } else {
+        console.log('Stopping TTS');
+      }
+      dispatch(setPlaying({id, value: !isPlaying}));
+    } catch (error) {
+      console.error('Error in handlePress:', error.message);
+      showError('Gagal memproses TTS.');
     }
-
-    // Toggle status pemutaran
-    dispatch(setPlaying({id, value: !isPlaying}));
   };
 
   const handleTtsButton = () => {

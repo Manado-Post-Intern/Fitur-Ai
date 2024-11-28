@@ -72,12 +72,26 @@ export const summarizetext = async cleanArticle => {
 };
 
 export const textToSpeech = async article => {
-  const response = await openAI.post('/audio/speech', {
-    model: 'tts-1',
-    voice: 'onyx',
-    input: `${article}`,
-  });
-  return response.data.audio;
+  try {
+    const response = await openAI.post('/audio/speech', {
+      model: 'tts-1',
+      voice: 'onyx',
+      input: article, // Jangan lupa untuk menghapus `${}` di sekitar `article`
+    });
+
+    console.log('Response from API:', response.data); // Log respons penuh
+
+    if (response.data.audio) {
+      console.log('Received audio:', response.data.audio); // Periksa apakah ada data audio
+      return response.data.audio;
+    } else {
+      console.error('No audio data received:', response.data);
+      throw new Error('No audio data received');
+    }
+  } catch (error) {
+    console.error('Error in textToSpeech:', error);
+    throw error;
+  }
 };
 
 // =================================== AUTH ===================================
