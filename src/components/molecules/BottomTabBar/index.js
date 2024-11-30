@@ -1,21 +1,11 @@
+/* eslint-disable prettier/prettier */
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
-// import {
-//   Ic3DPaper,
-//   Ic3DPaperActive,
-//   IcMeta,
-//   IcMetaActive,
-//   IcMP,
-//   IcRegion,
-//   IcRegionActive,
-//   IcTrending,
-//   IcTrendingActive,
-//   theme,
-// } from '../../assets';
-// import {TextInter} from '../../components';
 import {
   Ic3DPaper,
   Ic3DPaperActive,
+  IcLapor,
+  IcLaporActive,
   IcMeta,
   IcMetaActive,
   IcMP,
@@ -29,21 +19,21 @@ import {TextInter} from '../../atoms';
 
 const BottomTabBar = ({route, focused}) => {
   switch (route.name) {
-    case 'Trending': {
+    case 'Forum': {
       if (focused) {
         return (
           <View style={styles.container}>
             <View style={[styles.inner, focused && styles.active]}>
-              <IcTrendingActive />
-              <TextInter style={styles.labelActive}>Trending</TextInter>
+              <IcLaporActive />
+              <TextInter style={styles.labelActive}>Lapor</TextInter>
             </View>
           </View>
         );
       }
       return (
         <View style={styles.container}>
-          <IcTrending />
-          <TextInter style={styles.label}>Trending</TextInter>
+          <IcLapor />
+          <TextInter style={styles.label}>Lapor</TextInter>
         </View>
       );
     }

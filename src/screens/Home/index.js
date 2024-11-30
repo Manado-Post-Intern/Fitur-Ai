@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   SafeAreaView,
   ScrollView,
@@ -262,7 +263,6 @@ const Home = ({navigation}) => {
           {isPollingActive && <CardPoling />}
           <Gap height={12} />
           {isRealTime && <RealTimeWidget />}
-
           <Gap height={12} />
           <Headlines data={headlines} />
           <Gap height={12} />

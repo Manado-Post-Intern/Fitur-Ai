@@ -1,6 +1,7 @@
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import axios from 'axios';
+import database from '@react-native-firebase/database';
 // =================================== LOAD SESSION ===================================
 export const loadSession = async () => {
   try {
@@ -15,6 +16,30 @@ export const loadSession = async () => {
   }
 };
 // =================================== GPT ===================================
+export const getChatAiConfig = async () => {
+  try {
+    const snapshot = await database().ref('/chatAi').once('value');
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      return {
+        content: data.content || '',
+        model: data.model || 'gpt-4o-mini', // fallback model
+      };
+    }
+    return {
+      content:
+        'balas setiap pesan dengan bahasa indonesia, Berikan jawaban singkat, ringkas, dan padat, tidak lebih dari 2-3 kalimat. chat ini juga hanya terbatas 20 pertanyaan dari user.',
+      model: 'gpt-4o-mini',
+    };
+  } catch (error) {
+    console.error('Error fetching chatAi config:', error);
+    return {
+      content: 'Default prompt jika terjadi error',
+      model: 'gpt-4o-mini',
+    };
+  }
+};
+
 const openAI = axios.create({
   baseURL: 'https://api.openai.com/v1',
   headers: {
@@ -25,25 +50,28 @@ const openAI = axios.create({
 
 let chatCounter = 0;
 
-export const generateText = async prompt => {
+export const generateText = async userPrompt => {
   try {
-    if (chatCounter >= 20) {
+    if (chatCounter >= 10) {
       return {
         text: 'Percakapan anda telah mencapai batas. Silahkan memulai ulang sesi chatnya',
         sources: [],
       };
     }
+    const {content, model} = await getChatAiConfig();
+
     const response = await openAI.post('/chat/completions', {
-      model: 'gpt-4o-mini',
+      model,
       messages: [
         {
           role: 'user',
-          content: `balas setiap pesan dengan bahasa indonesia, Berikan jawaban singkat, ringkas, dan padat, tidak lebih dari 2-3 kalimat. Gunakan bahasa Indonesia untuk balasan. Pertanyaannya: ${prompt}`,
+          content: `${content} ${userPrompt}`,
         },
       ],
       max_tokens: 150,
       temperature: 0.7,
     });
+
     chatCounter += 1;
 
     return {
@@ -57,6 +85,7 @@ export const generateText = async prompt => {
     };
   }
 };
+
 export const resetChatCounter = () => {
   chatCounter = 0;
 };

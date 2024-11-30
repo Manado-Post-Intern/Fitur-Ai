@@ -166,6 +166,12 @@ const styles = StyleSheet.create({
   },
   TtsButton: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  wrapperButton: {
+
+    flexDirection: 'row',
     justifyContent: 'space-between', // Tambahkan ini jika perlu
     alignItems: 'center',
   },
