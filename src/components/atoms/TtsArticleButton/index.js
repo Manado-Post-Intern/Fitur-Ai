@@ -80,6 +80,26 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     };
   }, [isPlaying]);
 
+  useEffect(() => {
+    // Periksa status inisialisasi TTS
+    Tts.getInitStatus()
+      .then(() => {
+        console.log('TTS initialized successfully.');
+      })
+      .catch(err => {
+        console.error('Error initializing TTS:', err.message);
+        if (err.code === 'no_engine') {
+          console.warn('No TTS engine found. Requesting installation.');
+          Tts.requestInstallEngine(); // Meminta pengguna menginstal engine TTS
+          showError(
+            'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
+          );
+        } else {
+          showError('Error inisialisasi TTS. Silakan coba lagi.');
+        }
+      });
+  }, []);
+
   const handlePress = async () => {
     // Cek apakah ada koneksi internet
     if (!isConnected) {
@@ -97,6 +117,7 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     setId(id);
     setCleanArticle(cleanArticle);
     console.log('berhasil menerima article content');
+    Tts.engines().then(engines => console.log(engines));
 
     if (!isPlaying) {
       showSnackbar(title, '#024D91');

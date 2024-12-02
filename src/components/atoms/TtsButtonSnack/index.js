@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {
@@ -20,17 +21,35 @@ const TtsSnackbarButton = ({id}) => {
   const {cleanArticle} = useSnackbar(); // Get content from SnackbarContext
 
   useEffect(() => {
-    // Check TTS initialization status
+    // Periksa status inisialisasi TTS
     Tts.getInitStatus()
       .then(() => {
-        setTtsReady(true); // TTS is ready to use
-        Tts.setDefaultLanguage('id-ID'); // Pastikan bahasa diatur ke Indonesia
-        console.log('tts initialized');
+        console.log('TTS initialized successfully.');
       })
-      .catch(error => {
-        console.error('TTS initialization failed:', error);
-        setTtsReady(false); // Failed to initialize TTS
+      .catch(err => {
+        console.error('Error initializing TTS:', err.message);
+        if (err.code === 'no_engine') {
+          console.warn('No TTS engine found. Requesting installation.');
+          Tts.requestInstallEngine(); // Meminta pengguna menginstal engine TTS
+          showError('Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.');
+        } else {
+          showError('Error inisialisasi TTS. Silakan coba lagi.');
+        }
       });
+  }, []);
+
+  useEffect(() => {
+    // // Check TTS initialization status
+    // Tts.getInitStatus()
+    //   .then(() => {
+    //     setTtsReady(true); // TTS is ready to use
+    //     Tts.setDefaultLanguage('id-ID'); // Pastikan bahasa diatur ke Indonesia
+    //     console.log('tts initialized');
+    //   })
+    //   .catch(error => {
+    //     console.error('TTS initialization failed:', error);
+    //     setTtsReady(false); // Failed to initialize TTS
+    //   });
 
     const handleTtsStart = () => {
       dispatch(setLoading({id, value: false}));
