@@ -69,11 +69,31 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         if (err.code === 'no_engine') {
           console.warn('No TTS engine found. Requesting installation.');
           Tts.requestInstallEngine(); // Meminta pengguna menginstal engine TTS
-          showError('Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.');
+          showError(
+            'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
+          );
         } else {
           showError('Error inisialisasi TTS. Silakan coba lagi.');
         }
       });
+
+    // Memeriksa ketersediaan bahasa Indonesia saat komponen pertama kali dimuat
+  const checkAndRequestLanguageData = async () => {
+    try {
+      const availableLanguages = await Tts.getAvailableLanguages();
+      if (!availableLanguages.includes('id-ID')) {
+        await Tts.requestInstallData();
+        showError(
+          'Data bahasa Indonesia tidak ditemukan. Silakan instal data untuk melanjutkan.'
+        );
+      }
+    } catch (error) {
+      console.error('Error checking or requesting language data:', error.message);
+      showError('Gagal memeriksa ketersediaan bahasa. Pastikan perangkat mendukung TTS.');
+    }
+  };
+
+  checkAndRequestLanguageData();
   }, []);
 
   useEffect(() => {
@@ -143,6 +163,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
 
       setId(id);
       setCleanArticle(cleanContent);
+      Tts.setDefaultLanguage('id-ID');
 
       // Set loading state for the new TTS
       dispatch(setLoading({id, value: true}));
@@ -150,7 +171,6 @@ const TTSButton = ({id, isActive, onPress, content}) => {
 
       try {
         await // Set the new TTS to speak
-        Tts.setDefaultLanguage('id-ID');
         Tts.stop();
         Tts.speak(cleanContent); // Speak the new content
         dispatch(setPlaying({id, value: true}));

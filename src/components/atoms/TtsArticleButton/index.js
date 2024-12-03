@@ -98,6 +98,16 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
           showError('Error inisialisasi TTS. Silakan coba lagi.');
         }
       });
+    Tts.requestInstallData()
+      .then(() => {
+        console.log('TTS data installation requested.');
+      })
+      .catch(err => {
+        console.error('Error requesting TTS data installation:', err.message);
+        showError(
+          'Tidak dapat meminta data TTS. Pastikan perangkat mendukung TTS.',
+        );
+      });
   }, []);
 
   const handlePress = async () => {
@@ -118,10 +128,9 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     setCleanArticle(cleanArticle);
     console.log('berhasil menerima article content');
     Tts.engines().then(engines => console.log(engines));
-
+    Tts.setDefaultLanguage('id-ID');
     if (!isPlaying) {
       showSnackbar(title, '#024D91');
-      Tts.setDefaultLanguage('id-ID');
       // setIsLoadingArticle(true);
       dispatch(setLoading({id, value: true}));
       Tts.speak(cleanArticle);

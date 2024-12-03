@@ -31,10 +31,23 @@ const TtsSnackbarButton = ({id}) => {
         if (err.code === 'no_engine') {
           console.warn('No TTS engine found. Requesting installation.');
           Tts.requestInstallEngine(); // Meminta pengguna menginstal engine TTS
-          showError('Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.');
+          showError(
+            'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
+          );
         } else {
           showError('Error inisialisasi TTS. Silakan coba lagi.');
         }
+      });
+
+    Tts.requestInstallData()
+      .then(() => {
+        console.log('TTS data installation requested.');
+      })
+      .catch(err => {
+        console.error('Error requesting TTS data installation:', err.message);
+        showError(
+          'Tidak dapat meminta data TTS. Pastikan perangkat mendukung TTS.',
+        );
       });
   }, []);
 
@@ -83,7 +96,7 @@ const TtsSnackbarButton = ({id}) => {
       // console.error('TTS is not ready.');
       return;
     }
-
+    Tts.setDefaultLanguage('id-ID');
     if (cleanArticle) {
       if (isPlaying) {
         // Stop TTS if already playing
