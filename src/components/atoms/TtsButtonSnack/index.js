@@ -15,7 +15,6 @@ const TtsSnackbarButton = ({id}) => {
   const dispatch = useDispatch();
   const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
   const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
-  const [ttsReady, setTtsReady] = useState(false);
   const {cleanArticle} = useSnackbar();
 
   useEffect(() => {

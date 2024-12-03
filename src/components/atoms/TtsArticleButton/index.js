@@ -127,13 +127,13 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   };
 
   const handleTtsButton = () => {
-    // if (mpUser?.subscription?.isExpired) {
-    //   hideSnackbar();
-    //   Tts.stop();
-    //   setShowSubscriptionModal(true);
-    // } else {
-    handlePress();
-    // }
+    if (mpUser?.subscription?.isExpired) {
+      hideSnackbar();
+      Tts.stop();
+      setShowSubscriptionModal(true);
+    } else {
+      handlePress();
+    }
   };
 
   return (
