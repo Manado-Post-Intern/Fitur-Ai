@@ -37,13 +37,8 @@ const TTSButton = ({id, isActive, onPress, content}) => {
 
   useEffect(() => {
     if (visible) {
-      // setIsPlaying(true);
-      //console.log('berubah menjadi icon stop');
     } else {
-      // setIsPlayingButton(false);
       dispatch(setPlaying({id, value: false}));
-      // dispatch(setPlaying(!isPlaying));
-      //console.log('kembali menjadi icon play');
     }
   }, [visible]);
 
@@ -51,15 +46,14 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
       if (!state.isConnected && isPlaying) {
-        Tts.stop(); // Stop TTS jika koneksi terputus
-        showError('Koneksi internet terputus, fitur TTS dihentikan.'); // Tampilkan pesan error
+        Tts.stop();
+        showError('Koneksi internet terputus, fitur TTS dihentikan.');
       }
     });
     return () => unsubscribe();
   }, [isPlaying]);
 
   useEffect(() => {
-    // Periksa status inisialisasi TTS
     Tts.getInitStatus()
       .then(() => {
         console.log('TTS initialized successfully.');
@@ -77,37 +71,9 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         }
       });
 
-    // Memeriksa ketersediaan bahasa Indonesia saat komponen pertama kali dimuat
-    const checkAndRequestLanguageData = async () => {
-      try {
-        const availableLanguages = await Tts.getAvailableLanguages();
-        if (!availableLanguages.includes('id-ID')) {
-          await Tts.requestInstallData();
-          showError(
-            'Data bahasa Indonesia tidak ditemukan. Silakan instal data untuk melanjutkan.'
-          );
-        }
-      } catch (error) {
-        console.error('Error checking or requesting language data:', error.message);
-        showError('Gagal memeriksa ketersediaan bahasa. Pastikan perangkat mendukung TTS.');
-      }
-    };
-
-  checkAndRequestLanguageData();
   }, []);
 
   useEffect(() => {
-    // // Checking TTS initialization status
-    // Tts.getInitStatus()
-    //   .then(() => {
-    //     setTtsReady(true); // TTS is ready
-    //     // console.log('TTS is initialized');
-    //   })
-    //   .catch(error => {
-    //     console.error('TTS initialization failed:', error);
-    //     setTtsReady(false); // TTS initialization failed
-    //   });
-
     Tts.addEventListener('tts-start', () => {
       dispatch(setLoading({id, value: false}));
       dispatch(setPlaying({id, value: true}));
@@ -124,7 +90,6 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     });
     return () => {
       Tts.removeAllListeners('tts-start');
-      // Tts.removeAllListeners('tts-progress');
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
     };
@@ -137,20 +102,13 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       return;
     }
 
-    if (!ttsReady) {
-      //console.error('TTS is not ready');
-      return;
-    }
     dispatch(resetAllTtsExcept(id));
     console.log('reset id');
 
     if (isPlaying) {
-      // If the current button is already playing, stop the TTS
       Tts.stop();
       hideSnackbar();
-      // dispatch(setPlaying({id, value: false})); // Mark this button as not playing
-      // dispatch(setLoading({id, value: false})); // Reset loading state
-      return; // Exit the function
+      return;
     }
 
     if (content) {
@@ -170,15 +128,14 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       console.log('set loading true');
 
       try {
-        await // Set the new TTS to speak
-        Tts.stop();
-        Tts.speak(cleanContent); // Speak the new content
+        await Tts.stop();
+        Tts.speak(cleanContent);
         dispatch(setPlaying({id, value: true}));
         console.log('try button tts');
       } catch (error) {
         console.error('Error during TTS:', error);
       } finally {
-        dispatch(setLoading({id, value: true})); // Reset loading after speaking or error
+        dispatch(setLoading({id, value: true}));
         console.log('finally button tts');
       }
       dispatch(setPlaying({id, value: !isPlaying}));

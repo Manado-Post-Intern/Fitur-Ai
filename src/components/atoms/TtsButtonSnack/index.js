@@ -38,32 +38,9 @@ const TtsSnackbarButton = ({id}) => {
           showError('Error inisialisasi TTS. Silakan coba lagi.');
         }
       });
-
-    // Tts.requestInstallData()
-    //   .then(() => {
-    //     console.log('TTS data installation requested.');
-    //   })
-    //   .catch(err => {
-    //     console.error('Error requesting TTS data installation:', err.message);
-    //     showError(
-    //       'Tidak dapat meminta data TTS. Pastikan perangkat mendukung TTS.',
-    //     );
-    //   });
   }, []);
 
   useEffect(() => {
-    // // Check TTS initialization status
-    // Tts.getInitStatus()
-    //   .then(() => {
-    //     setTtsReady(true); // TTS is ready to use
-    //     Tts.setDefaultLanguage('id-ID'); // Pastikan bahasa diatur ke Indonesia
-    //     console.log('tts initialized');
-    //   })
-    //   .catch(error => {
-    //     console.error('TTS initialization failed:', error);
-    //     setTtsReady(false); // Failed to initialize TTS
-    //   });
-
     const handleTtsStart = () => {
       dispatch(setLoading({id, value: false}));
       dispatch(setPlaying({id, value: true}));
