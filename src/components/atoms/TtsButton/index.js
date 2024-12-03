@@ -78,20 +78,20 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       });
 
     // Memeriksa ketersediaan bahasa Indonesia saat komponen pertama kali dimuat
-  const checkAndRequestLanguageData = async () => {
-    try {
-      const availableLanguages = await Tts.getAvailableLanguages();
-      if (!availableLanguages.includes('id-ID')) {
-        await Tts.requestInstallData();
-        showError(
-          'Data bahasa Indonesia tidak ditemukan. Silakan instal data untuk melanjutkan.'
-        );
+    const checkAndRequestLanguageData = async () => {
+      try {
+        const availableLanguages = await Tts.getAvailableLanguages();
+        if (!availableLanguages.includes('id-ID')) {
+          await Tts.requestInstallData();
+          showError(
+            'Data bahasa Indonesia tidak ditemukan. Silakan instal data untuk melanjutkan.'
+          );
+        }
+      } catch (error) {
+        console.error('Error checking or requesting language data:', error.message);
+        showError('Gagal memeriksa ketersediaan bahasa. Pastikan perangkat mendukung TTS.');
       }
-    } catch (error) {
-      console.error('Error checking or requesting language data:', error.message);
-      showError('Gagal memeriksa ketersediaan bahasa. Pastikan perangkat mendukung TTS.');
-    }
-  };
+    };
 
   checkAndRequestLanguageData();
   }, []);
@@ -177,12 +177,11 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         console.log('try button tts');
       } catch (error) {
         console.error('Error during TTS:', error);
+      } finally {
+        dispatch(setLoading({id, value: true})); // Reset loading after speaking or error
+        console.log('finally button tts');
       }
-      // finally {
-      //   dispatch(setLoading({id, value: true})); // Reset loading after speaking or error
-      //   console.log("finally button tts");
-      // }
-      // dispatch(setPlaying({id, value: !isPlaying}));
+      dispatch(setPlaying({id, value: !isPlaying}));
     }
     onPress?.();
   };

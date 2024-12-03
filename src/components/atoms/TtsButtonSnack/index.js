@@ -39,16 +39,16 @@ const TtsSnackbarButton = ({id}) => {
         }
       });
 
-    Tts.requestInstallData()
-      .then(() => {
-        console.log('TTS data installation requested.');
-      })
-      .catch(err => {
-        console.error('Error requesting TTS data installation:', err.message);
-        showError(
-          'Tidak dapat meminta data TTS. Pastikan perangkat mendukung TTS.',
-        );
-      });
+    // Tts.requestInstallData()
+    //   .then(() => {
+    //     console.log('TTS data installation requested.');
+    //   })
+    //   .catch(err => {
+    //     console.error('Error requesting TTS data installation:', err.message);
+    //     showError(
+    //       'Tidak dapat meminta data TTS. Pastikan perangkat mendukung TTS.',
+    //     );
+    //   });
   }, []);
 
   useEffect(() => {
