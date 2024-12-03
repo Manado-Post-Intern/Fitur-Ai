@@ -15,7 +15,7 @@ import {
 } from '../../../assets';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext';
-import {useErrorNotification} from '../../../context/ErrorNotificationContext'; // Import context
+import {useErrorNotification} from '../../../context/ErrorNotificationContext';
 import NetInfo from '@react-native-community/netinfo';
 import {useDispatch, useSelector} from 'react-redux';
 import {setPlaying, setLoading} from '../../../redux/ttsSlice';
@@ -24,37 +24,35 @@ import {useNavigation} from '@react-navigation/native';
 
 const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} =
-    useSnackbar(); // Menggunakan fungsi showSnackbar dari context
-  const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
-  const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
+    useSnackbar();
+  const {showError} = useErrorNotification();
+  const [isConnected, setIsConnected] = useState(true);
   const {mpUser} = useContext(AuthContext);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
-  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false); // Get playing state for the specific button
-  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false); // Get loading state for the specific button
+  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
+  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
 
   useEffect(() => {
     if (!visible) {
-      dispatch(setPlaying({id, value: false})); // Pastikan tombol kembali ke "play" saat Snackbar disembunyikan
+      dispatch(setPlaying({id, value: false}));
     }
   }, [visible]);
 
   useEffect(() => {
-    // Listener untuk memantau perubahan koneksi
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
       if (!state.isConnected && isPlaying) {
-        Tts.stop(); // Stop TTS jika koneksi terputus
-        showError('Koneksi internet terputus, fitur TTS dihentikan.'); // Tampilkan pesan error
+        Tts.stop();
+        showError('Koneksi internet terputus, fitur TTS dihentikan.');
       }
     });
     return () => unsubscribe();
   }, [isPlaying]);
 
   useEffect(() => {
-    // Event listener ketika TTS mulai berbicara
     Tts.addEventListener('tts-start', () => {
       dispatch(setLoading({id, value: false}));
       dispatch(setPlaying({id, value: true}));
@@ -64,12 +62,12 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     Tts.addEventListener('tts-finish', () => {
       dispatch(setPlaying({id, value: false}));
       console.log('tts telah selesai diputar article');
-    }); // Suara selesai, atur tombol ke "Dengar"
+    });
     Tts.addEventListener('tts-cancel', () => {
       dispatch(setPlaying({id, value: false}));
       dispatch(setLoading({id, value: false}));
       console.log('memcancel tts article');
-    }); // Jika dibatalkan, tombol kembali ke "Dengar"
+    });
 
     return () => {
       Tts.removeAllListeners('tts-start');
@@ -79,7 +77,6 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   }, [isPlaying]);
 
   useEffect(() => {
-    // Periksa status inisialisasi TTS
     Tts.getInitStatus()
       .then(() => {
         console.log('TTS initialized successfully.');
@@ -88,7 +85,7 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
         console.error('Error initializing TTS:', err.message);
         if (err.code === 'no_engine') {
           console.warn('No TTS engine found. Requesting installation.');
-          Tts.requestInstallEngine(); // Meminta pengguna menginstal engine TTS
+          Tts.requestInstallEngine();
           showError(
             'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
           );
@@ -99,13 +96,11 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   }, []);
 
   const handlePress = async () => {
-    // Cek apakah ada koneksi internet
     if (!isConnected) {
-      showError('Oops, tidak bisa memutar suara artikel.'); // Tampilkan notifikasi error
+      showError('Oops, tidak bisa memutar suara artikel.');
       return;
     }
 
-    // Bersihkan HTML tags dari artikel
     const cleanArticle = article
       .replace(/<\/?[^>]+(>|$)/g, '')
       .toLowerCase()
@@ -128,18 +123,17 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
       console.log('stop tts');
     }
 
-    // Toggle status pemutaran
     dispatch(setPlaying({id, value: !isPlaying}));
   };
 
   const handleTtsButton = () => {
-    if (mpUser?.subscription?.isExpired) {
-      hideSnackbar();
-      Tts.stop();
-      setShowSubscriptionModal(true);
-    } else {
-      handlePress();
-    }
+    // if (mpUser?.subscription?.isExpired) {
+    //   hideSnackbar();
+    //   Tts.stop();
+    //   setShowSubscriptionModal(true);
+    // } else {
+    handlePress();
+    // }
   };
 
   return (
@@ -150,8 +144,7 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
       ]}
       onPress={handleTtsButton}
       disabled={isLoading}>
-
-    <Modal
+      <Modal
         transparent={true}
         visible={showSubscriptionModal}
         animationType="fade"
@@ -173,7 +166,7 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
 
       <View style={styles.content}>
         {isLoading ? (
-          <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses
+          <ActivityIndicator size="small" color="#FFFAFA" />
         ) : isPlaying ? (
           <IcTtsArticleStop width={13} height={13} />
         ) : (
@@ -231,7 +224,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   subscriptionContent: {
     backgroundColor: 'white',

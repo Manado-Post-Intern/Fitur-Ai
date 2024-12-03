@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
-  ScrollView, // Import ScrollView
+  ScrollView,
 } from 'react-native';
 import {
   IcSummarizeSpark,
@@ -40,7 +40,6 @@ const SummarizeFloatingButton = ({title, article}) => {
 
   useEffect(() => {
     Tts.addEventListener('tts-start', () => {
-      // setIsPlaying(true);
       console.log('tts sedang start');
     });
     Tts.addEventListener('tts-finish', () => {
@@ -182,14 +181,13 @@ const SummarizeFloatingButton = ({title, article}) => {
             </View>
 
             <ScrollView style={styles.Description}>
-              {loading ? ( // Show loading indicator if loading is true
+              {loading ? (
                 <ActivityIndicator size="large" color="#005AAC" />
               ) : (
-                <Text style={styles.bulletPoint}>{summary}</Text> // Show summary once loaded
+                <Text style={styles.bulletPoint}>{summary}</Text>
               )}
             </ScrollView>
 
-            {/* Tombol Play/Pause */}
             <TouchableOpacity
               onPress={togglePlayPause}
               style={styles.playPauseButton}>
@@ -245,11 +243,10 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignSelf: 'stretch',
-    paddingRight: 40, // Padding to prevent overlap with close button
+    paddingRight: 40,
     marginBottom: 2,
   },
   titleText: {
-    // position: 'absolute',
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: '10%',
@@ -280,7 +277,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   subscriptionContent: {
     backgroundColor: 'white',

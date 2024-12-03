@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState, useContext} from 'react';
 import {
@@ -26,10 +25,9 @@ import {useNavigation} from '@react-navigation/native';
 const TTSButton = ({id, isActive, onPress, content}) => {
   const [isConnected, setIsConnected] = useState(true);
   const dispatch = useDispatch();
-  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false); // Get playing state for the specific button
-  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false); // Get loading state for the specific button
-  const [ttsReady, setTtsReady] = useState(false); // State to check if TTS is initialized
-  const {hideSnackbar, setCleanArticle, visible, setId} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
+  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
+  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
+  const {hideSnackbar, setCleanArticle, visible, setId} = useSnackbar();
   const {showError} = useErrorNotification();
   const {mpUser} = useContext(AuthContext);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
@@ -62,7 +60,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         console.error('Error initializing TTS:', err.message);
         if (err.code === 'no_engine') {
           console.warn('No TTS engine found. Requesting installation.');
-          Tts.requestInstallEngine(); // Meminta pengguna menginstal engine TTS
+          Tts.requestInstallEngine();
           showError(
             'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
           );
@@ -70,7 +68,6 @@ const TTSButton = ({id, isActive, onPress, content}) => {
           showError('Error inisialisasi TTS. Silakan coba lagi.');
         }
       });
-
   }, []);
 
   useEffect(() => {
@@ -123,7 +120,6 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       setCleanArticle(cleanContent);
       Tts.setDefaultLanguage('id-ID');
 
-      // Set loading state for the new TTS
       dispatch(setLoading({id, value: true}));
       console.log('set loading true');
 
@@ -144,18 +140,17 @@ const TTSButton = ({id, isActive, onPress, content}) => {
   };
 
   const handleTtsButton = () => {
-    if (mpUser?.subscription?.isExpired) {
-      hideSnackbar();
-      Tts.stop();
-      setShowSubscriptionModal(true);
-    } else {
-      handlePress();
-    }
+    // if (mpUser?.subscription?.isExpired) {
+    //   hideSnackbar();
+    //   Tts.stop();
+    //   setShowSubscriptionModal(true);
+    // } else {
+    handlePress();
+    // }
   };
 
   return (
     <View style={styles.container}>
-
       <Modal
         transparent={true}
         visible={showSubscriptionModal}
@@ -202,7 +197,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   subscriptionContent: {
     backgroundColor: 'white',

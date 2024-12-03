@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {
   TouchableOpacity,
@@ -18,10 +16,9 @@ const TtsSnackbarButton = ({id}) => {
   const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
   const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
   const [ttsReady, setTtsReady] = useState(false);
-  const {cleanArticle} = useSnackbar(); // Get content from SnackbarContext
+  const {cleanArticle} = useSnackbar();
 
   useEffect(() => {
-    // Periksa status inisialisasi TTS
     Tts.getInitStatus()
       .then(() => {
         console.log('TTS initialized successfully.');
@@ -30,7 +27,7 @@ const TtsSnackbarButton = ({id}) => {
         console.error('Error initializing TTS:', err.message);
         if (err.code === 'no_engine') {
           console.warn('No TTS engine found. Requesting installation.');
-          Tts.requestInstallEngine(); // Meminta pengguna menginstal engine TTS
+          Tts.requestInstallEngine();
           showError(
             'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
           );
@@ -55,13 +52,11 @@ const TtsSnackbarButton = ({id}) => {
       dispatch(setPlaying({id, value: false}));
     };
 
-    // Add event listeners for TTS events
     Tts.addEventListener('tts-start', handleTtsStart);
     Tts.addEventListener('tts-finish', handleTtsFinish);
     Tts.addEventListener('tts-cancel', handleTtsCancel);
 
     return () => {
-      // Cleanup event listeners
       Tts.removeAllListeners('tts-start');
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
@@ -69,20 +64,14 @@ const TtsSnackbarButton = ({id}) => {
   }, [isPlaying]);
 
   const handleTtsPress = () => {
-    if (!ttsReady) {
-      // console.error('TTS is not ready.');
-      return;
-    }
     Tts.setDefaultLanguage('id-ID');
     if (cleanArticle) {
       if (isPlaying) {
-        // Stop TTS if already playing
-        Tts.stop(); // Stop TTS playback
+        Tts.stop();
         dispatch(setPlaying({id, value: false}));
       } else {
-        // Tts.setDefaultLanguage('id-ID');
         dispatch(setLoading({id, value: true}));
-        Tts.speak(cleanArticle); // Speak the content
+        Tts.speak(cleanArticle);
       }
     } else {
       console.error('No content to play.');
