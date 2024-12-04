@@ -51,9 +51,9 @@ const formatBillingCycle = billingCycle => {
 
   switch (unit) {
     case 'M':
-      return `${value} Month`;
+      return `${value} Bulan`;
     case 'Y':
-      return `${value} Year`;
+      return `${value} Tahun`;
     default:
       return billingCycle;
   }
@@ -361,13 +361,52 @@ const Subscription = ({price}) => {
                     handleSubscribe(item.productId, offerDetails.offerToken);
                   }}>
                   <View style={styles.cardContainer}>
-                    <TextInter style={styles.priceTag}>{`${formatBillingCycle(
-                      billingCycle,
-                    )}`}</TextInter>
-                    <TextInter
-                      style={
-                        styles.priceTag1
-                      }>{`Price: ${currencySymbol} ${price} `}</TextInter>
+                    <TextInter style={styles.priceTag}>
+                      {`${formatBillingCycle(billingCycle)}`}
+                    </TextInter>
+                    <TextInter style={styles.priceTag1}>
+                      {`${currencySymbol} ${price} / ${formatBillingCycle(
+                        billingCycle,
+                      )}`}
+                    </TextInter>
+
+                    {/* Tambahkan informasi detil subscription */}
+                    <View style={styles.subscriptionDetails}>
+                      <TextInter style={styles.detailText}>
+                        • Ditagih setiap{' '}
+                        {formatBillingCycle(billingCycle).toLowerCase()}
+                      </TextInter>
+                      <TextInter style={styles.detailText}>
+                        • Pembaruan otomatis setiap periode
+                      </TextInter>
+                      <TextInter style={styles.detailText}>
+                        • Pembayaran akan diproses melalui akun Google Play
+                      </TextInter>
+                      <TextInter style={styles.detailText}>
+                        • Dapat dibatalkan kapan saja melalui Google Play
+                      </TextInter>
+                    </View>
+
+                    <View style={styles.benefitsSection}>
+                      <TextInter style={styles.benefitsTitle}>
+                        Manfaat langganan:
+                      </TextInter>
+                      <TextInter style={styles.detailText}>
+                        • Akses penuh ke e-koran harian
+                      </TextInter>
+                      <TextInter style={styles.detailText}>
+                        • Akses penuh fitur ringkas
+                      </TextInter>
+                      <TextInter style={styles.detailText}>
+                        • Akses penuh fitur chat dengan ai
+                      </TextInter>
+                      <TextInter style={styles.detailText}>
+                        • Akses penuh fitur text menjadi suara dengan ai
+                      </TextInter>
+                      <TextInter style={styles.detailText}>
+                        • Kesempatan ikut undian bulanan
+                      </TextInter>
+                    </View>
                   </View>
                 </Pressable>
               );
@@ -602,5 +641,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: theme.fonts.inter.semiBold,
     color: theme.colors.MPBlue1,
+  },
+  subscriptionDetails: {
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.2)',
+  },
+  detailText: {
+    fontSize: 12,
+    color: theme.colors.white,
+    marginBottom: 4,
+  },
+  benefitsSection: {
+    marginTop: 16,
+  },
+  benefitsTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.colors.white,
+    marginBottom: 8,
   },
 });

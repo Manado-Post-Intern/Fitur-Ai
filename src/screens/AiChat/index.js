@@ -1,18 +1,15 @@
-import React, {useState, useRef, useEffect, memo} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   TextInput,
   Text,
-  Button,
-  ScrollView,
+  SafeAreaView,
   ActivityIndicator,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   useColorScheme,
-  Animated,
-  Touchable,
+  TouchableOpacity,
 } from 'react-native';
 import {generateText} from '../../api/index';
 import LinearGradient from 'react-native-linear-gradient';
@@ -22,6 +19,8 @@ import {useErrorNotification} from '../../context/ErrorNotificationContext';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {IcAiChatSend} from '../../assets';
+import {memo} from 'react';
+import Modal from 'react-native-modal';
 
 const WelcomeScreen = memo(() => {
   const [displayedText, setDisplayedText] = useState('');
@@ -46,12 +45,14 @@ const WelcomeScreen = memo(() => {
       clearInterval(typingInterval);
     };
   }, []);
+
   if (!displayedText) {
     return null;
   }
 
   return <Text style={styles.welcomeText}>{displayedText}</Text>;
 });
+
 const ChatAI = () => {
   const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState([]);
@@ -61,6 +62,17 @@ const ChatAI = () => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const showWelcome = messages.length === 0;
+
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  useEffect(() => {
+    // Modal muncul otomatis ketika screen terbuka
+    setModalVisible(true);
+  }, []);
 
   const handleGenerateText = async () => {
     if (!prompt.trim()) {
@@ -105,6 +117,28 @@ const ChatAI = () => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBarAi />
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        backdropOpacity={0.5}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Selamat Datang di Chat AI!</Text>
+          <Text style={styles.modalText}>
+            Anda dapat mengirimkan hingga 10 pesan per sesi. Setelah mencapai
+            batas ini, silakan reset chat atau keluar dari aplikasi untuk
+            melanjutkan.
+          </Text>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}>
+            <Text style={styles.closeButtonText}>Tutup</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
       <View style={styles.contentContainer}>
         {showWelcome ? (
           <View style={styles.welcomeContainer}>
@@ -167,11 +201,6 @@ const ChatAI = () => {
           value={prompt}
           onChangeText={setPrompt}
         />
-        {/* <Button
-          title="Kirim"
-          onPress={handleGenerateText}
-          disabled={!prompt.trim()}
-        /> */}
         <TouchableOpacity
           onPress={handleGenerateText}
           disabled={!prompt.trim()}>
@@ -189,6 +218,51 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+  },
+  modalContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: '85%',
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalTitle: {
+    color: '#00599b',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalText: {
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: '#004683',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   chatContainer: {
     padding: 20,

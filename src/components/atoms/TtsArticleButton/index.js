@@ -5,7 +5,6 @@ import {
   StyleSheet,
   View,
   ActivityIndicator,
-  Modal,
 } from 'react-native';
 import {
   IcTtsArticlePlay,
@@ -19,8 +18,6 @@ import {useErrorNotification} from '../../../context/ErrorNotificationContext';
 import NetInfo from '@react-native-community/netinfo';
 import {useDispatch, useSelector} from 'react-redux';
 import {setPlaying, setLoading} from '../../../redux/ttsSlice';
-import {AuthContext} from '../../../context/AuthContext';
-import {useNavigation} from '@react-navigation/native';
 
 const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} =
@@ -34,6 +31,8 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
   const dispatch = useDispatch();
   const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
   const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
+
+  const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
 
   useEffect(() => {
     if (!visible) {
@@ -110,7 +109,6 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     setId(id);
     setCleanArticle(cleanArticle);
     console.log('berhasil menerima article content');
-    Tts.engines().then(engines => console.log(engines));
     Tts.setDefaultLanguage('id-ID');
     if (!isPlaying) {
       showSnackbar(title, '#024D91');
@@ -125,25 +123,15 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
 
     dispatch(setPlaying({id, value: !isPlaying}));
   };
-
-  const handleTtsButton = () => {
-    if (mpUser?.subscription?.isExpired) {
-      hideSnackbar();
-      Tts.stop();
-      setShowSubscriptionModal(true);
-    } else {
-      handlePress();
-    }
-  };
-
   return (
     <TouchableOpacity
       style={[
         styles.button,
         isPlaying ? styles.pauseButton : styles.playButton,
       ]}
-      onPress={handleTtsButton}
+      onPress={handlePress}
       disabled={isLoading}>
+
       <Modal
         transparent={true}
         visible={showSubscriptionModal}

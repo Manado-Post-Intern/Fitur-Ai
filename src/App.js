@@ -35,13 +35,20 @@ import ErrorNotification from './components/atoms/ErrorNotification';
 import {Provider} from 'react-redux';
 import {store} from './redux/store';
 
+import linking from './utils/linking';
+import {useNavigation} from '@react-navigation/native';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import {createNavigationContainerRef} from '@react-navigation/native';
+
+const navigationRef = createNavigationContainerRef();
+
 GoogleSignin.configure({
   webClientId:
     '782626479856-89khocqerprpe29tscrpvdn5vb8ghan0.apps.googleusercontent.com',
 });
 
 const App = () => {
-  const latestVersion = '2.1.4'; // akan diganti dengan link dinamis
+  const latestVersion = '3.0.0'; // akan diganti dengan link dinamis
   const playStoreUrl =
     'https://play.google.com/store/apps/details?id=com.mp.manadopost&pcampaignid=web_share';
   const appState = useRef(AppState.currentState);
@@ -111,6 +118,20 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleDynamicLink = link => {
+      if (link.url && navigationRef.isReady()) {
+        const postID = link.url.split('/').pop();
+        navigationRef.navigate('Forum', {id: postID});
+      }
+    };
+
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    dynamicLinks().getInitialLink().then(handleDynamicLink);
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <ErrorNotificationProvider>
@@ -124,7 +145,7 @@ const App = () => {
                       style={styles.gestureHandlerRootView}>
                       <BottomSheetModalProvider>
                         <ErrorNotification />
-                        <NavigationContainer>
+                        <NavigationContainer linking={linking}>
                           <View style={styles.container}>
                             <Routes />
                             <SnackbarNotification />

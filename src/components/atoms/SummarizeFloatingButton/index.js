@@ -20,7 +20,6 @@ import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../../context/ErrorNotificationContext';
 import {summarizetext} from '../../../api';
-import Gap from '../Gap';
 
 const SummarizeFloatingButton = ({title, article}) => {
   const [modalVisible, setModalVisible] = useState(false);

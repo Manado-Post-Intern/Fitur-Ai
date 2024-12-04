@@ -1,12 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   View,
-  Modal,
-  Text,
 } from 'react-native';
 import {IcTtsPlay, IcTtsStop} from '../../../assets';
 import Tts from 'react-native-tts';
@@ -19,8 +16,6 @@ import {
   setLoading,
   resetAllTtsExcept,
 } from '../../../redux/ttsSlice';
-import {AuthContext} from '../../../context/AuthContext';
-import {useNavigation} from '@react-navigation/native';
 
 const TTSButton = ({id, isActive, onPress, content}) => {
   const [isConnected, setIsConnected] = useState(true);
@@ -29,9 +24,6 @@ const TTSButton = ({id, isActive, onPress, content}) => {
   const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
   const {hideSnackbar, setCleanArticle, visible, setId} = useSnackbar();
   const {showError} = useErrorNotification();
-  const {mpUser} = useContext(AuthContext);
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const navigation = useNavigation();
 
   useEffect(() => {
     if (visible) {
@@ -138,19 +130,9 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     }
     onPress?.();
   };
-
-  const handleTtsButton = () => {
-    if (mpUser?.subscription?.isExpired) {
-      hideSnackbar();
-      Tts.stop();
-      setShowSubscriptionModal(true);
-    } else {
-      handlePress();
-    }
-  };
-
   return (
     <View style={styles.container}>
+    
       <Modal
         transparent={true}
         visible={showSubscriptionModal}
@@ -172,7 +154,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       </Modal>
 
       <TouchableOpacity
-        onPress={handleTtsButton}
+        onPress={handlePress}
         style={styles.button}
         disabled={isLoading}>
         {isLoading ? (

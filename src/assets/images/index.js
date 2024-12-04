@@ -71,6 +71,7 @@ import IMGDummyProperty from './img-dummy-property.png';
 import IMGBanner1 from './img-banner-1.png';
 import IMGBanner2 from './img-banner-2.png';
 import IMGLotteryWinner from './img-lottery-winner.png';
+import IMGForum from './img-forum.png';
 import IMGCengkeh from './img-cengkeh.png';
 export {
   IMGCengkeh,
@@ -147,4 +148,5 @@ export {
   IMGBanner1,
   IMGBanner2,
   IMGLotteryWinner,
+  IMGForum,
 };

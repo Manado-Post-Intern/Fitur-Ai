@@ -2,6 +2,150 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-Black.ttf",
+      "sha1": "5c074ef3dd5051b4d2baa8da9504b6486e566b15"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-Bold.ttf",
+      "sha1": "72da4e25853179c027aefc327fe2a0117ef414e8"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-ExtraBold.ttf",
+      "sha1": "cf5b86489e762ced8d281855afece2d53fb88066"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-ExtraLight.ttf",
+      "sha1": "df878d8218f90555adcd687ce1d4cff13a02c560"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-Light.ttf",
+      "sha1": "4040155c3415acc74887e6bd8c93204d5960c866"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-Medium.ttf",
+      "sha1": "0099fff4d30cc2daacfdbf570cfe802bf2a19ad4"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-Regular.ttf",
+      "sha1": "b54fadbdf4c8a44c1c172ce4cb5280b892b27abe"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-SemiBold.ttf",
+      "sha1": "959900951019b899c003d1955a99af91f6deff49"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian-Thin.ttf",
+      "sha1": "0479836ae7b641989d9fe51e21947fa57868ca77"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-Black.ttf",
+      "sha1": "3953fd850169b376ea8f3150a3744bef42d926cf"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-Bold.ttf",
+      "sha1": "fba682eed44adb01fa5e43ce34dcf44bd5099771"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-ExtraBold.ttf",
+      "sha1": "18c394a13179c24ea41358b1cae9d9e7f4014eca"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-ExtraLight.ttf",
+      "sha1": "cc08189d3757b129b301c6b7673fc601b7322267"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-Light.ttf",
+      "sha1": "b29bc257cf3375327b777de34e0bd85204b0bc80"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-Medium.ttf",
+      "sha1": "2226fb28c27bcd42b62a8caf47be72b8bacefb26"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-Regular.ttf",
+      "sha1": "9bff23759314e322702ca0cfaae1dbd2a1105009"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-SemiBold.ttf",
+      "sha1": "b307ba79202429006488b281404c7fd519ea94a8"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_Condensed-Thin.ttf",
+      "sha1": "7a77da4c85f64e6710ebf450f21391246b111018"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-Black.ttf",
+      "sha1": "564d942d872b704dd08aaff456630ba4cb6ee54f"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-Bold.ttf",
+      "sha1": "72019507fb8faf0a1229bbdd8caa348562377c89"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-ExtraBold.ttf",
+      "sha1": "08dcb6821875feaa7ba58a0db89710ce57904228"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-ExtraLight.ttf",
+      "sha1": "0b947ec3f3d4ba8ee9507b6e894609458715b0a1"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-Light.ttf",
+      "sha1": "65dba69b23e6dec0adc96212a8337b11e6f536ec"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-Medium.ttf",
+      "sha1": "09d3ef60d427ac7114cbba767b2ae2844320d5e9"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-Regular.ttf",
+      "sha1": "c100564ccd38086e55a83135d91961af01790fcf"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-SemiBold.ttf",
+      "sha1": "c3947e0ed8be40b5e917d402307fe64d4de131bb"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_ExtraCondensed-Thin.ttf",
+      "sha1": "0a46c34747bb1675c7daab068450217b47274bf4"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-Black.ttf",
+      "sha1": "a7e7b143ffa7a5dca166c4d5200f7beb05f8c33e"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-Bold.ttf",
+      "sha1": "1665034ab526eb0e3c61d3abdaa2b40cc9f43fe8"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-ExtraBold.ttf",
+      "sha1": "910d98e6b165e978e696c97884e4526912579874"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-ExtraLight.ttf",
+      "sha1": "668dda5b14a88f93284cd4513e822f9c355580cd"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-Light.ttf",
+      "sha1": "e022769714c3f0bbe4565b53be9cb538482eeba1"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-Medium.ttf",
+      "sha1": "3fba2db31dde741be2848c43f86359100fc56e46"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-Regular.ttf",
+      "sha1": "356aa878be848c049316fbe7966cd16ec29070a8"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-SemiBold.ttf",
+      "sha1": "116a944874e58463994abb23b9ec95ffa5237e59"
+    },
+    {
+      "path": "src/assets/fonts/Georgia/NotoSerifGeorgian_SemiCondensed-Thin.ttf",
+      "sha1": "53690af945f15cb65cbfb24c849e7861722fed2e"
+    },
+    {
       "path": "src/assets/fonts/Inter/Inter-Black.ttf",
       "sha1": "283fa65b96dc1f2d71c6504afb9610447bdcdf1b"
     },
