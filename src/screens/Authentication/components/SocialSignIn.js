@@ -6,7 +6,7 @@ import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
 import moment from 'moment';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const SocialSignIn = ({type}) => {
   const handleGoogleSignIn = async () => {
     try {
@@ -15,13 +15,14 @@ const SocialSignIn = ({type}) => {
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       const {user} = await auth().signInWithCredential(googleCredential);
       await handleSaveUser(user);
+      await AsyncStorage.setItem('isLoggedIn', 'true');
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleSaveUser = async user => {
-    const userRef = database().ref(`/users/`);
+    const userRef = database().ref('/users/');
     try {
       await messaging().requestPermission();
       const userToken = await messaging().getToken();

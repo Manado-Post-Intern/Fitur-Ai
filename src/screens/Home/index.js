@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   SafeAreaView,
   ScrollView,
@@ -262,7 +263,6 @@ const Home = ({navigation}) => {
           {isPollingActive && <CardPoling />}
           <Gap height={12} />
           {isRealTime && <RealTimeWidget />}
-
           <Gap height={12} />
           <Headlines data={headlines} />
           <Gap height={12} />
@@ -336,12 +336,12 @@ const styles = StyleSheet.create({
     top: -20,
   },
   wrapAiChatBtn: {
-    position: 'absolute', // Mengatur tombol di posisi tetap
-    bottom: 55, // Jarak dari bawah layar
-    right: 2, // Jarak dari kanan layar
-    alignItems: 'center', // Pusatkan horizontal di dalam View
-    justifyContent: 'center', // Pusatkan vertikal di dalam View
-    width: 60, // Lebar tombol yang diinginkan
-    height: 60, // Tinggi tombol yang diinginkan
+    position: 'absolute',
+    bottom: 55,
+    right: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 60,
+    height: 60,
   },
 });

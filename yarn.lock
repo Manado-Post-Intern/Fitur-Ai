@@ -2426,35 +2426,40 @@
   resolved "https://registry.npmjs.org/@react-native-community/netinfo/-/netinfo-11.4.1.tgz"
   integrity sha512-B0BYAkghz3Q2V09BF88RA601XursIEA111tnc2JOaN7axJWmNefmfjZqw/KdSxKZp7CZUuPpjBmz/WCR9uaHYg==
 
-"@react-native-firebase/app@^20.3.0", "@react-native-firebase/app@20.3.0":
-  version "20.3.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-20.3.0.tgz"
-  integrity sha512-vmlu3g59wk0C8SmunLOg+6fC99kUe+ZlfBc7h9zdcFbnK+/6XScqKkG8B0yP3ANjrk9ZqWL1+M705m/uoo/WCQ==
+"@react-native-firebase/app@^20.4.0", "@react-native-firebase/app@20.4.0":
+  version "20.4.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-20.4.0.tgz"
+  integrity sha512-I3YswH5tq0kSezyFwyV0d3J+lnH+N/SdznFZ70Lr671X0YlrbEBb6BK7FzEiwq8rKeIPh+pbgnbYwzj/k9uEnQ==
   dependencies:
     firebase "10.12.2"
     superstruct "^0.6.2"
 
-"@react-native-firebase/auth@^20.3.0":
-  version "20.3.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/auth/-/auth-20.3.0.tgz"
-  integrity sha512-pG8s1z7XgxYiwe9TS4PB0LmnyAdZIBFFI3Sh9L/LsipTJshDmxHLDU3BLuV2KyF7XxFj6jdnvmYi+4QTNzIKpg==
+"@react-native-firebase/auth@^20.4.0":
+  version "20.4.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/auth/-/auth-20.4.0.tgz"
+  integrity sha512-LUmlS9m62QdDoqJKxPyZIBLne1O7ZznY3QjGh5tfU1QVk4DM/b1iG4wR06nyEK9PqzFY5BdqWwWAKbquXl78HQ==
   dependencies:
     plist "^3.1.0"
 
-"@react-native-firebase/database@^20.3.0":
-  version "20.3.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/database/-/database-20.3.0.tgz"
-  integrity sha512-MMRdBTCEJDJycO1M/7ATnsIDxsOn1XR3CgB87X17Z++nVINrA8fOSEDOHviNVjNgKp8sCAlIG7eObcMG1UGnUw==
+"@react-native-firebase/database@^20.4.0":
+  version "20.4.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/database/-/database-20.4.0.tgz"
+  integrity sha512-owleZymOsq+Y1ed6nFduUo8GThCKpcXUC2J6OojYHjI+puM6VgBg8X8hrbIlh+btH6f76D6RUyqP39XV3jCRnQ==
 
-"@react-native-firebase/messaging@^20.3.0":
-  version "20.3.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/messaging/-/messaging-20.3.0.tgz"
-  integrity sha512-jkAQq4gMGjrOcodFLP4YJGpaXaqcqikxlGMa7AzldTPyzNPdMIUhhWxiH1xjcCcepb4aIXz3ysqtJ3LvBWdyyw==
+"@react-native-firebase/dynamic-links@^20.4.0":
+  version "20.4.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/dynamic-links/-/dynamic-links-20.4.0.tgz"
+  integrity sha512-6NvdDs4OuEYRn1E+oS3DDeplpF+tMeA22hToaC1IXYOX7z8esVZ36k6Nb7VDpbmC3vxoCZadUc30rsCNjJr65w==
 
-"@react-native-firebase/storage@^20.3.0":
-  version "20.3.0"
-  resolved "https://registry.npmjs.org/@react-native-firebase/storage/-/storage-20.3.0.tgz"
-  integrity sha512-0pqJ7Syqh5pJWsA6PhFceGd/9w30ipi3DmcSrQ9MrtcCkneIycxhJ+6NVvNWudX2ULlvpuP6BnBom99vRd1V/A==
+"@react-native-firebase/messaging@^20.4.0":
+  version "20.4.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/messaging/-/messaging-20.4.0.tgz"
+  integrity sha512-Ju0rQLoJIzur+QQSQ3O2q/7aBnJa9dyT7kY1tt52vRJ38Bm3/W1NKcYPbbfqMV+N6Nelonlxs1/kaQmo/p+/AA==
+
+"@react-native-firebase/storage@^20.4.0":
+  version "20.4.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/storage/-/storage-20.4.0.tgz"
+  integrity sha512-aqrg+Uo56hOODWjdnJddzFtMXZKj344Yv07R5VYcZOF9RMCMUyYTSPemG0k2tCrPoQnwl9ESWSlPqnUOUQskRg==
 
 "@react-native-google-signin/google-signin@^12.2.1":
   version "12.2.1"
@@ -8034,6 +8039,13 @@ react-native-animatable@^1.4.0:
   dependencies:
     prop-types "^15.8.1"
 
+react-native-animatable@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.npmjs.org/react-native-animatable/-/react-native-animatable-1.3.3.tgz"
+  integrity sha512-2ckIxZQAsvWn25Ho+DK3d1mXIgj7tITkrS4pYDvx96WyOttSvzzFeQnM2od0+FUMzILbdHDsDEqZvnz1DYNQ1w==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-animated-component@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/react-native-animated-component/-/react-native-animated-component-0.2.0.tgz"
@@ -8094,6 +8106,11 @@ react-native-image-crop-picker@0.41.2:
   resolved "https://registry.npmjs.org/react-native-image-crop-picker/-/react-native-image-crop-picker-0.41.2.tgz"
   integrity sha512-GcDu/adXU/1y/MrxsbOfqcGRGWC2pTttt5VGy/jyRJ6GXfoC29fTQf8SG5kGtc5schSR6K+mKYO4uW6eJPljlQ==
 
+react-native-image-picker@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.1.2.tgz"
+  integrity sha512-b5y5nP60RIPxlAXlptn2QwlIuZWCUDWa/YPUVjgHc0Ih60mRiOg1PSzf0IjHSLeOZShCpirpvSPGnDExIpTRUg==
+
 react-native-iphone-x-helper@^1.0.3:
   version "1.3.1"
   resolved "https://registry.npmjs.org/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz"
@@ -8116,6 +8133,14 @@ react-native-localize@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/react-native-localize/-/react-native-localize-3.2.1.tgz"
   integrity sha512-XZsK9+V98XygBkutaPVxTIrwV48wXKk4AQfbjUOmrrsGCqa8WzWsBuEafwWVCMOEQ5coQt0SfM3XKT0Qg7DFXw==
+
+react-native-modal@^13.0.1:
+  version "13.0.1"
+  resolved "https://registry.npmjs.org/react-native-modal/-/react-native-modal-13.0.1.tgz"
+  integrity sha512-UB+mjmUtf+miaG/sDhOikRfBOv0gJdBU2ZE1HtFWp6UixW9jCk/bhGdHUgmZljbPpp0RaO/6YiMmQSSK3kkMaw==
+  dependencies:
+    prop-types "^15.6.2"
+    react-native-animatable "1.3.3"
 
 react-native-paper@^5.12.5:
   version "5.12.5"
@@ -8232,9 +8257,9 @@ react-native-tts@^4.1.1:
   integrity sha512-VL0TgCwkUWggbbFGIXAPKC3rM1baluAYtgOdgnaTm7UYsWf/y8n5VgmVB0J2Wa8qt1dldZ1cSsdQY9iz3evcAg==
 
 react-native-vector-icons@*, react-native-vector-icons@>7.0.0:
-  version "10.1.0"
-  resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.1.0.tgz"
-  integrity sha512-fdQjCHIdoXmRoTZ5gvN1FmT4sGLQ2wmQiNZHKJQUYnE2tkIwjGnxNch+6Nd4lHAACvMWO7LOzBNot2u/zlOmkw==
+  version "10.2.0"
+  resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.2.0.tgz"
+  integrity sha512-n5HGcxUuVaTf9QJPs/W22xQpC2Z9u0nb0KgLPnVltP8vdUvOp6+R26gF55kilP/fV4eL4vsAHUqUjewppJMBOQ==
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
@@ -8257,7 +8282,7 @@ react-native-webview@^13.10.5:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native@*, react-native@^*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@> 0.50.0", "react-native@>= 0.30.0", "react-native@>= 0.62", react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.48.0, react-native@>=0.48.4, react-native@>=0.59, react-native@>=0.59.0, react-native@>=0.63.x, react-native@>=0.65.1, react-native@>=0.70.0, react-native@0.74.3:
+react-native@*, react-native@^*, "react-native@^0.0.0-0 || >=0.60 <1.0", "react-native@> 0.50.0", "react-native@>= 0.30.0", "react-native@>= 0.62", react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.48.0, react-native@>=0.48.4, react-native@>=0.59, react-native@>=0.59.0, react-native@>=0.63.x, react-native@>=0.65.0, react-native@>=0.65.1, react-native@>=0.70.0, react-native@0.74.3:
   version "0.74.3"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.74.3.tgz"
   integrity sha512-UFutCC6WEw6HkxlcpQ2BemKqi0JkwrgDchYB5Svi8Sp4Xwt4HA6LGEjNQgZ+3KM44bjyFRpofQym0uh0jACGng==
