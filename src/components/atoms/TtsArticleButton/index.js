@@ -1,57 +1,53 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   View,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
-import {
-  IcTtsArticlePlay,
-  IcTtsArticlePause,
-  IcTtsArticlePauseNew,
-  IcTtsArticleStop,
-} from '../../../assets';
+import {IcTtsArticlePlay, IcTtsArticleStop} from '../../../assets';
 import Tts from 'react-native-tts';
 import {useSnackbar} from '../../../context/SnackbarContext';
-import {useErrorNotification} from '../../../context/ErrorNotificationContext'; // Import context
+import {useErrorNotification} from '../../../context/ErrorNotificationContext';
 import NetInfo from '@react-native-community/netinfo';
 import {useDispatch, useSelector} from 'react-redux';
 import {setPlaying, setLoading} from '../../../redux/ttsSlice';
+import {AuthContext} from '../../../context/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 
-const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
+const TtsArticleButton = ({id, article, title}) => {
   const {showSnackbar, hideSnackbar, setCleanArticle, visible, setId} =
-    useSnackbar(); // Menggunakan fungsi showSnackbar dari context
-  const {showError} = useErrorNotification(); // Dapatkan fungsi showError dari context
-  const [isConnected, setIsConnected] = useState(true); // State untuk menyimpan status koneksi
+    useSnackbar();
+  const {showError} = useErrorNotification();
+  const [isConnected, setIsConnected] = useState(true);
+  const {mpUser} = useContext(AuthContext);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const navigation = useNavigation();
 
   const dispatch = useDispatch();
-  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false); // Get playing state for the specific button
-  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false); // Get loading state for the specific button
-
-  const [isLoadingArticle, setIsLoadingArticle] = useState(false); // State untuk loading
+  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
+  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
 
   useEffect(() => {
     if (!visible) {
-      dispatch(setPlaying({id, value: false})); // Pastikan tombol kembali ke "play" saat Snackbar disembunyikan
+      dispatch(setPlaying({id, value: false}));
     }
   }, [visible]);
 
   useEffect(() => {
-    // Listener untuk memantau perubahan koneksi
     const unsubscribe = NetInfo.addEventListener(state => {
       setIsConnected(state.isConnected);
       if (!state.isConnected && isPlaying) {
-        Tts.stop(); // Stop TTS jika koneksi terputus
-        showError('Koneksi internet terputus, fitur TTS dihentikan.'); // Tampilkan pesan error
+        Tts.stop();
+        showError('Koneksi internet terputus, fitur TTS dihentikan.');
       }
     });
     return () => unsubscribe();
   }, [isPlaying]);
 
   useEffect(() => {
-    // Event listener ketika TTS mulai berbicara
     Tts.addEventListener('tts-start', () => {
       dispatch(setLoading({id, value: false}));
       dispatch(setPlaying({id, value: true}));
@@ -61,12 +57,12 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     Tts.addEventListener('tts-finish', () => {
       dispatch(setPlaying({id, value: false}));
       console.log('tts telah selesai diputar article');
-    }); // Suara selesai, atur tombol ke "Dengar"
+    });
     Tts.addEventListener('tts-cancel', () => {
       dispatch(setPlaying({id, value: false}));
       dispatch(setLoading({id, value: false}));
       console.log('memcancel tts article');
-    }); // Jika dibatalkan, tombol kembali ke "Dengar"
+    });
 
     return () => {
       Tts.removeAllListeners('tts-start');
@@ -75,14 +71,31 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     };
   }, [isPlaying]);
 
+  useEffect(() => {
+    Tts.getInitStatus()
+      .then(() => {
+        console.log('TTS initialized successfully.');
+      })
+      .catch(err => {
+        console.error('Error initializing TTS:', err.message);
+        if (err.code === 'no_engine') {
+          console.warn('No TTS engine found. Requesting installation.');
+          Tts.requestInstallEngine();
+          showError(
+            'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
+          );
+        } else {
+          showError('Error inisialisasi TTS. Silakan coba lagi.');
+        }
+      });
+  }, []);
+
   const handlePress = async () => {
-    // Cek apakah ada koneksi internet
     if (!isConnected) {
-      showError('Oops, tidak bisa memutar suara artikel.'); // Tampilkan notifikasi error
+      showError('Oops, tidak bisa memutar suara artikel.');
       return;
     }
 
-    // Bersihkan HTML tags dari artikel
     const cleanArticle = article
       .replace(/<\/?[^>]+(>|$)/g, '')
       .toLowerCase()
@@ -92,11 +105,9 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
     setId(id);
     setCleanArticle(cleanArticle);
     console.log('berhasil menerima article content');
-
+    Tts.setDefaultLanguage('id-ID');
     if (!isPlaying) {
       showSnackbar(title, '#024D91');
-      Tts.setDefaultLanguage('id-ID');
-      // setIsLoadingArticle(true);
       dispatch(setLoading({id, value: true}));
       Tts.speak(cleanArticle);
       console.log('playing tts');
@@ -106,8 +117,17 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
       console.log('stop tts');
     }
 
-    // Toggle status pemutaran
     dispatch(setPlaying({id, value: !isPlaying}));
+  };
+
+  const handleTtsButton = () => {
+    if (mpUser?.subscription?.isExpired) {
+      hideSnackbar();
+      Tts.stop();
+      setShowSubscriptionModal(true);
+    } else {
+      handlePress();
+    }
   };
   return (
     <TouchableOpacity
@@ -115,11 +135,31 @@ const TtsArticleButton = ({id, scrollY, isActive, onPress, article, title}) => {
         styles.button,
         isPlaying ? styles.pauseButton : styles.playButton,
       ]}
-      onPress={handlePress}
+      onPress={handleTtsButton}
       disabled={isLoading}>
+      <Modal
+        transparent={true}
+        visible={showSubscriptionModal}
+        animationType="fade"
+        onRequestClose={() => setShowSubscriptionModal(false)}>
+        <View style={styles.subscriptionOverlay}>
+          <View style={styles.subscriptionContent}>
+            <Text style={{color: 'black', textAlign: 'center'}}>
+              Anda perlu berlangganan MP Digital Premium untuk menggunakan fitur
+              ini
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Subscription')}
+              style={styles.subscribeButton}>
+              <Text style={{color: 'white'}}>Berlangganan Sekarang</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.content}>
         {isLoading ? (
-          <ActivityIndicator size="small" color="#FFFAFA" /> // Tampilkan loading saat proses
+          <ActivityIndicator size="small" color="#FFFAFA" />
         ) : isPlaying ? (
           <IcTtsArticleStop width={13} height={13} />
         ) : (
@@ -172,6 +212,25 @@ const styles = StyleSheet.create({
   },
   pauseText: {
     color: '#FFFFFF',
+  },
+  subscriptionOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  subscriptionContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '80%',
+  },
+  subscribeButton: {
+    backgroundColor: '#005AAC',
+    padding: 10,
+    marginTop: 15,
+    borderRadius: 5,
   },
 });
 
