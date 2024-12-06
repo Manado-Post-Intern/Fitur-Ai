@@ -291,7 +291,7 @@ const Subscription = ({price}) => {
         <Gap height={8} />
         <TextInter style={styles.text1}>
           {
-            'Berlangganan bersifat opsional dan menyediakan akses ke fitur-fitur premium seperti e-Quran, lotere bulanan, dan promo khusus. Anda masih dapat mengakses konten gratis tanpa berlangganan.'
+            'Berlangganan bersifat opsional dan menyediakan akses ke fitur-fitur premium seperti e-koran, lotere bulanan, dan promo khusus. Anda masih dapat mengakses konten gratis tanpa berlangganan.'
           }
         </TextInter>
         <Gap height={8} />
