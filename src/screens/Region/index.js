@@ -49,14 +49,16 @@ const Region = ({navigation}) => {
   };
 
   const [activeTTS, setActiveTTS] = useState(null);
-  const {showSnackbar, hideSnackbar} = useSnackbar();
+  const {showSnackbar, hideSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
 
   const handleTtsPress = id => {
     if (activeTTS !== null && activeTTS !== id) {
+      // setActiveTTS(null);
       setActiveTTS(id);
     }
 
     if (activeTTS === id) {
+      // setActiveTTS(null);
       setActiveTTS(id);
     } else {
       setActiveTTS(id);
@@ -65,10 +67,10 @@ const Region = ({navigation}) => {
 
   const handleSendTitle = (title, id) => {
     if (activeTTS === id) {
-      showSnackbar(`${title}`, 'black');
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
     } else {
-      showSnackbar(`${title}`, 'black');
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
     }
   };
@@ -153,12 +155,12 @@ const styles = StyleSheet.create({
     paddingLeft: 17,
   },
   wrapAiChatBtn: {
-    position: 'absolute',
-    bottom: 55,
-    right: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 60,
-    height: 60,
+    position: 'absolute', // Mengatur tombol di posisi tetap
+    bottom: 55, // Jarak dari bawah layar
+    right: 2, // Jarak dari kanan layar
+    alignItems: 'center', // Pusatkan horizontal di dalam View
+    justifyContent: 'center', // Pusatkan vertikal di dalam View
+    width: 60, // Lebar tombol yang diinginkan
+    height: 60, // Tinggi tombol yang diinginkan
   },
 });

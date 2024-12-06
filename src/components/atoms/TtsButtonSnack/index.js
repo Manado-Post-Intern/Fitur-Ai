@@ -1,4 +1,5 @@
-import React, {useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -15,28 +16,22 @@ const TtsSnackbarButton = ({id}) => {
   const dispatch = useDispatch();
   const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
   const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
-  const {cleanArticle} = useSnackbar();
+  const [ttsReady, setTtsReady] = useState(false);
+  const {cleanArticle} = useSnackbar(); // Get content from SnackbarContext
 
   useEffect(() => {
+    // Check TTS initialization status
     Tts.getInitStatus()
       .then(() => {
-        console.log('TTS initialized successfully.');
+        setTtsReady(true); // TTS is ready to use
+        Tts.setDefaultLanguage('id-ID'); // Pastikan bahasa diatur ke Indonesia
+        console.log('tts initialized');
       })
-      .catch(err => {
-        console.error('Error initializing TTS:', err.message);
-        if (err.code === 'no_engine') {
-          console.warn('No TTS engine found. Requesting installation.');
-          Tts.requestInstallEngine();
-          showError(
-            'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
-          );
-        } else {
-          showError('Error inisialisasi TTS. Silakan coba lagi.');
-        }
+      .catch(error => {
+        console.error('TTS initialization failed:', error);
+        setTtsReady(false); // Failed to initialize TTS
       });
-  }, []);
 
-  useEffect(() => {
     const handleTtsStart = () => {
       dispatch(setLoading({id, value: false}));
       dispatch(setPlaying({id, value: true}));
@@ -51,11 +46,13 @@ const TtsSnackbarButton = ({id}) => {
       dispatch(setPlaying({id, value: false}));
     };
 
+    // Add event listeners for TTS events
     Tts.addEventListener('tts-start', handleTtsStart);
     Tts.addEventListener('tts-finish', handleTtsFinish);
     Tts.addEventListener('tts-cancel', handleTtsCancel);
 
     return () => {
+      // Cleanup event listeners
       Tts.removeAllListeners('tts-start');
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-cancel');
@@ -63,14 +60,20 @@ const TtsSnackbarButton = ({id}) => {
   }, [isPlaying]);
 
   const handleTtsPress = () => {
-    Tts.setDefaultLanguage('id-ID');
+    if (!ttsReady) {
+      // console.error('TTS is not ready.');
+      return;
+    }
+
     if (cleanArticle) {
       if (isPlaying) {
-        Tts.stop();
+        // Stop TTS if already playing
+        Tts.stop(); // Stop TTS playback
         dispatch(setPlaying({id, value: false}));
       } else {
+        // Tts.setDefaultLanguage('id-ID');
         dispatch(setLoading({id, value: true}));
-        Tts.speak(cleanArticle);
+        Tts.speak(cleanArticle); // Speak the content
       }
     } else {
       console.error('No content to play.');

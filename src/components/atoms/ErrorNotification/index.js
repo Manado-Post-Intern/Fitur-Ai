@@ -1,6 +1,7 @@
+// src/components/ErrorNotification.js
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {useErrorNotification} from '../../../context/ErrorNotificationContext';
+import {useErrorNotification} from '../../../context/ErrorNotificationContext'; // Import context
 import {IcError} from '../../../assets';
 
 const ErrorNotification = () => {

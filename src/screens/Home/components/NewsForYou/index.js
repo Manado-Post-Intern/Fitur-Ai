@@ -1,3 +1,9 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-shadow */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useContext, useEffect} from 'react';
 import {TokenContext} from '../../../../context/TokenContext';
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
@@ -20,7 +26,7 @@ const NewsForYou = ({
   const [activeTTS, setActiveTTS] = useState(null);
   const [article, setArticle] = useState(null);
   const {token} = useContext(TokenContext);
-  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar();
+  const {showSnackbar, hideSnackbar, toggleSnackbar} = useSnackbar(); // Gunakan fungsi dari SnackbarContext
   const getArticle = async () => {
     if (!item?.id) {
       // console.log('Item ID is undefined or null');
@@ -58,23 +64,36 @@ const NewsForYou = ({
   }, [token]);
 
   const handleTTSPress = id => {
+    // let message = '';
+
     if (activeTTS !== null && activeTTS !== id) {
       setActiveTTS(id);
+      // message = 'Pemutaran dijeda';
+      // onShowSnackbar(true, message);
     }
 
     if (activeTTS === id) {
       setActiveTTS(id);
+      // message = 'Pemutaran dijeda';
+      // onShowSnackbar(true, message);
+      // Tts.stop();
     } else {
       setActiveTTS(id);
+      // message = 'Mendengarkan...';
+      // onShowSnackbar(true, message);
+      // console.log(article?.content);
+      // Tts.speak('kedepan harus tetap sama');
     }
   };
 
   const handleSendTitle = (title, id) => {
+    // setSelectedTitle(title); // Update title yang dipilih
+    // titleRef.current = title; // Update nilai di useRef
     if (activeTTS === id) {
-      showSnackbar(`${title}`, 'black');
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
     } else {
-      showSnackbar(`${title}`, 'black');
+      showSnackbar(`${title}`, 'black'); // Tampilkan Snackbar dengan pesan
       console.log(title);
     }
   };
@@ -114,7 +133,7 @@ const NewsForYou = ({
             item={item}
             isActive={activeTTS === item.id}
             onPress={() => handleTTSPress(item.id)}
-            onSendTitle={handleSendTitle}
+            onSendTitle={handleSendTitle} // Kirim handleSendTitle ke Card
             id={item.id}
           />
         );

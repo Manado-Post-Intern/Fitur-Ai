@@ -17,7 +17,6 @@ import {TopBarAi} from './component';
 import NetInfo from '@react-native-community/netinfo';
 import {useErrorNotification} from '../../context/ErrorNotificationContext';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-// import {TouchableOpacity} from 'react-native-gesture-handler';
 import {IcAiChatSend} from '../../assets';
 import {memo} from 'react';
 import Modal from 'react-native-modal';
@@ -321,12 +320,12 @@ const styles = StyleSheet.create({
   inputLight: {
     backgroundColor: '#FFFFFF',
     borderColor: '#ccc',
-    color: '#000000',
+    color: '#000000', // Ensure the text is visible in light mode
   },
   inputDark: {
     backgroundColor: '#FFFFFF',
     borderColor: '#ccc',
-    color: '#000000',
+    color: '#000000', // Text color for dark mode
   },
   sourceContainer: {
     marginTop: 5,

@@ -30,10 +30,10 @@ import {SnackbarProvider} from './context/SnackbarContext';
 import {
   ErrorNotificationProvider,
   useErrorNotification,
-} from './context/ErrorNotificationContext';
-import ErrorNotification from './components/atoms/ErrorNotification';
-import {Provider} from 'react-redux';
-import {store} from './redux/store';
+} from './context/ErrorNotificationContext'; // Import context
+import ErrorNotification from './components/atoms/ErrorNotification'; // Import komponen notifikasI
+import {Provider} from 'react-redux'; // Import Redux Provider
+import {store} from './redux/store'; // Import the Redux store
 
 import linking from './utils/linking';
 import {useNavigation} from '@react-navigation/native';

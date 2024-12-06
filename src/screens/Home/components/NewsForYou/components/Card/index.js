@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
 import {
@@ -27,6 +28,7 @@ const Card = ({id, item, isActive, onPress, onSendTitle, disabled}) => {
   const {width, height} = Dimensions.get('window');
   const getArticle = async () => {
     if (!item?.id) {
+      //console.log('Item ID is undefined or null');
       return;
     }
     try {
@@ -38,14 +40,18 @@ const Card = ({id, item, isActive, onPress, onSendTitle, disabled}) => {
         params: {id: item?.id},
       });
       setArticle(response.data.data.detail);
+      // console.log('Article Content:', response.data.data.detail.content);
     } catch (error) {
       if (error.response) {
+        // Server responded with a status code outside 2xx range
         console.log('Error data:', error.response.data);
         console.log('Error status:', error.response.status);
         console.log('Error headers:', error.response.headers);
       } else if (error.request) {
+        // Request was made but no response received
         console.log('Error request:', error.request);
       } else {
+        // Something happened in setting up the request
         console.log('Error message:', error.message);
       }
       console.log('Error config:', error.config);
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
   },
   TtsButton: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between', // Tambahkan ini jika perlu
     alignItems: 'center',
   },
   WrapTts: {
