@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react';
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect, useState, useContext} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   View,
+  Modal,
+  Text,
 } from 'react-native';
 import {IcTtsPlay, IcTtsStop} from '../../../assets';
 import Tts from 'react-native-tts';
@@ -16,14 +20,19 @@ import {
   setLoading,
   resetAllTtsExcept,
 } from '../../../redux/ttsSlice';
+import {AuthContext} from '../../../context/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 
 const TTSButton = ({id, isActive, onPress, content}) => {
   const [isConnected, setIsConnected] = useState(true);
   const dispatch = useDispatch();
-  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false);
-  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false);
-  const {hideSnackbar, setCleanArticle, visible, setId} = useSnackbar();
+  const isPlaying = useSelector(state => state.tts.isPlayingMap[id] || false); // Get playing state for the specific button
+  const isLoading = useSelector(state => state.tts.isLoadingMap[id] || false); // Get loading state for the specific button
+  const {hideSnackbar, setCleanArticle, visible, setId} = useSnackbar(); // Menggunakan fungsi showSnackbar dari context
   const {showError} = useErrorNotification();
+  const {mpUser} = useContext(AuthContext);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (visible) {
@@ -52,7 +61,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
         console.error('Error initializing TTS:', err.message);
         if (err.code === 'no_engine') {
           console.warn('No TTS engine found. Requesting installation.');
-          Tts.requestInstallEngine();
+          Tts.requestInstallEngine(); // Meminta pengguna menginstal engine TTS
           showError(
             'Tidak ada engine TTS yang ditemukan. Silakan instal untuk melanjutkan.',
           );
@@ -60,6 +69,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
           showError('Error inisialisasi TTS. Silakan coba lagi.');
         }
       });
+
   }, []);
 
   useEffect(() => {
@@ -112,6 +122,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       setCleanArticle(cleanContent);
       Tts.setDefaultLanguage('id-ID');
 
+      // Set loading state for the new TTS
       dispatch(setLoading({id, value: true}));
       console.log('set loading true');
 
@@ -130,9 +141,20 @@ const TTSButton = ({id, isActive, onPress, content}) => {
     }
     onPress?.();
   };
+
+  const handleTtsButton = () => {
+    if (mpUser?.subscription?.isExpired) {
+      hideSnackbar();
+      Tts.stop();
+      setShowSubscriptionModal(true);
+    } else {
+      handlePress();
+    }
+  };
+
   return (
     <View style={styles.container}>
-    
+
       <Modal
         transparent={true}
         visible={showSubscriptionModal}
@@ -154,7 +176,7 @@ const TTSButton = ({id, isActive, onPress, content}) => {
       </Modal>
 
       <TouchableOpacity
-        onPress={handlePress}
+        onPress={handleTtsButton}
         style={styles.button}
         disabled={isLoading}>
         {isLoading ? (
@@ -179,7 +201,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
   },
   subscriptionContent: {
     backgroundColor: 'white',
