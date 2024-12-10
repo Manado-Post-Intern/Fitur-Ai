@@ -69,7 +69,6 @@ const ChatAI = () => {
   };
 
   useEffect(() => {
-    // Modal muncul otomatis ketika screen terbuka
     setModalVisible(true);
   }, []);
 

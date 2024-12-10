@@ -1,16 +1,23 @@
 import {Image, SafeAreaView, StyleSheet} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {IMGGlowBR, IMGGlow, IMGMetaLogo, theme} from '../../assets';
 import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../../context/AuthContext';
+import {ActivityIndicator} from 'react-native-paper';
 
 const Splash = () => {
   const navigation = useNavigation();
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
     setTimeout(() => {
       console.log('To Splash Screen');
-      navigation.replace('Onboarding');
-    }, 1500);
+      if (!user) {
+        navigation.replace('Onboarding');
+      } else {
+        navigation.replace('HomeTab');
+      }
+    }, 1000);
 
     return () => {
       clearTimeout();
@@ -27,6 +34,12 @@ const Splash = () => {
       <Image source={IMGGlowBR} style={styles.bottomRightGlow} />
       <Image source={IMGGlowBR} style={styles.bottomRightGlow} />
       <Image source={IMGGlowBR} style={styles.bottomRightGlow} />
+
+      <ActivityIndicator
+        style={styles.indicator}
+        size="small"
+        color="#29458e"
+      />
     </SafeAreaView>
   );
 };
@@ -57,5 +70,8 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
+  },
+  indicator: {
+    marginTop: 80,
   },
 });

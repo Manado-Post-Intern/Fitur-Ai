@@ -100,7 +100,7 @@ const PrivateRoutes = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
-      initialRouteName="HomeTab"
+      initialRouteName="Splash"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="ChooseCanal" component={ChooseCanal} />
