@@ -1,5 +1,4 @@
 import {
-  Modal,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -10,16 +9,16 @@ import {
 } from 'react-native';
 import React, {useContext} from 'react';
 import {AiChatButton, Banner1, Gap, TextInter, TopBar} from '../../components';
-import {IcBack, theme} from '../../assets';
+import {theme} from '../../assets';
 import {CardListDigital, CardListNewspaper, More} from './components';
 import {screenHeightPercentage} from '../../utils';
 import {MPDigitalContext} from '../../context/MPDigitalContext';
 import {AuthContext} from '../../context/AuthContext';
-import FloatingActionButton from '../../components/atoms/AiChatButton';
 
 const Paper3D = ({navigation}) => {
   const {loading, setLoading, fetchData} = useContext(MPDigitalContext);
   const {mpUser} = useContext(AuthContext);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.topBarContainer}>
@@ -38,10 +37,6 @@ const Paper3D = ({navigation}) => {
           }
           style={styles.container}>
           <View style={styles.bodyContainer}>
-            {/* <View style={styles.headerContainer}>
-              <IcBack />
-              <TextInter style={styles.headerText}>E-Paper</TextInter>
-            </View> */}
 
             <Banner1 />
 
@@ -166,12 +161,12 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   wrapAiChatBtn: {
-    position: 'absolute', // Mengatur tombol di posisi tetap
-    bottom: 55, // Jarak dari bawah layar
-    right: 2, // Jarak dari kanan layar
-    alignItems: 'center', // Pusatkan horizontal di dalam View
-    justifyContent: 'center', // Pusatkan vertikal di dalam View
-    width: 60, // Lebar tombol yang diinginkan
-    height: 60, // Tinggi tombol yang diinginkan
+    position: 'absolute',
+    bottom: 55,
+    right: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 60,
+    height: 60,
   },
 });
