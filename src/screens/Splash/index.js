@@ -3,12 +3,11 @@ import React, {useEffect, useContext, useState} from 'react';
 import {IMGGlowBR, IMGGlow, IMGMetaLogo, theme} from '../../assets';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../../context/AuthContext';
-import { ActivityIndicator } from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
 
 const Splash = () => {
   const navigation = useNavigation();
   const {user} = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
     setTimeout(() => {
@@ -18,21 +17,12 @@ const Splash = () => {
       } else {
         navigation.replace('HomeTab');
       }
-    }, 3000);
+    }, 1000);
 
     return () => {
       clearTimeout();
     };
   }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(true);
-    }, 100);
-    return () => {
-      clearTimeout();
-    };
-  },[]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,13 +34,12 @@ const Splash = () => {
       <Image source={IMGGlowBR} style={styles.bottomRightGlow} />
       <Image source={IMGGlowBR} style={styles.bottomRightGlow} />
       <Image source={IMGGlowBR} style={styles.bottomRightGlow} />
-      {isLoading && (
-        <ActivityIndicator
-          style={styles.indicator}
-          size="small"
-          color="#29458e"
-        />
-      )}
+
+      <ActivityIndicator
+        style={styles.indicator}
+        size="small"
+        color="#29458e"
+      />
     </SafeAreaView>
   );
 };
