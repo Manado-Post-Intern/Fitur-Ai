@@ -7,8 +7,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  BackHandler,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {AiChatButton, Banner1, Gap, TextInter, TopBar} from '../../components';
 import {IcBack, theme} from '../../assets';
 import {CardListDigital, CardListNewspaper, More} from './components';
@@ -20,6 +21,20 @@ import FloatingActionButton from '../../components/atoms/AiChatButton';
 const Paper3D = ({navigation}) => {
   const {loading, setLoading, fetchData} = useContext(MPDigitalContext);
   const {mpUser} = useContext(AuthContext);
+
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     // Navigasi ke Home jika berada di Region atau Forum
+  //     navigation.navigate('Home');
+  //     return true; // Cegah aksi default back
+  //   };
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     backAction,
+  //   );
+  //   return () => backHandler.remove(); // Cleanup saat komponen unmount
+  // }, [navigation]);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.topBarContainer}>

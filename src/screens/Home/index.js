@@ -5,6 +5,8 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  ToastAndroid,
+  BackHandler,
 } from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {theme} from '../../assets';
@@ -40,6 +42,7 @@ import {AuthContext} from '../../context/AuthContext';
 import moment from 'moment';
 import database from '@react-native-firebase/database';
 import {useSnackbar} from '../../context/SnackbarContext';
+import { useNavigationState } from '@react-navigation/native';
 
 const data = [0, 1, 2];
 const daerah = ['Manado', 'Minahasa Utara', 'Bitung', 'Tondano'];
@@ -218,6 +221,18 @@ const Home = ({navigation}) => {
       // getReferenceSite();
     }
   }, [token]);
+  
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Home');
+      return true; 
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+    return () => backHandler.remove(); 
+  }, [navigation]);
 
   useEffect(() => {
     if (mpUser && token) {
