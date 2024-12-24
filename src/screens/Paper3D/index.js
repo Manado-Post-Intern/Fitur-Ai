@@ -1,5 +1,4 @@
 import {
-  Modal,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -7,33 +6,18 @@ import {
   Text,
   TouchableOpacity,
   View,
-  BackHandler,
 } from 'react-native';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {AiChatButton, Banner1, Gap, TextInter, TopBar} from '../../components';
-import {IcBack, theme} from '../../assets';
+import {theme} from '../../assets';
 import {CardListDigital, CardListNewspaper, More} from './components';
 import {screenHeightPercentage} from '../../utils';
 import {MPDigitalContext} from '../../context/MPDigitalContext';
 import {AuthContext} from '../../context/AuthContext';
-import FloatingActionButton from '../../components/atoms/AiChatButton';
 
 const Paper3D = ({navigation}) => {
   const {loading, setLoading, fetchData} = useContext(MPDigitalContext);
   const {mpUser} = useContext(AuthContext);
-
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     // Navigasi ke Home jika berada di Region atau Forum
-  //     navigation.navigate('Home');
-  //     return true; // Cegah aksi default back
-  //   };
-  //   const backHandler = BackHandler.addEventListener(
-  //     'hardwareBackPress',
-  //     backAction,
-  //   );
-  //   return () => backHandler.remove(); // Cleanup saat komponen unmount
-  // }, [navigation]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -53,10 +37,6 @@ const Paper3D = ({navigation}) => {
           }
           style={styles.container}>
           <View style={styles.bodyContainer}>
-            {/* <View style={styles.headerContainer}>
-              <IcBack />
-              <TextInter style={styles.headerText}>E-Paper</TextInter>
-            </View> */}
 
             <Banner1 />
 
@@ -181,12 +161,12 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   wrapAiChatBtn: {
-    position: 'absolute', // Mengatur tombol di posisi tetap
-    bottom: 55, // Jarak dari bawah layar
-    right: 2, // Jarak dari kanan layar
-    alignItems: 'center', // Pusatkan horizontal di dalam View
-    justifyContent: 'center', // Pusatkan vertikal di dalam View
-    width: 60, // Lebar tombol yang diinginkan
-    height: 60, // Tinggi tombol yang diinginkan
+    position: 'absolute',
+    bottom: 55,
+    right: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 60,
+    height: 60,
   },
 });
