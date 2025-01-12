@@ -17,7 +17,7 @@ const Splash = () => {
       } else {
         navigation.replace('HomeTab');
       }
-    }, 1000);
+    }, 7000);
 
     return () => {
       clearTimeout();
